@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登入 - 不動產媒合系統</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+            height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+        }
+
+        .login-container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px 30px;
+            width: 100%;
+            max-width: 320px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-icon {
+            font-size: 50px;
+            color: #2563eb;
+            margin-bottom: 15px;
+        }
+
+        .login-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .login-subtitle {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-control {
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 12px 15px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.25);
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-group-text {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            color: #666;
+            z-index: 10;
+        }
+
+        .form-control.with-icon {
+            padding-left: 45px;
+        }
+
+        .btn-login {
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+            border: none;
+            color: white;
+            font-weight: bold;
+            padding: 12px;
+            border-radius: 12px;
+            width: 100%;
+            font-size: 16px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(37, 99, 235, 0.4);
+            color: white;
+        }
+
+        .forgot-password {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .forgot-password a {
+            color: #2563eb;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
+        .divider {
+            text-align: center;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #e9ecef;
+        }
+
+        .divider span {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 0 15px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .register-link a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .remember-me input {
+            margin-right: 8px;
+        }
+
+        .remember-me label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="login-icon">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <h2 class="login-title">歡迎回來</h2>
+                <p class="login-subtitle">請登入您的帳號</p>
+            </div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label class="form-label">電子郵件或手機號碼</label>
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="fas fa-envelope"></i>
+                        </span>
+                        <input type="email" id="email" class="form-control with-icon" placeholder="請輸入電子郵件或手機號碼"
+                            value="demo@example.com">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">密碼</label>
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="fas fa-lock"></i>
+                        </span>
+                        <input type="password" id="password" class="form-control with-icon" placeholder="請輸入密碼"
+                            value="demo123">
+                    </div>
+                </div>
+
+                <div class="remember-me">
+                    <input type="checkbox" id="remember" checked>
+                    <label for="remember">記住我的登入狀態</label>
+                </div>
+
+                <button type="submit" class="btn btn-login">
+                    <i class="fas fa-sign-in-alt me-2"></i>登入
+                </button>
+
+                <div class="forgot-password">
+                    <a href="forgot-password.html">忘記密碼？</a>
+                </div>
+
+                <div class="divider">
+                    <span>或</span>
+                </div>
+
+                <div class="register-link">
+                    <span>還沒有帳號？</span>
+                    <a href="register.html">立即註冊</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 模擬用戶數據
+        const users = [
+            { email: 'demo@example.com', password: 'demo123', name: '張展店顧問' },
+            { email: 'admin@example.com', password: 'admin123', name: '系統管理員' }
+        ];
+
+        // 頁面載入完成後初始化
+        document.addEventListener('DOMContentLoaded', function () {
+            setupEventListeners();
+            setupFormValidation();
+            addDemoButton();
+        });
+
+        // 設置事件監聽器
+        function setupEventListeners() {
+            // 登入表單提交
+            const loginForm = document.querySelector('#loginForm');
+            if (loginForm) {
+                loginForm.addEventListener('submit', handleLogin);
+            }
+
+            // 輸入框焦點效果
+            document.querySelectorAll('.form-control').forEach(input => {
+                input.addEventListener('focus', handleInputFocus);
+                input.addEventListener('blur', handleInputBlur);
+                input.addEventListener('input', handleInputChange);
+            });
+        }
+
+        // 處理登入
+        function handleLogin(event) {
+            event.preventDefault();
+
+            const email = document.querySelector('#email').value;
+            const password = document.querySelector('#password').value;
+            const loginBtn = document.querySelector('.btn-login');
+
+            // 顯示載入狀態
+            const originalText = loginBtn.innerHTML;
+            loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>登入中...';
+            loginBtn.disabled = true;
+
+            // 模擬登入驗證
+            setTimeout(() => {
+                const user = users.find(u => u.email === email && u.password === password);
+
+                if (user) {
+                    // 登入成功
+                    loginBtn.innerHTML = '<i class="fas fa-check me-2"></i>登入成功';
+                    loginBtn.style.background = '#059669';
+
+                    showToast(`歡迎回來，${user.name}！`, 'success');
+
+                    // 儲存用戶資訊到localStorage
+                    localStorage.setItem('currentUser', JSON.stringify(user));
+                    localStorage.setItem('isLoggedIn', 'true');
+
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1500);
+                } else {
+                    // 登入失敗
+                    loginBtn.innerHTML = originalText;
+                    loginBtn.disabled = false;
+
+                    showToast('帳號或密碼錯誤，請重新輸入', 'error');
+
+                    // 添加錯誤樣式
+                    document.querySelector('#email').style.borderColor = '#dc3545';
+                    document.querySelector('#password').style.borderColor = '#dc3545';
+                }
+            }, 2000);
+        }
+
+        // 處理輸入框焦點
+        function handleInputFocus(event) {
+            event.target.style.borderColor = '#2563eb';
+        }
+
+        // 處理輸入框失焦
+        function handleInputBlur(event) {
+            validateInput(event.target);
+        }
+
+        // 處理輸入變化
+        function handleInputChange(event) {
+            validateInput(event.target);
+        }
+
+        // 驗證輸入
+        function validateInput(input) {
+            const value = input.value.trim();
+            const inputType = input.type;
+
+            if (inputType === 'email') {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (value && !emailRegex.test(value)) {
+                    input.style.borderColor = '#dc3545';
+                    return false;
+                } else if (value) {
+                    input.style.borderColor = '#059669';
+                    return true;
+                }
+            } else if (inputType === 'password') {
+                if (value && value.length < 6) {
+                    input.style.borderColor = '#dc3545';
+                    return false;
+                } else if (value) {
+                    input.style.borderColor = '#059669';
+                    return true;
+                }
+            }
+
+            input.style.borderColor = '#e9ecef';
+            return true;
+        }
+
+        // 設置表單驗證
+        function setupFormValidation() {
+            const form = document.querySelector('#loginForm');
+            const inputs = form.querySelectorAll('.form-control');
+
+            inputs.forEach(input => {
+                input.addEventListener('input', function () {
+                    checkFormValidity();
+                });
+            });
+        }
+
+        // 檢查表單有效性
+        function checkFormValidity() {
+            const email = document.querySelector('#email').value.trim();
+            const password = document.querySelector('#password').value.trim();
+            const loginBtn = document.querySelector('.btn-login');
+
+            if (email && password && password.length >= 6) {
+                loginBtn.disabled = false;
+                loginBtn.style.opacity = '1';
+            } else {
+                loginBtn.disabled = true;
+                loginBtn.style.opacity = '0.6';
+            }
+        }
+
+        // 添加Demo按鈕
+        function addDemoButton() {
+            const demoBtn = document.createElement('button');
+            demoBtn.type = 'button';
+            demoBtn.className = 'btn btn-outline-secondary btn-sm mt-2';
+            demoBtn.innerHTML = '<i class="fas fa-play me-1"></i>使用示範帳號';
+            demoBtn.style.width = '100%';
+
+            demoBtn.addEventListener('click', function () {
+                document.querySelector('#email').value = 'demo@example.com';
+                document.querySelector('#password').value = 'demo123';
+                checkFormValidity();
+                showToast('已填入示範帳號，點擊登入即可體驗', 'info');
+            });
+
+            const loginBtn = document.querySelector('.btn-login');
+            loginBtn.parentNode.insertBefore(demoBtn, loginBtn.nextSibling);
+        }
+
+        // 工具函數：顯示提示訊息
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast-message toast-${type}`;
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'info' ? '#2563eb' : type === 'success' ? '#059669' : '#dc3545'};
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                z-index: 9999;
+                animation: slideIn 0.3s ease;
+                font-size: 14px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            `;
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    if (document.body.contains(toast)) {
+                        document.body.removeChild(toast);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // 添加CSS動畫
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        console.log('登入頁面已載入');
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>物件詳情</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .top-bar {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 18px;
+            padding: 0;
+        }
+
+        .top-title {
+            font-size: 18px;
+            font-weight: bold;
+            flex: 1;
+            text-align: center;
+            margin: 0 20px;
+        }
+
+        .edit-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+        }
+
+        .image-gallery {
+            height: 250px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 60px;
+        }
+
+        .image-counter {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+        }
+
+        .property-status {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status-available {
+            background: #28a745;
+            color: white;
+        }
+
+        .property-header {
+            background: white;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .property-address {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .property-building {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .property-specs {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .spec-item {
+            text-align: center;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 12px 8px;
+        }
+
+        .spec-value {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 2px;
+        }
+
+        .spec-label {
+            font-size: 11px;
+            color: #666;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary-custom {
+            background: #f5576c;
+            color: white;
+        }
+
+        .btn-success-custom {
+            background: #28a745;
+            color: white;
+        }
+
+        .section-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 0 20px 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title i {
+            margin-right: 8px;
+            color: #f5576c;
+        }
+
+        .features-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .feature-tag {
+            background: #f5576c;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+        }
+
+        .owner-info {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 15px;
+        }
+
+        .owner-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .owner-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .owner-icon {
+            width: 20px;
+            color: #f5576c;
+            margin-right: 10px;
+        }
+
+        .map-container {
+            height: 200px;
+            background: #e9ecef;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 16px;
+        }
+
+        .nearby-info {
+            margin-top: 15px;
+        }
+
+        .nearby-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 13px;
+        }
+
+        .nearby-item:last-child {
+            border-bottom: none;
+        }
+
+        .nearby-name {
+            color: #333;
+        }
+
+        .nearby-distance {
+            color: #666;
+            font-size: 11px;
+        }
+
+        .matching-history {
+            margin-bottom: 80px;
+        }
+
+        .history-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 16px;
+        }
+
+        .history-icon.pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .history-icon.cancelled {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .history-content {
+            flex: 1;
+        }
+
+        .history-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 2px;
+        }
+
+        .history-subtitle {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 2px;
+        }
+
+        .history-time {
+            font-size: 11px;
+            color: #999;
+        }
+
+        .history-status {
+            padding: 4px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-cancelled {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e9ecef;
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .nav-item {
+            text-align: center;
+            color: #666;
+            text-decoration: none;
+            padding: 5px;
+        }
+
+        .nav-item.active {
+            color: #f5576c;
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 2px;
+        }
+
+        .nav-item span {
+            font-size: 10px;
+            display: block;
+        }
+
+        /* 相似物件推薦樣式 */
+        .similar-properties {
+            margin-bottom: 20px;
+        }
+
+        .recommendation-badge {
+            background: linear-gradient(135deg, #8b5cf6, #a855f7);
+            color: white;
+            font-size: 10px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            margin-left: 10px;
+            font-weight: 600;
+        }
+
+        .similar-properties-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .similar-property-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            display: flex;
+            gap: 15px;
+        }
+
+        .similar-property-card:hover {
+            background: #e9ecef;
+            border-color: #0ea5e9;
+            transform: translateY(-2px);
+        }
+
+        .similar-property-image {
+            width: 60px;
+            height: 60px;
+            background: #e0f2fe;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .similar-property-image i {
+            font-size: 24px;
+            color: #0ea5e9;
+        }
+
+        .similarity-score {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+        }
+
+        .score-circle {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+            border: 2px solid white;
+        }
+
+        .similar-property-content {
+            flex: 1;
+        }
+
+        .similar-property-address {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .similar-property-building {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .similar-property-specs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+
+        .spec-item {
+            background: #dbeafe;
+            color: #1e40af;
+            font-size: 10px;
+            padding: 3px 6px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        .similarity-reasons {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .reason-tag {
+            background: #f0fdf4;
+            color: #166534;
+            font-size: 10px;
+            padding: 3px 6px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        .view-more-properties {
+            text-align: center;
+        }
+
+        .btn-view-more {
+            background: #f3f4f6;
+            color: #374151;
+            border: 2px dashed #d1d5db;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .btn-view-more:hover {
+            background: #e5e7eb;
+            border-color: #9ca3af;
+            color: #111827;
+        }
+
+        /* 周邊分析樣式 */
+        .area-analysis {
+            margin-bottom: 20px;
+        }
+
+        .analysis-badge {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            font-size: 10px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            margin-left: 10px;
+            font-weight: 600;
+        }
+
+        .analysis-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .analysis-item {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .analysis-item:hover {
+            background: #e9ecef;
+            transform: translateY(-1px);
+        }
+
+        .analysis-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .analysis-header i {
+            font-size: 16px;
+            color: #0ea5e9;
+            margin-right: 8px;
+        }
+
+        .analysis-title {
+            flex: 1;
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .analysis-score {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .analysis-score.high {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .analysis-score.medium {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .analysis-score.low {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .analysis-content {
+            margin-left: 24px;
+        }
+
+        .analysis-bar {
+            width: 100%;
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 3px;
+            margin-bottom: 8px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #059669);
+            border-radius: 3px;
+            transition: width 0.8s ease;
+        }
+
+        .analysis-desc {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .analysis-summary {
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            border: 1px solid #bae6fd;
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .summary-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #0369a1;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .summary-content {
+            font-size: 13px;
+            color: #374151;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 頂部導航 -->
+    <div class="top-bar">
+        <button class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+        </button>
+        <div class="top-title">物件詳情</div>
+        <button class="edit-btn">
+            <i class="fas fa-edit me-1"></i>編輯
+        </button>
+    </div>
+
+    <!-- 圖片展示區 -->
+    <div class="image-gallery">
+        <i class="fas fa-store"></i>
+        <div class="property-status status-available">空置中</div>
+        <div class="image-counter">5 / 8</div>
+    </div>
+
+    <!-- 物件基本資訊 -->
+    <div class="property-header">
+        <div class="property-address">台北市信義區信義路五段7號</div>
+        <div class="property-building">信義商業大樓 1樓</div>
+
+        <div class="property-specs">
+            <div class="spec-item">
+                <div class="spec-value">1樓</div>
+                <div class="spec-label">樓層</div>
+            </div>
+            <div class="spec-item">
+                <div class="spec-value">35坪</div>
+                <div class="spec-label">面積</div>
+            </div>
+            <div class="spec-item">
+                <div class="spec-value">12萬</div>
+                <div class="spec-label">月租金</div>
+            </div>
+            <div class="spec-item">
+                <div class="spec-value">空置</div>
+                <div class="spec-label">現況</div>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="action-btn btn-primary-custom">
+                <i class="fas fa-phone me-2"></i>聯絡屋主
+            </button>
+            <button class="action-btn btn-success-custom">
+                <i class="fas fa-search me-2"></i>為此物件找品牌
+            </button>
+        </div>
+    </div>
+
+    <!-- 物件特色 -->
+    <div class="section-card">
+        <div class="section-title">
+            <i class="fas fa-star"></i>物件特色
+        </div>
+        <div class="features-grid">
+            <span class="feature-tag">一樓店面</span>
+            <span class="feature-tag">角間位置</span>
+            <span class="feature-tag">近捷運站</span>
+            <span class="feature-tag">停車位</span>
+            <span class="feature-tag">人流密集</span>
+            <span class="feature-tag">商業區</span>
+        </div>
+    </div>
+
+    <!-- 屋主資訊 -->
+    <div class="section-card">
+        <div class="section-title">
+            <i class="fas fa-user"></i>屋主資訊
+        </div>
+        <div class="owner-info">
+            <div class="owner-item">
+                <i class="fas fa-user owner-icon"></i>
+                <span>屋主：王先生</span>
+            </div>
+            <div class="owner-item">
+                <i class="fas fa-phone owner-icon"></i>
+                <span>電話：0912-345-678</span>
+            </div>
+            <div class="owner-item">
+                <i class="fas fa-envelope owner-icon"></i>
+                <span>Email：wang@example.com</span>
+            </div>
+            <div class="owner-item">
+                <i class="fas fa-sticky-note owner-icon"></i>
+                <span>備註：希望找穩定的連鎖品牌承租</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 位置資訊 -->
+    <div class="section-card">
+        <div class="section-title">
+            <i class="fas fa-map-marker-alt"></i>位置資訊
+        </div>
+        <div class="map-container">
+            <i class="fas fa-map me-2"></i>地圖載入中...
+        </div>
+        <div class="nearby-info">
+            <div class="nearby-item">
+                <span class="nearby-name">
+                    <i class="fas fa-subway me-2" style="color: #007bff;"></i>市政府捷運站
+                </span>
+                <span class="nearby-distance">步行 3分鐘</span>
+            </div>
+            <div class="nearby-item">
+                <span class="nearby-name">
+                    <i class="fas fa-shopping-cart me-2" style="color: #28a745;"></i>信義威秀
+                </span>
+                <span class="nearby-distance">步行 5分鐘</span>
+            </div>
+            <div class="nearby-item">
+                <span class="nearby-name">
+                    <i class="fas fa-car me-2" style="color: #ffc107;"></i>停車場
+                </span>
+                <span class="nearby-distance">步行 1分鐘</span>
+            </div>
+            <div class="nearby-item">
+                <span class="nearby-name">
+                    <i class="fas fa-utensils me-2" style="color: #dc3545;"></i>美食街
+                </span>
+                <span class="nearby-distance">步行 2分鐘</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 媒合記錄 -->
+    <div class="section-card matching-history">
+        <div class="section-title">
+            <i class="fas fa-history"></i>媒合記錄 (2筆)
+        </div>
+
+        <div class="history-item">
+            <div class="history-icon pending">
+                <i class="fas fa-clock"></i>
+            </div>
+            <div class="history-content">
+                <div class="history-title">麥當勞</div>
+                <div class="history-subtitle">餐飲業 | 匹配度 95%</div>
+                <div class="history-time">建立時間：2024/01/15 14:30</div>
+            </div>
+            <div class="history-status status-pending">洽談中</div>
+        </div>
+
+        <div class="history-item">
+            <div class="history-icon cancelled">
+                <i class="fas fa-times"></i>
+            </div>
+            <div class="history-content">
+                <div class="history-title">肯德基</div>
+                <div class="history-subtitle">餐飲業 | 匹配度 88%</div>
+                <div class="history-time">建立時間：2024/01/10 09:20</div>
+            </div>
+            <div class="history-status status-cancelled">已取消</div>
+        </div>
+    </div>
+
+    <!-- 相似物件推薦 -->
+    <div class="section-card similar-properties">
+        <div class="section-title">
+            <i class="fas fa-lightbulb"></i>相似物件推薦
+            <span class="recommendation-badge">AI推薦</span>
+        </div>
+
+        <div class="similar-properties-grid">
+            <div class="similar-property-card" onclick="viewPropertyDetail(2)">
+                <div class="similar-property-image">
+                    <i class="fas fa-store"></i>
+                    <div class="similarity-score">
+                        <div class="score-circle">94%</div>
+                    </div>
+                </div>
+                <div class="similar-property-content">
+                    <div class="similar-property-address">台北市信義區松仁路28號</div>
+                    <div class="similar-property-building">信義金融大樓 1樓</div>
+                    <div class="similar-property-specs">
+                        <span class="spec-item">45坪</span>
+                        <span class="spec-item">12萬/月</span>
+                        <span class="spec-item">空置中</span>
+                    </div>
+                    <div class="similarity-reasons">
+                        <span class="reason-tag">同區域</span>
+                        <span class="reason-tag">相似面積</span>
+                        <span class="reason-tag">1樓店面</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="similar-property-card" onclick="viewPropertyDetail(3)">
+                <div class="similar-property-image">
+                    <i class="fas fa-store"></i>
+                    <div class="similarity-score">
+                        <div class="score-circle">91%</div>
+                    </div>
+                </div>
+                <div class="similar-property-content">
+                    <div class="similar-property-address">台北市信義區基隆路一段180號</div>
+                    <div class="similar-property-building">世貿商業大樓 1樓</div>
+                    <div class="similar-property-specs">
+                        <span class="spec-item">38坪</span>
+                        <span class="spec-item">10萬/月</span>
+                        <span class="spec-item">空置中</span>
+                    </div>
+                    <div class="similarity-reasons">
+                        <span class="reason-tag">同區域</span>
+                        <span class="reason-tag">角間位置</span>
+                        <span class="reason-tag">近捷運</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="similar-property-card" onclick="viewPropertyDetail(4)">
+                <div class="similar-property-image">
+                    <i class="fas fa-store"></i>
+                    <div class="similarity-score">
+                        <div class="score-circle">88%</div>
+                    </div>
+                </div>
+                <div class="similar-property-content">
+                    <div class="similar-property-address">台北市大安區忠孝東路四段216號</div>
+                    <div class="similar-property-building">忠孝商業大樓 1樓</div>
+                    <div class="similar-property-specs">
+                        <span class="spec-item">42坪</span>
+                        <span class="spec-item">11萬/月</span>
+                        <span class="spec-item">裝潢中</span>
+                    </div>
+                    <div class="similarity-reasons">
+                        <span class="reason-tag">相似租金</span>
+                        <span class="reason-tag">人流密集</span>
+                        <span class="reason-tag">交通便利</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="view-more-properties">
+            <button class="btn-view-more" onclick="viewAllSimilarProperties()">
+                <i class="fas fa-plus me-2"></i>查看更多相似物件
+            </button>
+        </div>
+    </div>
+
+    <!-- 周邊分析 -->
+    <div class="section-card area-analysis">
+        <div class="section-title">
+            <i class="fas fa-chart-area"></i>周邊分析
+            <span class="analysis-badge">數據分析</span>
+        </div>
+
+        <div class="analysis-grid">
+            <!-- 商圈分析 -->
+            <div class="analysis-item">
+                <div class="analysis-header">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span class="analysis-title">商圈活躍度</span>
+                    <span class="analysis-score high">高</span>
+                </div>
+                <div class="analysis-content">
+                    <div class="analysis-bar">
+                        <div class="bar-fill" style="width: 85%"></div>
+                    </div>
+                    <div class="analysis-desc">信義商圈核心地段，商業活動頻繁</div>
+                </div>
+            </div>
+
+            <!-- 人流分析 -->
+            <div class="analysis-item">
+                <div class="analysis-header">
+                    <i class="fas fa-users"></i>
+                    <span class="analysis-title">人流密度</span>
+                    <span class="analysis-score high">高</span>
+                </div>
+                <div class="analysis-content">
+                    <div class="analysis-bar">
+                        <div class="bar-fill" style="width: 92%"></div>
+                    </div>
+                    <div class="analysis-desc">平日約8,000人次/日，假日約12,000人次/日</div>
+                </div>
+            </div>
+
+            <!-- 交通便利性 -->
+            <div class="analysis-item">
+                <div class="analysis-header">
+                    <i class="fas fa-subway"></i>
+                    <span class="analysis-title">交通便利性</span>
+                    <span class="analysis-score high">高</span>
+                </div>
+                <div class="analysis-content">
+                    <div class="analysis-bar">
+                        <div class="bar-fill" style="width: 88%"></div>
+                    </div>
+                    <div class="analysis-desc">3條捷運線交會，多條公車路線</div>
+                </div>
+            </div>
+
+            <!-- 競爭程度 -->
+            <div class="analysis-item">
+                <div class="analysis-header">
+                    <i class="fas fa-chart-line"></i>
+                    <span class="analysis-title">競爭程度</span>
+                    <span class="analysis-score medium">中</span>
+                </div>
+                <div class="analysis-content">
+                    <div class="analysis-bar">
+                        <div class="bar-fill" style="width: 65%"></div>
+                    </div>
+                    <div class="analysis-desc">周邊同類型店面約15家，競爭適中</div>
+                </div>
+            </div>
+
+            <!-- 租金水平 -->
+            <div class="analysis-item">
+                <div class="analysis-header">
+                    <i class="fas fa-dollar-sign"></i>
+                    <span class="analysis-title">租金水平</span>
+                    <span class="analysis-score medium">中上</span>
+                </div>
+                <div class="analysis-content">
+                    <div class="analysis-bar">
+                        <div class="bar-fill" style="width: 75%"></div>
+                    </div>
+                    <div class="analysis-desc">區域平均租金 8-15萬/月，此物件屬合理範圍</div>
+                </div>
+            </div>
+
+            <!-- 發展潛力 -->
+            <div class="analysis-item">
+                <div class="analysis-header">
+                    <i class="fas fa-rocket"></i>
+                    <span class="analysis-title">發展潛力</span>
+                    <span class="analysis-score high">高</span>
+                </div>
+                <div class="analysis-content">
+                    <div class="analysis-bar">
+                        <div class="bar-fill" style="width: 90%"></div>
+                    </div>
+                    <div class="analysis-desc">信義計畫區持續發展，未來增值空間大</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="analysis-summary">
+            <div class="summary-title">
+                <i class="fas fa-lightbulb me-2"></i>AI分析建議
+            </div>
+            <div class="summary-content">
+                此物件位於信義商圈核心地段，具備優秀的地理位置和交通條件。高人流密度和商圈活躍度使其非常適合餐飲、零售等面向消費者的業態。雖然租金水平偏高，但考慮到區域發展潛力和品牌曝光價值，對於知名連鎖品牌而言仍具有良好的投資回報潛力。
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部導航 -->
+    <div class="bottom-nav">
+        <a href="#" class="nav-item">
+            <i class="fas fa-home"></i>
+            <span>首頁</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-store"></i>
+            <span>品牌</span>
+        </a>
+        <a href="#" class="nav-item active">
+            <i class="fas fa-building"></i>
+            <span>物件</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-handshake"></i>
+            <span>案件</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-user"></i>
+            <span>我的</span>
+        </a>
+    </div>
+
+    <script>
+        /**
+         * 查看物件詳情
+         */
+        function viewPropertyDetail(propertyId) {
+            console.log('查看物件詳情:', propertyId);
+
+            // 顯示載入提示
+            showToast(`正在載入物件 ${propertyId} 的詳細資訊...`, 'info');
+
+            // 模擬跳轉
+            setTimeout(() => {
+                window.location.href = `property-detail.html?id=${propertyId}`;
+            }, 800);
+        }
+
+        /**
+         * 查看所有相似物件
+         */
+        function viewAllSimilarProperties() {
+            showToast('正在載入更多相似物件...', 'info');
+
+            setTimeout(() => {
+                window.location.href = 'properties.html?filter=similar&baseId=1';
+            }, 800);
+        }
+
+        /**
+         * 顯示提示訊息
+         */
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast-message toast-${type}`;
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'info' ? '#0ea5e9' : type === 'success' ? '#059669' : '#ea580c'};
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                z-index: 9999;
+                animation: slideIn 0.3s ease;
+                font-size: 14px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            `;
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    if (document.body.contains(toast)) {
+                        document.body.removeChild(toast);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // 添加CSS動畫
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // 頁面載入完成後的初始化
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log('物件詳情頁面載入完成');
+
+            // 動畫載入分析條
+            setTimeout(() => {
+                document.querySelectorAll('.bar-fill').forEach(bar => {
+                    const width = bar.style.width;
+                    bar.style.width = '0%';
+                    setTimeout(() => {
+                        bar.style.width = width;
+                    }, 100);
+                });
+            }, 500);
+        });
+    </script>
+</body>
+
+</html>

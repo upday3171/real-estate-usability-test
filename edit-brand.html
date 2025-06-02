@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>編輯品牌</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding-bottom: 100px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            border-radius: 10px;
+            padding: 10px 15px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .form-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f8f9fa;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-icon {
+            margin-right: 10px;
+            color: #667eea;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .required {
+            color: #dc3545;
+        }
+
+        .form-control,
+        .form-select {
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 12px 15px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+
+        .brand-logo-upload {
+            border: 2px dashed #e9ecef;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .brand-logo-upload:hover {
+            border-color: #667eea;
+            background: #f8f9fa;
+        }
+
+        .brand-logo-upload.dragover {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .logo-preview {
+            max-width: 150px;
+            max-height: 150px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .checkbox-item:hover {
+            background: #e9ecef;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+
+        .tag-input-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 10px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            min-height: 50px;
+            align-items: center;
+        }
+
+        .tag-item {
+            background: #667eea;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .tag-remove {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .tag-input {
+            border: none;
+            outline: none;
+            flex: 1;
+            min-width: 100px;
+            padding: 5px;
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 25px;
+            padding: 12px 30px;
+            font-weight: 600;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary-custom {
+            background: transparent;
+            border: 2px solid #6c757d;
+            color: #6c757d;
+            border-radius: 25px;
+            padding: 12px 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary-custom:hover {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-danger-custom {
+            background: #dc3545;
+            border: none;
+            border-radius: 25px;
+            padding: 12px 30px;
+            font-weight: 600;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .btn-danger-custom:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+
+        .action-buttons {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 20px;
+            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .budget-range {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .budget-input {
+            flex: 1;
+        }
+
+        .range-separator {
+            color: #666;
+            font-weight: 600;
+        }
+
+        .contact-person {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .contact-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .remove-contact {
+            background: #dc3545;
+            border: none;
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .add-contact-btn {
+            background: #28a745;
+            border: none;
+            color: white;
+            border-radius: 10px;
+            padding: 10px 20px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .add-contact-btn:hover {
+            background: #218838;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="brands.html" class="back-btn">
+                    <i class="fas fa-arrow-left me-2"></i>返回
+                </a>
+                <h1 class="page-title">編輯品牌</h1>
+                <div></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <form id="editBrandForm">
+            <!-- 基本資訊 -->
+            <div class="form-container">
+                <h3 class="section-title">
+                    <i class="fas fa-info-circle section-icon"></i>
+                    基本資訊
+                </h3>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">品牌名稱 <span class="required">*</span></label>
+                            <input type="text" class="form-control" id="brandName" value="星巴克咖啡" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">品牌類型 <span class="required">*</span></label>
+                            <select class="form-select" id="brandType" required>
+                                <option value="">請選擇品牌類型</option>
+                                <option value="餐飲" selected>餐飲</option>
+                                <option value="零售">零售</option>
+                                <option value="服務">服務</option>
+                                <option value="娛樂">娛樂</option>
+                                <option value="教育">教育</option>
+                                <option value="其他">其他</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">品牌描述</label>
+                    <textarea class="form-control" id="brandDescription" rows="3"
+                        placeholder="請描述品牌特色、經營理念等">全球知名咖啡連鎖品牌，提供高品質咖啡和舒適的用餐環境。</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">品牌標誌</label>
+                    <div class="brand-logo-upload" onclick="document.getElementById('logoFile').click()">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiBmaWxsPSIjMDA3MDRBIiByeD0iMTAiLz4KPHN2ZyB4PSIyNSIgeT0iMjUiIHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJ3aGl0ZSI+CjxwYXRoIGQ9Ik0xMiAyQzYuNDggMiAyIDYuNDggMiAxMnM0LjQ4IDEwIDEwIDEwIDEwLTQuNDggMTAtMTBTMTcuNTIgMiAxMiAyem0tMiAxNWwtNS01IDEuNDEtMS40MUwxMCAxNC4xN2w3LjU5LTcuNTlMMTkgOGwtOSA5eiIvPgo8L3N2Zz4KPC9zdmc+"
+                            alt="星巴克標誌" class="logo-preview" id="logoPreview">
+                        <div class="upload-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <p>點擊上傳品牌標誌</p>
+                        <small class="text-muted">支援 JPG, PNG, SVG 格式，建議尺寸 200x200px</small>
+                    </div>
+                    <input type="file" id="logoFile" accept="image/*" style="display: none;">
+                </div>
+            </div>
+
+            <!-- 展店需求 -->
+            <div class="form-container">
+                <h3 class="section-title">
+                    <i class="fas fa-store section-icon"></i>
+                    展店需求
+                </h3>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">需求坪數範圍 <span class="required">*</span></label>
+                            <div class="budget-range">
+                                <input type="number" class="form-control budget-input" id="minArea" placeholder="最小坪數"
+                                    value="30" required>
+                                <span class="range-separator">~</span>
+                                <input type="number" class="form-control budget-input" id="maxArea" placeholder="最大坪數"
+                                    value="50" required>
+                                <span class="ms-2">坪</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">預算範圍 <span class="required">*</span></label>
+                            <div class="budget-range">
+                                <input type="number" class="form-control budget-input" id="minBudget" placeholder="最低預算"
+                                    value="80000" required>
+                                <span class="range-separator">~</span>
+                                <input type="number" class="form-control budget-input" id="maxBudget" placeholder="最高預算"
+                                    value="150000" required>
+                                <span class="ms-2">元/月</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">偏好地區</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="area1" value="台北市" checked>
+                            <label for="area1">台北市</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="area2" value="新北市" checked>
+                            <label for="area2">新北市</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="area3" value="桃園市">
+                            <label for="area3">桃園市</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="area4" value="台中市">
+                            <label for="area4">台中市</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="area5" value="台南市">
+                            <label for="area5">台南市</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="area6" value="高雄市">
+                            <label for="area6">高雄市</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">物件類型偏好</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="type1" value="店面" checked>
+                            <label for="type1">店面</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="type2" value="商場櫃位" checked>
+                            <label for="type2">商場櫃位</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="type3" value="百貨專櫃">
+                            <label for="type3">百貨專櫃</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="type4" value="辦公大樓">
+                            <label for="type4">辦公大樓</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">特殊需求標籤</label>
+                    <div class="tag-input-container" id="tagContainer">
+                        <div class="tag-item">
+                            近捷運站
+                            <button type="button" class="tag-remove" onclick="removeTag(this)">×</button>
+                        </div>
+                        <div class="tag-item">
+                            人流量大
+                            <button type="button" class="tag-remove" onclick="removeTag(this)">×</button>
+                        </div>
+                        <div class="tag-item">
+                            停車方便
+                            <button type="button" class="tag-remove" onclick="removeTag(this)">×</button>
+                        </div>
+                        <input type="text" class="tag-input" id="tagInput" placeholder="輸入標籤後按Enter">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 聯絡資訊 -->
+            <div class="form-container">
+                <h3 class="section-title">
+                    <i class="fas fa-address-book section-icon"></i>
+                    聯絡資訊
+                </h3>
+
+                <div id="contactPersons">
+                    <div class="contact-person">
+                        <div class="contact-header">
+                            <h6>主要聯絡人</h6>
+                            <button type="button" class="remove-contact" onclick="removeContact(this)"
+                                style="display: none;">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">姓名 <span class="required">*</span></label>
+                                    <input type="text" class="form-control" name="contactName" value="王經理" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">職位</label>
+                                    <input type="text" class="form-control" name="contactPosition" value="展店經理">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">電話 <span class="required">*</span></label>
+                                    <input type="tel" class="form-control" name="contactPhone" value="02-1234-5678"
+                                        required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">Email <span class="required">*</span></label>
+                                    <input type="email" class="form-control" name="contactEmail"
+                                        value="wang@starbucks.com" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="button" class="add-contact-btn" onclick="addContact()">
+                    <i class="fas fa-plus me-2"></i>新增聯絡人
+                </button>
+            </div>
+
+            <!-- 其他設定 -->
+            <div class="form-container">
+                <h3 class="section-title">
+                    <i class="fas fa-cog section-icon"></i>
+                    其他設定
+                </h3>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">品牌狀態</label>
+                            <select class="form-select" id="brandStatus">
+                                <option value="active" selected>活躍</option>
+                                <option value="inactive">暫停</option>
+                                <option value="pending">待審核</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">優先級</label>
+                            <select class="form-select" id="priority">
+                                <option value="high" selected>高</option>
+                                <option value="medium">中</option>
+                                <option value="low">低</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">備註</label>
+                    <textarea class="form-control" id="notes" rows="3"
+                        placeholder="其他需要注意的事項">品牌方對於店面位置要求較高，需要在主要商圈或交通便利的地點。</textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- 操作按鈕 -->
+    <div class="action-buttons">
+        <button type="button" class="btn btn-secondary-custom flex-fill" onclick="cancelEdit()">
+            <i class="fas fa-times me-2"></i>取消
+        </button>
+        <button type="button" class="btn btn-danger-custom" onclick="deleteBrand()">
+            <i class="fas fa-trash me-2"></i>刪除
+        </button>
+        <button type="submit" form="editBrandForm" class="btn btn-primary-custom flex-fill">
+            <i class="fas fa-save me-2"></i>儲存變更
+        </button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        /**
+         * 頁面載入完成後初始化
+         */
+        document.addEventListener('DOMContentLoaded', function () {
+            initializePage();
+            setupEventListeners();
+            loadBrandData();
+        });
+
+        /**
+         * 初始化頁面
+         */
+        function initializePage() {
+            // 設置標籤輸入功能
+            setupTagInput();
+
+            // 設置檔案上傳功能
+            setupFileUpload();
+
+            console.log('編輯品牌頁面已載入');
+        }
+
+        /**
+         * 設置事件監聽器
+         */
+        function setupEventListeners() {
+            const form = document.getElementById('editBrandForm');
+            form.addEventListener('submit', handleFormSubmit);
+
+            // 監聽表單變更
+            form.addEventListener('change', markFormAsChanged);
+            form.addEventListener('input', markFormAsChanged);
+        }
+
+        /**
+         * 載入品牌數據
+         */
+        function loadBrandData() {
+            // 從URL參數獲取品牌ID
+            const urlParams = new URLSearchParams(window.location.search);
+            const brandId = urlParams.get('id');
+
+            if (brandId) {
+                // 模擬從API載入品牌數據
+                console.log(`載入品牌數據: ${brandId}`);
+                // 這裡的數據已經在HTML中預填了
+            }
+        }
+
+        /**
+         * 設置標籤輸入功能
+         */
+        function setupTagInput() {
+            const tagInput = document.getElementById('tagInput');
+
+            tagInput.addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    addTag(this.value.trim());
+                    this.value = '';
+                }
+            });
+        }
+
+        /**
+         * 新增標籤
+         */
+        function addTag(tagText) {
+            if (!tagText) return;
+
+            const tagContainer = document.getElementById('tagContainer');
+            const tagInput = document.getElementById('tagInput');
+
+            // 檢查是否已存在
+            const existingTags = Array.from(tagContainer.querySelectorAll('.tag-item'))
+                .map(tag => tag.textContent.replace('×', '').trim());
+
+            if (existingTags.includes(tagText)) {
+                showToast('標籤已存在', 'warning');
+                return;
+            }
+
+            const tagElement = document.createElement('div');
+            tagElement.className = 'tag-item';
+            tagElement.innerHTML = `
+                ${tagText}
+                <button type="button" class="tag-remove" onclick="removeTag(this)">×</button>
+            `;
+
+            tagContainer.insertBefore(tagElement, tagInput);
+        }
+
+        /**
+         * 移除標籤
+         */
+        function removeTag(button) {
+            button.parentElement.remove();
+            markFormAsChanged();
+        }
+
+        /**
+         * 設置檔案上傳功能
+         */
+        function setupFileUpload() {
+            const fileInput = document.getElementById('logoFile');
+            const uploadArea = document.querySelector('.brand-logo-upload');
+
+            fileInput.addEventListener('change', handleFileSelect);
+
+            // 拖拽上傳
+            uploadArea.addEventListener('dragover', function (e) {
+                e.preventDefault();
+                this.classList.add('dragover');
+            });
+
+            uploadArea.addEventListener('dragleave', function (e) {
+                e.preventDefault();
+                this.classList.remove('dragover');
+            });
+
+            uploadArea.addEventListener('drop', function (e) {
+                e.preventDefault();
+                this.classList.remove('dragover');
+
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    handleFileSelect({ target: { files: files } });
+                }
+            });
+        }
+
+        /**
+         * 處理檔案選擇
+         */
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            // 檢查檔案類型
+            if (!file.type.startsWith('image/')) {
+                showToast('請選擇圖片檔案', 'error');
+                return;
+            }
+
+            // 檢查檔案大小 (5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                showToast('檔案大小不能超過5MB', 'error');
+                return;
+            }
+
+            // 預覽圖片
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const preview = document.getElementById('logoPreview');
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+
+            markFormAsChanged();
+        }
+
+        /**
+         * 新增聯絡人
+         */
+        function addContact() {
+            const contactsContainer = document.getElementById('contactPersons');
+            const contactCount = contactsContainer.children.length;
+
+            const contactHtml = `
+                <div class="contact-person">
+                    <div class="contact-header">
+                        <h6>聯絡人 ${contactCount + 1}</h6>
+                        <button type="button" class="remove-contact" onclick="removeContact(this)">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">姓名 <span class="required">*</span></label>
+                                <input type="text" class="form-control" name="contactName" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">職位</label>
+                                <input type="text" class="form-control" name="contactPosition">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">電話 <span class="required">*</span></label>
+                                <input type="tel" class="form-control" name="contactPhone" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Email <span class="required">*</span></label>
+                                <input type="email" class="form-control" name="contactEmail" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            contactsContainer.insertAdjacentHTML('beforeend', contactHtml);
+            markFormAsChanged();
+        }
+
+        /**
+         * 移除聯絡人
+         */
+        function removeContact(button) {
+            if (confirm('確定要移除此聯絡人嗎？')) {
+                button.closest('.contact-person').remove();
+                markFormAsChanged();
+            }
+        }
+
+        /**
+         * 標記表單已變更
+         */
+        function markFormAsChanged() {
+            window.formChanged = true;
+        }
+
+        /**
+         * 處理表單提交
+         */
+        function handleFormSubmit(event) {
+            event.preventDefault();
+
+            if (!validateForm()) {
+                return;
+            }
+
+            const submitBtn = event.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+
+            // 顯示載入狀態
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>儲存中...';
+
+            // 收集表單數據
+            const formData = collectFormData();
+
+            // 模擬保存過程
+            setTimeout(() => {
+                showToast('品牌資訊已成功更新！', 'success');
+                window.formChanged = false;
+
+                setTimeout(() => {
+                    window.location.href = 'brand-detail.html?id=' + (new URLSearchParams(window.location.search).get('id') || '1');
+                }, 1500);
+            }, 2000);
+        }
+
+        /**
+         * 驗證表單
+         */
+        function validateForm() {
+            const requiredFields = document.querySelectorAll('[required]');
+            let isValid = true;
+
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    field.style.borderColor = '#dc3545';
+                    isValid = false;
+                } else {
+                    field.style.borderColor = '#e9ecef';
+                }
+            });
+
+            if (!isValid) {
+                showToast('請填寫所有必填欄位', 'error');
+            }
+
+            return isValid;
+        }
+
+        /**
+         * 收集表單數據
+         */
+        function collectFormData() {
+            const formData = new FormData();
+
+            // 基本資訊
+            formData.append('brandName', document.getElementById('brandName').value);
+            formData.append('brandType', document.getElementById('brandType').value);
+            formData.append('brandDescription', document.getElementById('brandDescription').value);
+
+            // 展店需求
+            formData.append('minArea', document.getElementById('minArea').value);
+            formData.append('maxArea', document.getElementById('maxArea').value);
+            formData.append('minBudget', document.getElementById('minBudget').value);
+            formData.append('maxBudget', document.getElementById('maxBudget').value);
+
+            // 偏好地區
+            const selectedAreas = Array.from(document.querySelectorAll('input[type="checkbox"]:checked'))
+                .map(cb => cb.value);
+            formData.append('preferredAreas', JSON.stringify(selectedAreas));
+
+            // 標籤
+            const tags = Array.from(document.querySelectorAll('.tag-item'))
+                .map(tag => tag.textContent.replace('×', '').trim());
+            formData.append('tags', JSON.stringify(tags));
+
+            // 聯絡人
+            const contacts = Array.from(document.querySelectorAll('.contact-person')).map(contact => ({
+                name: contact.querySelector('[name="contactName"]').value,
+                position: contact.querySelector('[name="contactPosition"]').value,
+                phone: contact.querySelector('[name="contactPhone"]').value,
+                email: contact.querySelector('[name="contactEmail"]').value
+            }));
+            formData.append('contacts', JSON.stringify(contacts));
+
+            // 其他設定
+            formData.append('brandStatus', document.getElementById('brandStatus').value);
+            formData.append('priority', document.getElementById('priority').value);
+            formData.append('notes', document.getElementById('notes').value);
+
+            // 品牌標誌
+            const logoFile = document.getElementById('logoFile').files[0];
+            if (logoFile) {
+                formData.append('logo', logoFile);
+            }
+
+            return formData;
+        }
+
+        /**
+         * 取消編輯
+         */
+        function cancelEdit() {
+            if (window.formChanged) {
+                if (confirm('您有未儲存的變更，確定要離開嗎？')) {
+                    window.location.href = 'brand-detail.html?id=' + (new URLSearchParams(window.location.search).get('id') || '1');
+                }
+            } else {
+                window.location.href = 'brand-detail.html?id=' + (new URLSearchParams(window.location.search).get('id') || '1');
+            }
+        }
+
+        /**
+         * 刪除品牌
+         */
+        function deleteBrand() {
+            if (confirm('確定要刪除此品牌嗎？此操作無法復原。')) {
+                showToast('品牌已刪除', 'success');
+                setTimeout(() => {
+                    window.location.href = 'brands.html';
+                }, 1500);
+            }
+        }
+
+        /**
+         * 顯示提示訊息
+         */
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast-message toast-${type}`;
+            toast.innerHTML = `
+                <i class="fas fa-${getToastIcon(type)} me-2"></i>
+                ${message}
+            `;
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${getToastColor(type)};
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                z-index: 9999;
+                animation: slideIn 0.3s ease;
+                font-size: 14px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                max-width: 300px;
+            `;
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    if (document.body.contains(toast)) {
+                        document.body.removeChild(toast);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        /**
+         * 獲取提示訊息圖標
+         */
+        function getToastIcon(type) {
+            const icons = {
+                success: 'check-circle',
+                error: 'exclamation-circle',
+                info: 'info-circle',
+                warning: 'exclamation-triangle'
+            };
+            return icons[type] || 'info-circle';
+        }
+
+        /**
+         * 獲取提示訊息顏色
+         */
+        function getToastColor(type) {
+            const colors = {
+                success: '#28a745',
+                error: '#dc3545',
+                info: '#007bff',
+                warning: '#ffc107'
+            };
+            return colors[type] || '#007bff';
+        }
+
+        // 添加CSS動畫
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // 監聽頁面離開事件
+        window.addEventListener('beforeunload', function (e) {
+            if (window.formChanged) {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        });
+    </script>
+</body>
+
+</html>

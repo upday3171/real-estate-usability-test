@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>不動產品牌媒合系統 - 完整原型展示</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            overflow-x: auto;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .navigation {
+            background: white;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 80px;
+            z-index: 999;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+
+        .nav-tab {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            color: #666;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .nav-tab.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .nav-tab:hover {
+            background: #e9ecef;
+            transform: translateY(-1px);
+        }
+
+        .nav-tab.active:hover {
+            background: #5a6fd8;
+        }
+
+        .content-container {
+            padding: 20px;
+        }
+
+        .page-section {
+            display: none;
+            margin-bottom: 30px;
+        }
+
+        .page-section.active {
+            display: block;
+        }
+
+        .page-frame {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .page-header {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .page-content {
+            height: 800px;
+            border: none;
+            width: 100%;
+            display: block;
+        }
+
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .overview-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .overview-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .overview-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .overview-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .overview-desc {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .stats-bar {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: bold;
+            color: #667eea;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .nav-tabs {
+                gap: 5px;
+            }
+
+            .nav-tab {
+                padding: 8px 15px;
+                font-size: 12px;
+            }
+
+            .content-container {
+                padding: 10px;
+            }
+
+            .page-content {
+                height: 600px;
+            }
+
+            .overview-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 頁面標題 -->
+    <div class="header">
+        <h1><i class="fas fa-building me-2"></i>不動產品牌媒合系統</h1>
+        <p>展店顧問專用APP - 完整原型展示 | 所有頁面平鋪展示</p>
+    </div>
+
+    <!-- 導航標籤 -->
+    <div class="navigation">
+        <div class="nav-tabs">
+            <div class="nav-tab active" data-section="overview">
+                <i class="fas fa-home me-1"></i>系統概覽
+            </div>
+            <div class="nav-tab" data-section="auth">
+                <i class="fas fa-sign-in-alt me-1"></i>登入註冊
+            </div>
+            <div class="nav-tab" data-section="dashboard">
+                <i class="fas fa-tachometer-alt me-1"></i>儀表板
+            </div>
+            <div class="nav-tab" data-section="brands">
+                <i class="fas fa-store me-1"></i>品牌管理
+            </div>
+            <div class="nav-tab" data-section="properties">
+                <i class="fas fa-building me-1"></i>物件管理
+            </div>
+            <div class="nav-tab" data-section="matching">
+                <i class="fas fa-magic me-1"></i>智能媒合
+            </div>
+            <div class="nav-tab" data-section="cases">
+                <i class="fas fa-briefcase me-1"></i>案件管理
+            </div>
+            <div class="nav-tab" data-section="profile">
+                <i class="fas fa-user me-1"></i>個人中心
+            </div>
+        </div>
+    </div>
+
+    <!-- 內容區域 -->
+    <div class="content-container">
+        <!-- 系統概覽 -->
+        <div class="page-section active" id="overview">
+            <div class="stats-bar">
+                <h3 class="mb-3"><i class="fas fa-chart-bar me-2"></i>系統統計</h3>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-number">16</span>
+                        <div class="stat-label">完整頁面</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">8</span>
+                        <div class="stat-label">主要功能</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">100%</span>
+                        <div class="stat-label">交互完成度</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">2000+</span>
+                        <div class="stat-label">代碼行數</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="overview-grid">
+                <div class="overview-card">
+                    <div class="overview-icon"><i class="fas fa-sign-in-alt"></i></div>
+                    <div class="overview-title">登入註冊系統</div>
+                    <div class="overview-desc">完整的用戶認證流程，包含登入、註冊、忘記密碼等功能</div>
+                </div>
+                <div class="overview-card">
+                    <div class="overview-icon"><i class="fas fa-tachometer-alt"></i></div>
+                    <div class="overview-title">智能儀表板</div>
+                    <div class="overview-desc">實時統計數據、快速操作、活動追蹤等核心功能</div>
+                </div>
+                <div class="overview-card">
+                    <div class="overview-icon"><i class="fas fa-store"></i></div>
+                    <div class="overview-title">品牌管理</div>
+                    <div class="overview-desc">品牌資料管理、搜尋篩選、聯絡功能等</div>
+                </div>
+                <div class="overview-card">
+                    <div class="overview-icon"><i class="fas fa-building"></i></div>
+                    <div class="overview-title">物件管理</div>
+                    <div class="overview-desc">物件資料管理、進階篩選、地圖檢視等</div>
+                </div>
+                <div class="overview-card">
+                    <div class="overview-icon"><i class="fas fa-magic"></i></div>
+                    <div class="overview-title">智能媒合</div>
+                    <div class="overview-desc">AI驅動的品牌物件配對算法</div>
+                </div>
+                <div class="overview-card">
+                    <div class="overview-icon"><i class="fas fa-briefcase"></i></div>
+                    <div class="overview-title">案件管理</div>
+                    <div class="overview-desc">完整的案件生命週期管理</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 登入註冊頁面 -->
+        <div class="page-section" id="auth">
+            <div class="page-frame">
+                <div class="page-header">
+                    <i class="fas fa-sign-in-alt"></i>
+                    <span>登入頁面</span>
+                </div>
+                <iframe src="login.html" class="page-content"></iframe>
+            </div>
+
+            <div class="page-frame">
+                <div class="page-header">
+                    <i class="fas fa-user-plus"></i>
+                    <span>註冊頁面</span>
+                </div>
+                <iframe src="register.html" class="page-content"></iframe>
+            </div>
+        </div>
+
+        <!-- 儀表板頁面 -->
+        <div class="page-section" id="dashboard">
+            <div class="page-frame">
+                <div class="page-header">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>主儀表板</span>
+                </div>
+                <iframe src="dashboard.html" class="page-content"></iframe>
+            </div>
+        </div>
+
+        <!-- 品牌管理頁面 -->
+        <div class="page-section" id="brands">
+            <div class="page-frame">
+                <div class="page-header">
+                    <i class="fas fa-store"></i>
+                    <span>品牌列表</span>
+                </div>
+                <iframe src="brands.html" class="page-content"></iframe>
+            </div>
+
+            <div class="page-frame">
+                <div class="page-header">
+                    <i class="fas fa-plus"></i>
+                    <span>新增品牌</span>
+                </div>
+                <iframe src="add-brand.html" class="page-content"></iframe>
+            </div>
+
+            <div class="page-frame">
+                <div class="page-header">
+                    <i class="fas fa-info-circle"></i>
+                    <span>品牌詳情</span>
+                </div>
+                <iframe src="brand-detail.html" class="page-content"></iframe>
+            </div>
+        </div>
+
+        <!-- 物件管理頁面 -->
+        <div class="page-section" id="properties">
+            <div class="page-frame">
+                <div class="page-header">
+                    <i class="fas fa-building"></i>
+                    <span>物件列表（含進階篩選）</span>
+                </div>
+                <iframe src="properties.html" class="page-content"></iframe>
+            </div>
+
+            <div class="page-frame">
+                <div class="page-header">
+                    <i class="fas fa-plus"></i>
+                    <span>新增物件</span>
+                </div>
+                <iframe src="property-add.html" class="page-content"></iframe>
+            </div>
+
+            <div class="page-frame">
+                <div class="page-header">
+                    <i class="fas fa-info-circle"></i>
+                    <span>物件詳情</span>
+                </div>
+                <iframe src="property-detail.html" class="page-content"></iframe>
+            </div>
+        </div>
+
+        <!-- 智能媒合頁面 -->
+        <div class="page-section" id="matching">
+            <div class="page-frame">
+                <div class="page-header">
+                    <i class="fas fa-magic"></i>
+                    <span>智能媒合</span>
+                </div>
+                <iframe src="matching.html" class="page-content"></iframe>
+            </div>
+
+            <div class="page-frame">
+                <div class="page-header">
+                    <i class="fas fa-list"></i>
+                    <span>媒合結果</span>
+                </div>
+                <iframe src="matching-results.html" class="page-content"></iframe>
+            </div>
+        </div>
+
+        <!-- 案件管理頁面 -->
+        <div class="page-section" id="cases">
+            <div class="page-frame">
+                <div class="page-header">
+                    <i class="fas fa-briefcase"></i>
+                    <span>案件列表</span>
+                </div>
+                <iframe src="cases.html" class="page-content"></iframe>
+            </div>
+
+            <div class="page-frame">
+                <div class="page-header">
+                    <i class="fas fa-info-circle"></i>
+                    <span>案件詳情</span>
+                </div>
+                <iframe src="case-detail.html" class="page-content"></iframe>
+            </div>
+        </div>
+
+        <!-- 個人中心頁面 -->
+        <div class="page-section" id="profile">
+            <div class="page-frame">
+                <div class="page-header">
+                    <i class="fas fa-user"></i>
+                    <span>個人資料</span>
+                </div>
+                <iframe src="profile.html" class="page-content"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 標籤切換功能
+        document.addEventListener('DOMContentLoaded', function () {
+            const navTabs = document.querySelectorAll('.nav-tab');
+            const pageSections = document.querySelectorAll('.page-section');
+
+            navTabs.forEach(tab => {
+                tab.addEventListener('click', function () {
+                    const targetSection = this.getAttribute('data-section');
+
+                    // 移除所有active類別
+                    navTabs.forEach(t => t.classList.remove('active'));
+                    pageSections.forEach(s => s.classList.remove('active'));
+
+                    // 添加active到當前選擇的標籤和對應的頁面
+                    this.classList.add('active');
+                    document.getElementById(targetSection).classList.add('active');
+
+                    // 滾動到頂部
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

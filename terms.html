@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>使用條款</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .top-bar {
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+
+        .page-title {
+            font-size: 18px;
+            font-weight: bold;
+            flex: 1;
+            text-align: center;
+            margin: 0 15px;
+        }
+
+        .print-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .terms-container {
+            padding: 20px;
+            padding-bottom: 80px;
+        }
+
+        .terms-header {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .terms-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .terms-subtitle {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .last-updated {
+            background: #f0f9ff;
+            color: #0369a1;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            display: inline-block;
+        }
+
+        .terms-content {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .terms-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #2563eb;
+        }
+
+        .section-content {
+            color: #666;
+            line-height: 1.7;
+            font-size: 14px;
+        }
+
+        .section-content p {
+            margin-bottom: 12px;
+        }
+
+        .section-content ol,
+        .section-content ul {
+            padding-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .section-content li {
+            margin-bottom: 8px;
+        }
+
+        .highlight-box {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .highlight-box .title {
+            font-weight: bold;
+            color: #92400e;
+            margin-bottom: 8px;
+        }
+
+        .highlight-box .content {
+            color: #92400e;
+            font-size: 13px;
+        }
+
+        .important-notice {
+            background: #fee2e2;
+            border: 1px solid #fecaca;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .important-notice .title {
+            font-weight: bold;
+            color: #991b1b;
+            margin-bottom: 8px;
+        }
+
+        .important-notice .content {
+            color: #991b1b;
+            font-size: 13px;
+        }
+
+        .contact-info {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .contact-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .contact-item i {
+            width: 20px;
+            color: #2563eb;
+            margin-right: 12px;
+        }
+
+        .contact-item a {
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        .toc {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .toc-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .toc-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .toc-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #e9ecef;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .toc-item:last-child {
+            border-bottom: none;
+        }
+
+        .toc-item:hover {
+            color: #2563eb;
+            padding-left: 10px;
+        }
+
+        .toc-item a {
+            color: inherit;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e9ecef;
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .nav-item {
+            text-align: center;
+            color: #666;
+            text-decoration: none;
+            padding: 5px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-item.active {
+            color: #2563eb;
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 2px;
+        }
+
+        .nav-item span {
+            font-size: 10px;
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 頂部導航 -->
+    <div class="top-bar">
+        <a href="dashboard.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <div class="page-title">使用條款</div>
+        <button class="print-btn" onclick="printTerms()">
+            <i class="fas fa-print"></i>
+        </button>
+    </div>
+
+    <!-- 條款容器 -->
+    <div class="terms-container">
+        <!-- 條款標題 -->
+        <div class="terms-header">
+            <div class="terms-title">使用條款與服務協議</div>
+            <div class="terms-subtitle">商業不動產媒合平台</div>
+            <div class="last-updated">
+                <i class="fas fa-calendar-alt me-1"></i>
+                最後更新：2024年2月1日
+            </div>
+        </div>
+
+        <!-- 目錄 -->
+        <div class="terms-content">
+            <div class="toc">
+                <div class="toc-title">
+                    <i class="fas fa-list me-2"></i>目錄
+                </div>
+                <ul class="toc-list">
+                    <li class="toc-item"><a href="#section1">1. 服務條款接受</a></li>
+                    <li class="toc-item"><a href="#section2">2. 服務說明</a></li>
+                    <li class="toc-item"><a href="#section3">3. 用戶註冊與帳戶</a></li>
+                    <li class="toc-item"><a href="#section4">4. 使用規範</a></li>
+                    <li class="toc-item"><a href="#section5">5. 費用與付款</a></li>
+                    <li class="toc-item"><a href="#section6">6. 隱私保護</a></li>
+                    <li class="toc-item"><a href="#section7">7. 智慧財產權</a></li>
+                    <li class="toc-item"><a href="#section8">8. 免責聲明</a></li>
+                    <li class="toc-item"><a href="#section9">9. 服務變更與終止</a></li>
+                    <li class="toc-item"><a href="#section10">10. 爭議解決</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 條款內容 -->
+        <div class="terms-content">
+            <div class="terms-section" id="section1">
+                <div class="section-title">1. 服務條款接受</div>
+                <div class="section-content">
+                    <p>歡迎使用商業不動產媒合平台（以下簡稱「本平台」）。本服務條款（以下簡稱「條款」）構成您與本平台之間具有法律約束力的協議。</p>
+                    <p>使用本平台服務即表示您已閱讀、理解並同意遵守本條款的所有規定。如果您不同意本條款的任何部分，請勿使用本平台服務。</p>
+                    
+                    <div class="important-notice">
+                        <div class="title">重要提醒</div>
+                        <div class="content">本條款可能會不定期更新，請定期查看最新版本。繼續使用服務即表示您接受修訂後的條款。</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="terms-section" id="section2">
+                <div class="section-title">2. 服務說明</div>
+                <div class="section-content">
+                    <p>本平台提供以下主要服務：</p>
+                    <ul>
+                        <li>商業不動產媒合服務</li>
+                        <li>品牌展店諮詢服務</li>
+                        <li>物件出租媒合服務</li>
+                        <li>市場分析與數據服務</li>
+                        <li>專業顧問諮詢服務</li>
+                    </ul>
+                    
+                    <div class="highlight-box">
+                        <div class="title">服務特色</div>
+                        <div class="content">我們運用AI智能分析技術，結合專業顧問團隊，為您提供精準、高效的媒合服務。</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="terms-section" id="section3">
+                <div class="section-title">3. 用戶註冊與帳戶</div>
+                <div class="section-content">
+                    <p>使用本平台服務需要註冊帳戶，您需要：</p>
+                    <ol>
+                        <li>提供真實、準確、完整的註冊資訊</li>
+                        <li>及時更新帳戶資訊以保持準確性</li>
+                        <li>妥善保管帳戶密碼，不得與他人共享</li>
+                        <li>對帳戶下的所有活動承擔責任</li>
+                    </ol>
+                    
+                    <p>我們保留拒絕註冊申請或終止帳戶的權利，特別是在以下情況：</p>
+                    <ul>
+                        <li>提供虛假或不完整資訊</li>
+                        <li>違反本條款或相關法律法規</li>
+                        <li>從事可能損害平台或其他用戶利益的行為</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="terms-section" id="section4">
+                <div class="section-title">4. 使用規範</div>
+                <div class="section-content">
+                    <p>使用本平台時，您同意遵守以下規範：</p>
+                    
+                    <p><strong>允許的使用：</strong></p>
+                    <ul>
+                        <li>合法的商業不動產媒合需求</li>
+                        <li>真實的品牌展店或物件出租資訊</li>
+                        <li>正當的商業洽談與溝通</li>
+                    </ul>
+                    
+                    <p><strong>禁止的行為：</strong></p>
+                    <ul>
+                        <li>發布虛假、誤導性資訊</li>
+                        <li>侵犯他人智慧財產權</li>
+                        <li>進行詐騙、洗錢等非法活動</li>
+                        <li>干擾或破壞平台正常運作</li>
+                        <li>未經授權存取他人帳戶或資料</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="terms-section" id="section5">
+                <div class="section-title">5. 費用與付款</div>
+                <div class="section-content">
+                    <p>本平台採用以下收費模式：</p>
+                    <ul>
+                        <li>基本媒合服務：免費</li>
+                        <li>進階服務：按服務項目收費</li>
+                        <li>成功媒合費：僅在成功簽約後收取</li>
+                    </ul>
+                    
+                    <div class="highlight-box">
+                        <div class="title">付款條件</div>
+                        <div class="content">
+                            所有費用均以新台幣計價，支援信用卡、銀行轉帳等付款方式。
+                            成功媒合費將在簽約完成後30天內收取。
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 聯絡資訊 -->
+        <div class="terms-content">
+            <div class="terms-section">
+                <div class="section-title">
+                    <i class="fas fa-phone me-2"></i>如有疑問，請聯絡我們
+                </div>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <a href="mailto:legal@realestate-matching.com">legal@realestate-matching.com</a>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <a href="tel:02-2345-6789">02-2345-6789</a>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>台北市信義區信義路五段7號35樓</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部導航 -->
+    <div class="bottom-nav">
+        <a href="dashboard.html" class="nav-item">
+            <i class="fas fa-home"></i>
+            <span>首頁</span>
+        </a>
+        <a href="brands.html" class="nav-item">
+            <i class="fas fa-store"></i>
+            <span>品牌</span>
+        </a>
+        <a href="properties.html" class="nav-item">
+            <i class="fas fa-building"></i>
+            <span>物件</span>
+        </a>
+        <a href="cases.html" class="nav-item">
+            <i class="fas fa-handshake"></i>
+            <span>案件</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <i class="fas fa-user"></i>
+            <span>我的</span>
+        </a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        /**
+         * 列印條款
+         */
+        function printTerms() {
+            window.print();
+            showToast('正在準備列印...', 'info');
+        }
+
+        /**
+         * 平滑滾動到指定區塊
+         */
+        document.querySelectorAll('.toc-item a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    
+                    // 高亮顯示目標區塊
+                    targetElement.style.backgroundColor = '#f0f9ff';
+                    setTimeout(() => {
+                        targetElement.style.backgroundColor = '';
+                    }, 2000);
+                }
+            });
+        });
+
+        /**
+         * 工具函數：顯示提示訊息
+         */
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast-message toast-${type}`;
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'info' ? '#2563eb' : type === 'success' ? '#059669' : '#dc3545'};
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                z-index: 9999;
+                animation: slideIn 0.3s ease;
+                font-size: 14px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            `;
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    if (document.body.contains(toast)) {
+                        document.body.removeChild(toast);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // 添加CSS動畫
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // 頁面載入動畫
+        document.addEventListener('DOMContentLoaded', function() {
+            const sections = document.querySelectorAll('.terms-section');
+            sections.forEach((section, index) => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(20px)';
+                section.style.transition = 'all 0.5s ease';
+                
+                setTimeout(() => {
+                    section.style.opacity = '1';
+                    section.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+
+</html>

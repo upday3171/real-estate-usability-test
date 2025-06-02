@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>案件狀態更新</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding-bottom: 100px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            border-radius: 10px;
+            padding: 10px 15px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .case-info-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .case-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f8f9fa;
+        }
+
+        .case-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin: 0;
+        }
+
+        .current-status {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-in-progress {
+            background: #cce5ff;
+            color: #004085;
+        }
+
+        .status-completed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-cancelled {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .case-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .detail-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .detail-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .detail-value {
+            font-size: 16px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .status-flow-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-icon {
+            margin-right: 10px;
+            color: #3498db;
+        }
+
+        .status-flow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .status-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .status-step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 20px;
+            right: -50%;
+            width: 100%;
+            height: 3px;
+            background: #e9ecef;
+            z-index: 1;
+        }
+
+        .status-step.completed:not(:last-child)::after {
+            background: #28a745;
+        }
+
+        .status-step.active:not(:last-child)::after {
+            background: linear-gradient(to right, #28a745 50%, #e9ecef 50%);
+        }
+
+        .status-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #e9ecef;
+            color: #666;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 16px;
+            z-index: 2;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .status-step.completed .status-circle {
+            background: #28a745;
+            color: white;
+        }
+
+        .status-step.active .status-circle {
+            background: #3498db;
+            color: white;
+            animation: pulse 2s infinite;
+        }
+
+        .status-step.selectable:hover .status-circle {
+            background: #3498db;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .status-label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 10px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .status-step.active .status-label {
+            color: #3498db;
+        }
+
+        .status-step.completed .status-label {
+            color: #28a745;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(52, 152, 219, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(52, 152, 219, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(52, 152, 219, 0);
+            }
+        }
+
+        .update-form {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .required {
+            color: #dc3545;
+        }
+
+        .form-control,
+        .form-select {
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 12px 15px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+        }
+
+        .notification-options {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .notification-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .notification-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .notification-item input[type="checkbox"] {
+            margin-right: 12px;
+            transform: scale(1.2);
+        }
+
+        .notification-item label {
+            margin: 0;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            border: none;
+            border-radius: 25px;
+            padding: 12px 30px;
+            font-weight: 600;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.3);
+        }
+
+        .btn-secondary-custom {
+            background: transparent;
+            border: 2px solid #6c757d;
+            color: #6c757d;
+            border-radius: 25px;
+            padding: 12px 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary-custom:hover {
+            background: #6c757d;
+            color: white;
+        }
+
+        .action-buttons {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 20px;
+            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .timeline-item {
+            display: flex;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .timeline-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .timeline-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #667eea;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .timeline-content {
+            flex: 1;
+        }
+
+        .timeline-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .timeline-description {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .timeline-time {
+            color: #999;
+            font-size: 12px;
+        }
+
+        .alert-custom {
+            border-radius: 10px;
+            border: none;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+        }
+
+        .alert-info-custom {
+            background: #e7f3ff;
+            color: #004085;
+        }
+
+        .alert-warning-custom {
+            background: #fff8e1;
+            color: #856404;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="case-detail.html" class="back-btn">
+                    <i class="fas fa-arrow-left me-2"></i>返回
+                </a>
+                <h1 class="page-title">案件狀態更新</h1>
+                <div></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- 案件資訊卡片 -->
+        <div class="case-info-card">
+            <div class="case-header">
+                <h3 class="case-title">星巴克 × 信義區精華店面</h3>
+                <span class="current-status status-in-progress">進行中</span>
+            </div>
+
+            <div class="case-details">
+                <div class="detail-item">
+                    <div class="detail-label">品牌</div>
+                    <div class="detail-value">星巴克咖啡</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">物件</div>
+                    <div class="detail-value">信義區精華店面</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">案件類型</div>
+                    <div class="detail-value">新租約</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">建立日期</div>
+                    <div class="detail-value">2024/01/05</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 狀態流程 -->
+        <div class="status-flow-container">
+            <h3 class="section-title">
+                <i class="fas fa-route section-icon"></i>
+                案件進度流程
+            </h3>
+
+            <div class="status-flow">
+                <div class="status-step completed" data-status="initial" onclick="selectStatus('initial')">
+                    <div class="status-circle">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div class="status-label">初始洽談</div>
+                </div>
+
+                <div class="status-step completed" data-status="negotiation" onclick="selectStatus('negotiation')">
+                    <div class="status-circle">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div class="status-label">條件協商</div>
+                </div>
+
+                <div class="status-step active" data-status="contract" onclick="selectStatus('contract')">
+                    <div class="status-circle">3</div>
+                    <div class="status-label">合約準備</div>
+                </div>
+
+                <div class="status-step selectable" data-status="signing" onclick="selectStatus('signing')">
+                    <div class="status-circle">4</div>
+                    <div class="status-label">簽約階段</div>
+                </div>
+
+                <div class="status-step selectable" data-status="completed" onclick="selectStatus('completed')">
+                    <div class="status-circle">5</div>
+                    <div class="status-label">完成交付</div>
+                </div>
+            </div>
+
+            <div class="alert alert-info-custom">
+                <i class="fas fa-info-circle me-2"></i>
+                <strong>目前狀態：</strong>合約準備階段 - 正在準備租賃合約文件，預計3個工作天完成
+            </div>
+        </div>
+
+        <!-- 狀態更新表單 -->
+        <div class="update-form">
+            <h3 class="section-title">
+                <i class="fas fa-edit section-icon"></i>
+                更新案件狀態
+            </h3>
+
+            <div class="form-group">
+                <label class="form-label">新狀態 <span class="required">*</span></label>
+                <select class="form-select" id="newStatus" required>
+                    <option value="">請選擇新狀態</option>
+                    <option value="initial">初始洽談</option>
+                    <option value="negotiation">條件協商</option>
+                    <option value="contract" selected>合約準備</option>
+                    <option value="signing">簽約階段</option>
+                    <option value="completed">完成交付</option>
+                    <option value="cancelled">取消案件</option>
+                    <option value="on-hold">暫停處理</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">狀態說明 <span class="required">*</span></label>
+                <textarea class="form-control" id="statusDescription" rows="4" placeholder="請詳細說明狀態變更的原因、進展情況或遇到的問題..."
+                    required></textarea>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label">預計完成日期</label>
+                        <input type="date" class="form-control" id="expectedDate">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label">優先級調整</label>
+                        <select class="form-select" id="priorityUpdate">
+                            <option value="">維持原優先級</option>
+                            <option value="high">調整為高優先級</option>
+                            <option value="medium">調整為中優先級</option>
+                            <option value="low">調整為低優先級</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">附加資訊</label>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="form-label">聯絡人</label>
+                        <input type="text" class="form-control" id="contactPerson" placeholder="主要聯絡人">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">聯絡電話</label>
+                        <input type="tel" class="form-control" id="contactPhone" placeholder="聯絡電話">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">內部備註</label>
+                <textarea class="form-control" id="internalNotes" rows="3" placeholder="內部團隊備註，不會發送給客戶..."></textarea>
+            </div>
+
+            <!-- 通知設定 -->
+            <div class="notification-options">
+                <h6><i class="fas fa-bell me-2"></i>通知設定</h6>
+                <div class="notification-item">
+                    <input type="checkbox" id="notifyBrand" checked>
+                    <label for="notifyBrand">通知品牌方聯絡人</label>
+                </div>
+                <div class="notification-item">
+                    <input type="checkbox" id="notifyProperty" checked>
+                    <label for="notifyProperty">通知物業方聯絡人</label>
+                </div>
+                <div class="notification-item">
+                    <input type="checkbox" id="notifyTeam" checked>
+                    <label for="notifyTeam">通知內部團隊成員</label>
+                </div>
+                <div class="notification-item">
+                    <input type="checkbox" id="sendEmail">
+                    <label for="sendEmail">發送郵件通知</label>
+                </div>
+                <div class="notification-item">
+                    <input type="checkbox" id="sendSMS">
+                    <label for="sendSMS">發送簡訊通知</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- 歷史記錄 -->
+        <div class="update-form">
+            <h3 class="section-title">
+                <i class="fas fa-history section-icon"></i>
+                狀態變更歷史
+            </h3>
+
+            <div class="timeline-item">
+                <div class="timeline-icon">
+                    <i class="fas fa-play"></i>
+                </div>
+                <div class="timeline-content">
+                    <div class="timeline-title">案件建立</div>
+                    <div class="timeline-description">建立新案件：星巴克 × 信義區精華店面</div>
+                    <div class="timeline-time">2024/01/05 09:30 - 張展店顧問</div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-icon">
+                    <i class="fas fa-handshake"></i>
+                </div>
+                <div class="timeline-content">
+                    <div class="timeline-title">初始洽談完成</div>
+                    <div class="timeline-description">與品牌方完成初步需求確認，物業方表達合作意願</div>
+                    <div class="timeline-time">2024/01/06 14:20 - 張展店顧問</div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-icon">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <div class="timeline-content">
+                    <div class="timeline-title">條件協商完成</div>
+                    <div class="timeline-description">租金確定為120,000元/月，押金3個月，租期3年</div>
+                    <div class="timeline-time">2024/01/08 16:45 - 張展店顧問</div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-icon">
+                    <i class="fas fa-file-contract"></i>
+                </div>
+                <div class="timeline-content">
+                    <div class="timeline-title">進入合約準備階段</div>
+                    <div class="timeline-description">開始準備租賃合約文件，預計3個工作天完成</div>
+                    <div class="timeline-time">2024/01/10 10:15 - 張展店顧問</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 操作按鈕 -->
+    <div class="action-buttons">
+        <button type="button" class="btn btn-secondary-custom" onclick="cancelUpdate()">
+            <i class="fas fa-times me-2"></i>取消
+        </button>
+        <button type="button" class="btn btn-primary-custom flex-fill" onclick="updateStatus()">
+            <i class="fas fa-save me-2"></i>更新狀態
+        </button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        /**
+         * 頁面載入完成後初始化
+         */
+        document.addEventListener('DOMContentLoaded', function () {
+            initializePage();
+            setupEventListeners();
+        });
+
+        /**
+         * 初始化頁面
+         */
+        function initializePage() {
+            // 設置當前日期為預設值
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('expectedDate').value = today;
+
+            console.log('案件狀態更新頁面已載入');
+        }
+
+        /**
+         * 設置事件監聽器
+         */
+        function setupEventListeners() {
+            // 監聽狀態選擇變更
+            document.getElementById('newStatus').addEventListener('change', function () {
+                updateStatusDescription(this.value);
+                updateExpectedDate(this.value);
+            });
+
+            // 監聽表單變更
+            document.querySelectorAll('input, select, textarea').forEach(element => {
+                element.addEventListener('change', validateForm);
+                element.addEventListener('input', validateForm);
+            });
+        }
+
+        /**
+         * 選擇狀態（從流程圖）
+         */
+        function selectStatus(status) {
+            const statusSelect = document.getElementById('newStatus');
+            statusSelect.value = status;
+
+            // 觸發變更事件
+            statusSelect.dispatchEvent(new Event('change'));
+
+            // 更新視覺狀態
+            updateVisualStatus(status);
+        }
+
+        /**
+         * 更新視覺狀態
+         */
+        function updateVisualStatus(selectedStatus) {
+            const statusSteps = document.querySelectorAll('.status-step');
+            const statusOrder = ['initial', 'negotiation', 'contract', 'signing', 'completed'];
+            const selectedIndex = statusOrder.indexOf(selectedStatus);
+
+            statusSteps.forEach((step, index) => {
+                step.classList.remove('active', 'completed', 'selectable');
+
+                if (index < selectedIndex) {
+                    step.classList.add('completed');
+                    step.querySelector('.status-circle').innerHTML = '<i class="fas fa-check"></i>';
+                } else if (index === selectedIndex) {
+                    step.classList.add('active');
+                    step.querySelector('.status-circle').textContent = index + 1;
+                } else {
+                    step.classList.add('selectable');
+                    step.querySelector('.status-circle').textContent = index + 1;
+                }
+            });
+        }
+
+        /**
+         * 根據狀態更新描述建議
+         */
+        function updateStatusDescription(status) {
+            const descriptions = {
+                'initial': '開始與雙方進行初步洽談，了解需求和條件...',
+                'negotiation': '進行租金、租期、條件等詳細協商...',
+                'contract': '準備租賃合約文件，確認法律條款...',
+                'signing': '安排簽約時間，準備簽約相關文件...',
+                'completed': '完成簽約，交付鑰匙，案件結案...',
+                'cancelled': '說明取消原因和後續處理方式...',
+                'on-hold': '說明暫停原因和預計恢復時間...'
+            };
+
+            const textarea = document.getElementById('statusDescription');
+            if (!textarea.value && descriptions[status]) {
+                textarea.placeholder = descriptions[status];
+            }
+        }
+
+        /**
+         * 根據狀態更新預計完成日期
+         */
+        function updateExpectedDate(status) {
+            const today = new Date();
+            const expectedDays = {
+                'initial': 3,
+                'negotiation': 7,
+                'contract': 5,
+                'signing': 3,
+                'completed': 1
+            };
+
+            if (expectedDays[status]) {
+                const expectedDate = new Date(today);
+                expectedDate.setDate(today.getDate() + expectedDays[status]);
+                document.getElementById('expectedDate').value = expectedDate.toISOString().split('T')[0];
+            }
+        }
+
+        /**
+         * 驗證表單
+         */
+        function validateForm() {
+            const newStatus = document.getElementById('newStatus').value;
+            const statusDescription = document.getElementById('statusDescription').value;
+
+            const isValid = newStatus && statusDescription.trim();
+
+            // 更新按鈕狀態
+            const updateBtn = document.querySelector('.action-buttons .btn-primary-custom');
+            updateBtn.disabled = !isValid;
+
+            return isValid;
+        }
+
+        /**
+         * 更新狀態
+         */
+        function updateStatus() {
+            if (!validateForm()) {
+                showToast('請填寫必填欄位', 'error');
+                return;
+            }
+
+            const updateBtn = document.querySelector('.action-buttons .btn-primary-custom');
+            const originalText = updateBtn.innerHTML;
+
+            // 顯示載入狀態
+            updateBtn.disabled = true;
+            updateBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>更新中...';
+
+            // 收集表單數據
+            const updateData = {
+                newStatus: document.getElementById('newStatus').value,
+                statusDescription: document.getElementById('statusDescription').value,
+                expectedDate: document.getElementById('expectedDate').value,
+                priorityUpdate: document.getElementById('priorityUpdate').value,
+                contactPerson: document.getElementById('contactPerson').value,
+                contactPhone: document.getElementById('contactPhone').value,
+                internalNotes: document.getElementById('internalNotes').value,
+                notifications: {
+                    notifyBrand: document.getElementById('notifyBrand').checked,
+                    notifyProperty: document.getElementById('notifyProperty').checked,
+                    notifyTeam: document.getElementById('notifyTeam').checked,
+                    sendEmail: document.getElementById('sendEmail').checked,
+                    sendSMS: document.getElementById('sendSMS').checked
+                }
+            };
+
+            // 模擬更新過程
+            setTimeout(() => {
+                showToast('案件狀態已成功更新！', 'success');
+
+                // 發送通知
+                if (updateData.notifications.notifyBrand || updateData.notifications.notifyProperty) {
+                    setTimeout(() => {
+                        showToast('相關人員已收到通知', 'info');
+                    }, 1000);
+                }
+
+                setTimeout(() => {
+                    window.location.href = 'case-detail.html?updated=true';
+                }, 2000);
+            }, 2000);
+
+            console.log('更新狀態數據:', updateData);
+        }
+
+        /**
+         * 取消更新
+         */
+        function cancelUpdate() {
+            if (confirm('確定要取消狀態更新嗎？未儲存的變更將會遺失。')) {
+                window.location.href = 'case-detail.html';
+            }
+        }
+
+        /**
+         * 顯示提示訊息
+         */
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast-message toast-${type}`;
+            toast.innerHTML = `
+                <i class="fas fa-${getToastIcon(type)} me-2"></i>
+                ${message}
+            `;
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${getToastColor(type)};
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                z-index: 9999;
+                animation: slideIn 0.3s ease;
+                font-size: 14px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                max-width: 300px;
+            `;
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    if (document.body.contains(toast)) {
+                        document.body.removeChild(toast);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        /**
+         * 獲取提示訊息圖標
+         */
+        function getToastIcon(type) {
+            const icons = {
+                success: 'check-circle',
+                error: 'exclamation-circle',
+                info: 'info-circle',
+                warning: 'exclamation-triangle'
+            };
+            return icons[type] || 'info-circle';
+        }
+
+        /**
+         * 獲取提示訊息顏色
+         */
+        function getToastColor(type) {
+            const colors = {
+                success: '#28a745',
+                error: '#dc3545',
+                info: '#007bff',
+                warning: '#ffc107'
+            };
+            return colors[type] || '#007bff';
+        }
+
+        // 添加CSS動畫
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // 初始驗證
+        validateForm();
+    </script>
+</body>
+
+</html>

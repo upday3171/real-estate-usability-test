@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>品牌詳情</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .top-bar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .top-bar .back-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 18px;
+            padding: 0;
+        }
+
+        .top-bar .title {
+            font-size: 18px;
+            font-weight: bold;
+            flex: 1;
+            text-align: center;
+            margin: 0 20px;
+        }
+
+        .top-bar .edit-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+        }
+
+        .brand-header {
+            background: white;
+            padding: 25px 20px;
+            margin-bottom: 15px;
+        }
+
+        .brand-logo-section {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .brand-logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 35px;
+            margin-right: 20px;
+        }
+
+        .brand-basic-info {
+            flex: 1;
+        }
+
+        .brand-name {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .brand-type {
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+
+        .brand-status {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #28a745;
+            margin-right: 8px;
+        }
+
+        .contact-info {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 15px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .contact-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .contact-icon {
+            width: 20px;
+            color: #667eea;
+            margin-right: 10px;
+        }
+
+        .section-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title i {
+            margin-right: 8px;
+            color: #667eea;
+        }
+
+        .requirement-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .requirement-item {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .requirement-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .requirement-value {
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .target-areas {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .area-tag {
+            background: #667eea;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+        }
+
+        .special-requirements {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary-custom {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary-custom:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+        }
+
+        .btn-success-custom {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success-custom:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+
+        .matching-history {
+            margin-bottom: 80px;
+        }
+
+        .history-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 16px;
+        }
+
+        .history-icon.success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .history-icon.pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .history-icon.cancelled {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .history-content {
+            flex: 1;
+        }
+
+        .history-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 2px;
+        }
+
+        .history-subtitle {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 2px;
+        }
+
+        .history-time {
+            font-size: 11px;
+            color: #999;
+        }
+
+        .history-status {
+            padding: 4px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-cancelled {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e9ecef;
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .nav-item {
+            text-align: center;
+            color: #666;
+            text-decoration: none;
+            padding: 5px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-item.active {
+            color: #667eea;
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 2px;
+        }
+
+        .nav-item span {
+            font-size: 10px;
+            display: block;
+        }
+
+        /* 相似品牌推薦樣式 */
+        .similar-brands {
+            margin-bottom: 20px;
+        }
+
+        .recommendation-badge {
+            background: linear-gradient(135deg, #8b5cf6, #a855f7);
+            color: white;
+            font-size: 10px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            margin-left: 10px;
+            font-weight: 600;
+        }
+
+        .similar-brands-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .similar-brand-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .similar-brand-card:hover {
+            background: #e9ecef;
+            border-color: #2563eb;
+            transform: translateY(-2px);
+        }
+
+        .similar-brand-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .similar-brand-logo {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            border-radius: 8px;
+            margin-right: 12px;
+        }
+
+        .similar-brand-info {
+            flex: 1;
+        }
+
+        .similar-brand-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 2px;
+        }
+
+        .similar-brand-type {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .similarity-score {
+            text-align: center;
+        }
+
+        .score-circle {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .score-label {
+            font-size: 10px;
+            color: #666;
+        }
+
+        .similar-brand-details {
+            margin-top: 12px;
+        }
+
+        .similarity-reasons {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+
+        .reason-tag {
+            background: #dbeafe;
+            color: #1e40af;
+            font-size: 10px;
+            padding: 3px 6px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .brand-quick-info {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .view-more-brands {
+            text-align: center;
+        }
+
+        .btn-view-more {
+            background: #f3f4f6;
+            color: #374151;
+            border: 2px dashed #d1d5db;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .btn-view-more:hover {
+            background: #e5e7eb;
+            border-color: #9ca3af;
+            color: #111827;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 頂部導航 -->
+    <div class="top-bar">
+        <button class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+        </button>
+        <div class="title">品牌詳情</div>
+        <button class="edit-btn">
+            <i class="fas fa-edit me-1"></i>編輯
+        </button>
+    </div>
+
+    <!-- 品牌基本資訊 -->
+    <div class="brand-header">
+        <div class="brand-logo-section">
+            <div class="brand-logo">
+                🍔
+            </div>
+            <div class="brand-basic-info">
+                <div class="brand-name">麥當勞</div>
+                <div class="brand-type">餐飲業</div>
+                <div class="brand-status">
+                    <div class="status-indicator"></div>
+                    <span>積極找點中</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="contact-info">
+            <div class="contact-item">
+                <i class="fas fa-user contact-icon"></i>
+                <span>聯絡人：張經理</span>
+            </div>
+            <div class="contact-item">
+                <i class="fas fa-phone contact-icon"></i>
+                <span>電話：0912-345-678</span>
+            </div>
+            <div class="contact-item">
+                <i class="fas fa-envelope contact-icon"></i>
+                <span>Email：manager@mcdonalds.com</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 快速操作按鈕 -->
+    <div style="padding: 0 20px;">
+        <div class="action-buttons">
+            <button class="action-btn btn-primary-custom">
+                <i class="fas fa-phone me-2"></i>聯絡品牌方
+            </button>
+            <button class="action-btn btn-success-custom">
+                <i class="fas fa-search me-2"></i>為此品牌找物件
+            </button>
+        </div>
+    </div>
+
+    <!-- 展店需求 -->
+    <div style="padding: 0 20px;">
+        <div class="section-card">
+            <div class="section-title">
+                <i class="fas fa-map-marker-alt"></i>展店需求
+            </div>
+
+            <div class="requirement-grid">
+                <div class="requirement-item">
+                    <div class="requirement-label">面積需求</div>
+                    <div class="requirement-value">30-50坪</div>
+                </div>
+                <div class="requirement-item">
+                    <div class="requirement-label">租金預算</div>
+                    <div class="requirement-value">8-15萬/月</div>
+                </div>
+                <div class="requirement-item">
+                    <div class="requirement-label">樓層偏好</div>
+                    <div class="requirement-value">1樓店面</div>
+                </div>
+                <div class="requirement-item">
+                    <div class="requirement-label">建立時間</div>
+                    <div class="requirement-value">2024/01/10</div>
+                </div>
+            </div>
+
+            <div style="margin-top: 15px;">
+                <div class="requirement-label" style="margin-bottom: 8px;">目標區域</div>
+                <div class="target-areas">
+                    <span class="area-tag">台北市</span>
+                    <span class="area-tag">新北市</span>
+                </div>
+            </div>
+
+            <div style="margin-top: 15px;">
+                <div class="requirement-label" style="margin-bottom: 8px;">特殊需求</div>
+                <div class="special-requirements">
+                    希望找到人流密集的商業區，最好是角間位置，有停車位更佳。需要有良好的招牌能見度，適合快餐業經營。
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 媒合記錄 -->
+    <div style="padding: 0 20px;">
+        <div class="section-card matching-history">
+            <div class="section-title">
+                <i class="fas fa-history"></i>媒合記錄 (3筆)
+            </div>
+
+            <div class="history-item">
+                <div class="history-icon pending">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="history-content">
+                    <div class="history-title">信義區店面</div>
+                    <div class="history-subtitle">台北市信義區信義路五段7號</div>
+                    <div class="history-time">建立時間：2024/01/15 14:30</div>
+                </div>
+                <div class="history-status status-pending">洽談中</div>
+            </div>
+
+            <div class="history-item">
+                <div class="history-icon cancelled">
+                    <i class="fas fa-times"></i>
+                </div>
+                <div class="history-content">
+                    <div class="history-title">松山區店面</div>
+                    <div class="history-subtitle">台北市松山區八德路四段123號</div>
+                    <div class="history-time">建立時間：2024/01/12 10:15</div>
+                </div>
+                <div class="history-status status-cancelled">已取消</div>
+            </div>
+
+            <div class="history-item">
+                <div class="history-icon success">
+                    <i class="fas fa-check"></i>
+                </div>
+                <div class="history-content">
+                    <div class="history-title">中山區店面</div>
+                    <div class="history-subtitle">台北市中山區南京東路二段100號</div>
+                    <div class="history-time">建立時間：2024/01/08 16:45</div>
+                </div>
+                <div class="history-status status-success">已成交</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 相似品牌推薦 -->
+    <div style="padding: 0 20px;">
+        <div class="section-card similar-brands">
+            <div class="section-title">
+                <i class="fas fa-lightbulb"></i>相似品牌推薦
+                <span class="recommendation-badge">AI推薦</span>
+            </div>
+
+            <div class="similar-brands-grid">
+                <div class="similar-brand-card" onclick="viewBrandDetail(2)">
+                    <div class="similar-brand-header">
+                        <img src="https://logos-world.net/wp-content/uploads/2020/04/Burger-King-Logo.png" alt="漢堡王"
+                            class="similar-brand-logo">
+                        <div class="similar-brand-info">
+                            <div class="similar-brand-name">漢堡王</div>
+                            <div class="similar-brand-type">餐飲業</div>
+                        </div>
+                        <div class="similarity-score">
+                            <div class="score-circle">92%</div>
+                            <div class="score-label">相似度</div>
+                        </div>
+                    </div>
+                    <div class="similar-brand-details">
+                        <div class="similarity-reasons">
+                            <span class="reason-tag">同業態</span>
+                            <span class="reason-tag">相似預算</span>
+                            <span class="reason-tag">目標區域重疊</span>
+                        </div>
+                        <div class="brand-quick-info">
+                            預算: 10-18萬/月 | 面積: 35-55坪
+                        </div>
+                    </div>
+                </div>
+
+                <div class="similar-brand-card" onclick="viewBrandDetail(3)">
+                    <div class="similar-brand-header">
+                        <img src="https://logos-world.net/wp-content/uploads/2020/04/KFC-Logo.png" alt="肯德基"
+                            class="similar-brand-logo">
+                        <div class="similar-brand-info">
+                            <div class="similar-brand-name">肯德基</div>
+                            <div class="similar-brand-type">餐飲業</div>
+                        </div>
+                        <div class="similarity-score">
+                            <div class="score-circle">88%</div>
+                            <div class="score-label">相似度</div>
+                        </div>
+                    </div>
+                    <div class="similar-brand-details">
+                        <div class="similarity-reasons">
+                            <span class="reason-tag">同業態</span>
+                            <span class="reason-tag">相似規模</span>
+                            <span class="reason-tag">快餐類型</span>
+                        </div>
+                        <div class="brand-quick-info">
+                            預算: 12-20萬/月 | 面積: 40-60坪
+                        </div>
+                    </div>
+                </div>
+
+                <div class="similar-brand-card" onclick="viewBrandDetail(4)">
+                    <div class="similar-brand-header">
+                        <img src="https://logos-world.net/wp-content/uploads/2020/04/Subway-Logo.png" alt="Subway"
+                            class="similar-brand-logo">
+                        <div class="similar-brand-info">
+                            <div class="similar-brand-name">Subway</div>
+                            <div class="similar-brand-type">餐飲業</div>
+                        </div>
+                        <div class="similarity-score">
+                            <div class="score-circle">85%</div>
+                            <div class="score-label">相似度</div>
+                        </div>
+                    </div>
+                    <div class="similar-brand-details">
+                        <div class="similarity-reasons">
+                            <span class="reason-tag">同業態</span>
+                            <span class="reason-tag">快速服務</span>
+                            <span class="reason-tag">連鎖品牌</span>
+                        </div>
+                        <div class="brand-quick-info">
+                            預算: 6-12萬/月 | 面積: 20-35坪
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="view-more-brands">
+                <button class="btn-view-more" onclick="viewAllSimilarBrands()">
+                    <i class="fas fa-plus me-2"></i>查看更多相似品牌
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部導航 -->
+    <div class="bottom-nav">
+        <a href="#" class="nav-item">
+            <i class="fas fa-home"></i>
+            <span>首頁</span>
+        </a>
+        <a href="#" class="nav-item active">
+            <i class="fas fa-store"></i>
+            <span>品牌</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-building"></i>
+            <span>物件</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-handshake"></i>
+            <span>案件</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-user"></i>
+            <span>我的</span>
+        </a>
+    </div>
+
+    <script>
+        /**
+         * 查看品牌詳情
+         */
+        function viewBrandDetail(brandId) {
+            console.log('查看品牌詳情:', brandId);
+
+            // 顯示載入提示
+            showToast(`正在載入品牌 ${brandId} 的詳細資訊...`, 'info');
+
+            // 模擬跳轉
+            setTimeout(() => {
+                // 這裡可以根據brandId跳轉到對應的品牌詳情頁
+                window.location.href = `brand-detail.html?id=${brandId}`;
+            }, 800);
+        }
+
+        /**
+         * 查看所有相似品牌
+         */
+        function viewAllSimilarBrands() {
+            showToast('正在載入更多相似品牌...', 'info');
+
+            setTimeout(() => {
+                window.location.href = 'brands.html?filter=similar&baseId=1';
+            }, 800);
+        }
+
+        /**
+         * 聯絡品牌
+         */
+        function contactBrand() {
+            showToast('正在撥打電話...', 'info');
+
+            // 模擬撥打電話
+            setTimeout(() => {
+                if (confirm('是否要撥打電話給 張經理 (0912-345-678)？')) {
+                    showToast('正在撥號...', 'success');
+                }
+            }, 500);
+        }
+
+        /**
+         * 開始媒合
+         */
+        function startMatching() {
+            showToast('正在啟動智能媒合系統...', 'info');
+
+            setTimeout(() => {
+                window.location.href = 'matching.html?brandId=1';
+            }, 1000);
+        }
+
+        /**
+         * 顯示提示訊息
+         */
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast-message toast-${type}`;
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'info' ? '#2563eb' : type === 'success' ? '#059669' : '#ea580c'};
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                z-index: 9999;
+                animation: slideIn 0.3s ease;
+                font-size: 14px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            `;
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    if (document.body.contains(toast)) {
+                        document.body.removeChild(toast);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // 添加CSS動畫
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // 頁面載入完成後的初始化
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log('品牌詳情頁面載入完成');
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>案件管理</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .top-bar {
+            background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .top-bar .title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .top-bar .search-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .status-tabs {
+            background: white;
+            padding: 15px 20px 0;
+            margin-bottom: 10px;
+        }
+
+        .tab-container {
+            display: flex;
+            overflow-x: auto;
+            gap: 5px;
+            padding-bottom: 15px;
+        }
+
+        .status-tab {
+            background: #f8f9fa;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #666;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .status-tab.active {
+            background: #0891b2;
+            color: white;
+        }
+
+        .tab-badge {
+            background: #dc3545;
+            color: white;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            font-size: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: -5px;
+            right: -5px;
+        }
+
+        .cases-list {
+            padding: 0 20px;
+            padding-bottom: 80px;
+        }
+
+        .case-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .case-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .case-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .case-status {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .status-negotiating {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-scheduled {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .status-completed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-cancelled {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .case-match {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .brand-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+
+        .match-arrow {
+            margin: 0 10px;
+            color: #0891b2;
+            font-size: 16px;
+        }
+
+        .property-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+            margin-left: 10px;
+        }
+
+        .match-info {
+            flex: 1;
+            text-align: center;
+        }
+
+        .match-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 2px;
+        }
+
+        .match-subtitle {
+            font-size: 11px;
+            color: #666;
+        }
+
+        .match-score {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 5px;
+        }
+
+        .case-details {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 15px;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 12px;
+        }
+
+        .detail-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .detail-label {
+            color: #666;
+        }
+
+        .detail-value {
+            color: #333;
+            font-weight: 600;
+        }
+
+        .case-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 8px 10px;
+            border: none;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary-custom {
+            background: #0891b2;
+            color: white;
+        }
+
+        .btn-outline-custom {
+            background: transparent;
+            border: 1px solid #0891b2;
+            color: #0891b2;
+        }
+
+        .btn-success-custom {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-warning-custom {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .urgent-indicator {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 8px;
+            height: 8px;
+            background: #dc3545;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .empty-state i {
+            font-size: 60px;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e9ecef;
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .nav-item {
+            text-align: center;
+            color: #666;
+            text-decoration: none;
+            padding: 5px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-item.active {
+            color: #0891b2;
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 2px;
+        }
+
+        .nav-item span {
+            font-size: 10px;
+            display: block;
+        }
+
+        /* 統計儀表板樣式 */
+        .stats-dashboard {
+            padding: 15px 20px;
+            background: white;
+            margin-bottom: 10px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 15px 10px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+        }
+
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: #2563eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 8px;
+        }
+
+        .stat-icon i {
+            color: white;
+            font-size: 18px;
+        }
+
+        .stat-number {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #666;
+        }
+
+        /* 截止日期提醒樣式 */
+        .deadline-alerts {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            border: 1px solid #f59e0b;
+            border-radius: 12px;
+            margin: 15px 20px;
+            overflow: hidden;
+            animation: slideDown 0.3s ease;
+        }
+
+        .alert-header {
+            background: #f59e0b;
+            color: white;
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .alert-header i {
+            margin-right: 8px;
+        }
+
+        .alert-header span {
+            flex: 1;
+        }
+
+        .alert-close {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            transition: background 0.3s ease;
+        }
+
+        .alert-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .alert-list {
+            padding: 15px;
+        }
+
+        .alert-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .alert-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .alert-item.urgent {
+            border-left-color: #dc2626;
+        }
+
+        .alert-item.warning {
+            border-left-color: #f59e0b;
+        }
+
+        .alert-item.info {
+            border-left-color: #2563eb;
+        }
+
+        .alert-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 14px;
+        }
+
+        .alert-item.urgent .alert-icon {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .alert-item.warning .alert-icon {
+            background: #fef3c7;
+            color: #f59e0b;
+        }
+
+        .alert-item.info .alert-icon {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .alert-content {
+            flex: 1;
+        }
+
+        .alert-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 2px;
+        }
+
+        .alert-desc {
+            font-size: 11px;
+            color: #666;
+        }
+
+        .alert-time {
+            font-size: 11px;
+            font-weight: 600;
+            color: #f59e0b;
+            background: #fef3c7;
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+
+        /* 進度追蹤樣式 */
+        .progress-section {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .progress-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .progress-percentage {
+            font-size: 12px;
+            font-weight: 600;
+            color: #2563eb;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 3px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #2563eb, #1e40af);
+            border-radius: 3px;
+            transition: width 0.8s ease;
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            position: relative;
+        }
+
+        .step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 12px;
+            left: 60%;
+            right: -40%;
+            height: 2px;
+            background: #e5e7eb;
+            z-index: 1;
+        }
+
+        .step.completed:not(:last-child)::after {
+            background: #10b981;
+        }
+
+        .step-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            margin-bottom: 6px;
+            position: relative;
+            z-index: 2;
+            background: #e5e7eb;
+            color: #9ca3af;
+        }
+
+        .step.completed .step-icon {
+            background: #10b981;
+            color: white;
+        }
+
+        .step.active .step-icon {
+            background: #2563eb;
+            color: white;
+            animation: pulse 2s infinite;
+        }
+
+        .step-label {
+            font-size: 9px;
+            color: #666;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .step.completed .step-label {
+            color: #10b981;
+            font-weight: 600;
+        }
+
+        .step.active .step-label {
+            color: #2563eb;
+            font-weight: 600;
+        }
+
+        /* 截止日期樣式 */
+        .deadline-row {
+            border-top: 1px solid #e5e7eb;
+            padding-top: 8px;
+            margin-top: 8px;
+        }
+
+        .urgent-deadline {
+            color: #dc2626 !important;
+            font-weight: 600;
+            animation: blink 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes blink {
+
+            0%,
+            50% {
+                opacity: 1;
+            }
+
+            51%,
+            100% {
+                opacity: 0.5;
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .progress-steps {
+                gap: 5px;
+            }
+
+            .step-label {
+                font-size: 8px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 頂部導航 -->
+    <div class="top-bar">
+        <div class="title">
+            <i class="fas fa-handshake me-2"></i>案件管理
+        </div>
+        <button class="search-btn">
+            <i class="fas fa-search"></i>
+        </button>
+    </div>
+
+    <!-- 狀態標籤 -->
+    <div class="status-tabs">
+        <div class="tab-container">
+            <button class="status-tab active">
+                全部 (8)
+            </button>
+            <button class="status-tab">
+                洽談中 (3)
+                <span class="tab-badge">!</span>
+            </button>
+            <button class="status-tab">
+                已預約 (2)
+            </button>
+            <button class="status-tab">
+                已成交 (2)
+            </button>
+            <button class="status-tab">
+                已取消 (1)
+            </button>
+        </div>
+    </div>
+
+    <!-- 統計儀表板 -->
+    <div class="stats-dashboard">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number">8</div>
+                    <div class="stat-label">總案件</div>
+                </div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">進行中</div>
+                </div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-icon">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number">2</div>
+                    <div class="stat-label">已成交</div>
+                </div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-icon">
+                    <i class="fas fa-percentage"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number">67%</div>
+                    <div class="stat-label">成功率</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 截止日期提醒 -->
+    <div class="deadline-alerts" id="deadlineAlerts">
+        <div class="alert-header">
+            <i class="fas fa-bell"></i>
+            <span>重要提醒</span>
+            <button class="alert-close" onclick="hideDeadlineAlerts()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="alert-list">
+            <div class="alert-item urgent">
+                <div class="alert-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="alert-content">
+                    <div class="alert-title">麥當勞案件需要跟進</div>
+                    <div class="alert-desc">距離預定回覆時間還有 2小時</div>
+                </div>
+                <div class="alert-time">2小時</div>
+            </div>
+            <div class="alert-item warning">
+                <div class="alert-icon">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <div class="alert-content">
+                    <div class="alert-title">星巴克看房預約</div>
+                    <div class="alert-desc">明天上午10:00 松山區店面</div>
+                </div>
+                <div class="alert-time">明天</div>
+            </div>
+            <div class="alert-item info">
+                <div class="alert-icon">
+                    <i class="fas fa-file-contract"></i>
+                </div>
+                <div class="alert-content">
+                    <div class="alert-title">UNIQLO合約到期提醒</div>
+                    <div class="alert-desc">租約將於下週到期，需要續約確認</div>
+                </div>
+                <div class="alert-time">7天</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 案件列表 -->
+    <div class="cases-list">
+        <!-- 案件卡片 1 -->
+        <div class="case-card" style="position: relative;">
+            <div class="urgent-indicator"></div>
+            <div class="case-header">
+                <div class="case-status status-negotiating">洽談中</div>
+            </div>
+            <div class="case-match">
+                <div class="brand-icon">🍔</div>
+                <div class="match-info">
+                    <div class="match-title">麥當勞</div>
+                    <div class="match-subtitle">餐飲業</div>
+                </div>
+                <div class="match-arrow">
+                    <i class="fas fa-exchange-alt"></i>
+                </div>
+                <div class="match-info">
+                    <div class="match-title">信義區店面</div>
+                    <div class="match-subtitle">35坪 | 12萬/月</div>
+                    <div class="match-score">匹配度 95%</div>
+                </div>
+                <div class="property-icon">🏪</div>
+            </div>
+            <!-- 進度追蹤 -->
+            <div class="progress-section">
+                <div class="progress-header">
+                    <span class="progress-title">案件進度</span>
+                    <span class="progress-percentage">75%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 75%"></div>
+                </div>
+                <div class="progress-steps">
+                    <div class="step completed">
+                        <div class="step-icon"><i class="fas fa-check"></i></div>
+                        <div class="step-label">初次接觸</div>
+                    </div>
+                    <div class="step completed">
+                        <div class="step-icon"><i class="fas fa-check"></i></div>
+                        <div class="step-label">需求確認</div>
+                    </div>
+                    <div class="step active">
+                        <div class="step-icon"><i class="fas fa-clock"></i></div>
+                        <div class="step-label">洽談中</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-icon"><i class="fas fa-handshake"></i></div>
+                        <div class="step-label">簽約</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="case-details">
+                <div class="detail-row">
+                    <span class="detail-label">建立時間</span>
+                    <span class="detail-value">2024/01/15 14:30</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">最後更新</span>
+                    <span class="detail-value">今天 16:20</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">負責顧問</span>
+                    <span class="detail-value">張顧問</span>
+                </div>
+                <div class="detail-row deadline-row">
+                    <span class="detail-label">回覆期限</span>
+                    <span class="detail-value urgent-deadline">今天 18:00</span>
+                </div>
+            </div>
+            <div class="case-actions">
+                <button class="action-btn btn-primary-custom">
+                    <i class="fas fa-phone me-1"></i>聯絡
+                </button>
+                <button class="action-btn btn-outline-custom">
+                    <i class="fas fa-edit me-1"></i>更新
+                </button>
+                <button class="action-btn btn-success-custom">
+                    <i class="fas fa-eye me-1"></i>詳情
+                </button>
+            </div>
+        </div>
+
+        <!-- 案件卡片 2 -->
+        <div class="case-card">
+            <div class="case-header">
+                <div class="case-status status-scheduled">已預約</div>
+            </div>
+            <div class="case-match">
+                <div class="brand-icon">☕</div>
+                <div class="match-info">
+                    <div class="match-title">星巴克</div>
+                    <div class="match-subtitle">餐飲業</div>
+                </div>
+                <div class="match-arrow">
+                    <i class="fas fa-exchange-alt"></i>
+                </div>
+                <div class="match-info">
+                    <div class="match-title">松山區店面</div>
+                    <div class="match-subtitle">45坪 | 15萬/月</div>
+                    <div class="match-score">匹配度 87%</div>
+                </div>
+                <div class="property-icon">🏪</div>
+            </div>
+            <div class="case-details">
+                <div class="detail-row">
+                    <span class="detail-label">預約看房</span>
+                    <span class="detail-value">明天 10:00</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">建立時間</span>
+                    <span class="detail-value">2024/01/12 09:15</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">負責顧問</span>
+                    <span class="detail-value">張顧問</span>
+                </div>
+            </div>
+            <div class="case-actions">
+                <button class="action-btn btn-warning-custom">
+                    <i class="fas fa-calendar me-1"></i>提醒
+                </button>
+                <button class="action-btn btn-outline-custom">
+                    <i class="fas fa-edit me-1"></i>更新
+                </button>
+                <button class="action-btn btn-success-custom">
+                    <i class="fas fa-eye me-1"></i>詳情
+                </button>
+            </div>
+        </div>
+
+        <!-- 案件卡片 3 -->
+        <div class="case-card">
+            <div class="case-header">
+                <div class="case-status status-completed">已成交</div>
+            </div>
+            <div class="case-match">
+                <div class="brand-icon">🛍️</div>
+                <div class="match-info">
+                    <div class="match-title">UNIQLO</div>
+                    <div class="match-subtitle">零售業</div>
+                </div>
+                <div class="match-arrow">
+                    <i class="fas fa-exchange-alt"></i>
+                </div>
+                <div class="match-info">
+                    <div class="match-title">中山區店面</div>
+                    <div class="match-subtitle">80坪 | 25萬/月</div>
+                    <div class="match-score">匹配度 92%</div>
+                </div>
+                <div class="property-icon">🏪</div>
+            </div>
+            <div class="case-details">
+                <div class="detail-row">
+                    <span class="detail-label">成交時間</span>
+                    <span class="detail-value">2024/01/10 15:30</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">成交金額</span>
+                    <span class="detail-value">25萬/月</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">佣金收入</span>
+                    <span class="detail-value">50,000元</span>
+                </div>
+            </div>
+            <div class="case-actions">
+                <button class="action-btn btn-success-custom">
+                    <i class="fas fa-trophy me-1"></i>已完成
+                </button>
+                <button class="action-btn btn-outline-custom">
+                    <i class="fas fa-file-alt me-1"></i>合約
+                </button>
+                <button class="action-btn btn-primary-custom">
+                    <i class="fas fa-eye me-1"></i>詳情
+                </button>
+            </div>
+        </div>
+
+        <!-- 案件卡片 4 -->
+        <div class="case-card">
+            <div class="case-header">
+                <div class="case-status status-negotiating">洽談中</div>
+            </div>
+            <div class="case-match">
+                <div class="brand-icon">🍕</div>
+                <div class="match-info">
+                    <div class="match-title">必勝客</div>
+                    <div class="match-subtitle">餐飲業</div>
+                </div>
+                <div class="match-arrow">
+                    <i class="fas fa-exchange-alt"></i>
+                </div>
+                <div class="match-info">
+                    <div class="match-title">板橋區店面</div>
+                    <div class="match-subtitle">40坪 | 10萬/月</div>
+                    <div class="match-score">匹配度 83%</div>
+                </div>
+                <div class="property-icon">🏪</div>
+            </div>
+            <div class="case-details">
+                <div class="detail-row">
+                    <span class="detail-label">建立時間</span>
+                    <span class="detail-value">2024/01/14 11:20</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">最後更新</span>
+                    <span class="detail-value">昨天 14:15</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">負責顧問</span>
+                    <span class="detail-value">張顧問</span>
+                </div>
+            </div>
+            <div class="case-actions">
+                <button class="action-btn btn-primary-custom">
+                    <i class="fas fa-phone me-1"></i>聯絡
+                </button>
+                <button class="action-btn btn-outline-custom">
+                    <i class="fas fa-edit me-1"></i>更新
+                </button>
+                <button class="action-btn btn-success-custom">
+                    <i class="fas fa-eye me-1"></i>詳情
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部導航 -->
+    <div class="bottom-nav">
+        <a href="dashboard.html" class="nav-item">
+            <i class="fas fa-home"></i>
+            <span>首頁</span>
+        </a>
+        <a href="brands.html" class="nav-item">
+            <i class="fas fa-store"></i>
+            <span>品牌</span>
+        </a>
+        <a href="properties.html" class="nav-item">
+            <i class="fas fa-building"></i>
+            <span>物件</span>
+        </a>
+        <a href="cases.html" class="nav-item active">
+            <i class="fas fa-handshake"></i>
+            <span>案件</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <i class="fas fa-user"></i>
+            <span>我的</span>
+        </a>
+    </div>
+
+    <script>
+        /**
+         * 隱藏截止日期提醒
+         */
+        function hideDeadlineAlerts() {
+            const alertsElement = document.getElementById('deadlineAlerts');
+            alertsElement.style.animation = 'slideUp 0.3s ease';
+
+            setTimeout(() => {
+                alertsElement.style.display = 'none';
+            }, 300);
+        }
+
+        /**
+         * 顯示提示訊息
+         */
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast-message toast-${type}`;
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'info' ? '#2563eb' : type === 'success' ? '#059669' : '#ea580c'};
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                z-index: 9999;
+                animation: slideIn 0.3s ease;
+                font-size: 14px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            `;
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    if (document.body.contains(toast)) {
+                        document.body.removeChild(toast);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        /**
+         * 更新案件進度
+         */
+        function updateCaseProgress(caseId, newProgress) {
+            console.log(`更新案件 ${caseId} 進度至 ${newProgress}%`);
+
+            // 找到對應的進度條
+            const progressBar = document.querySelector(`[data-case-id="${caseId}"] .progress-fill`);
+            const progressPercentage = document.querySelector(`[data-case-id="${caseId}"] .progress-percentage`);
+
+            if (progressBar && progressPercentage) {
+                progressBar.style.width = `${newProgress}%`;
+                progressPercentage.textContent = `${newProgress}%`;
+
+                showToast(`案件進度已更新至 ${newProgress}%`, 'success');
+            }
+        }
+
+        /**
+         * 檢查截止日期
+         */
+        function checkDeadlines() {
+            const now = new Date();
+            const urgentDeadlines = [];
+
+            // 模擬檢查邏輯
+            const deadlines = [
+                { case: '麥當勞案件', deadline: new Date(now.getTime() + 2 * 60 * 60 * 1000) }, // 2小時後
+                { case: '星巴克看房', deadline: new Date(now.getTime() + 24 * 60 * 60 * 1000) }, // 明天
+            ];
+
+            deadlines.forEach(item => {
+                const timeDiff = item.deadline - now;
+                const hoursDiff = timeDiff / (1000 * 60 * 60);
+
+                if (hoursDiff <= 24) {
+                    urgentDeadlines.push(item);
+                }
+            });
+
+            if (urgentDeadlines.length > 0) {
+                console.log(`發現 ${urgentDeadlines.length} 個緊急截止日期`);
+            }
+        }
+
+        /**
+         * 初始化進度動畫
+         */
+        function initProgressAnimations() {
+            setTimeout(() => {
+                document.querySelectorAll('.progress-fill').forEach(bar => {
+                    const width = bar.style.width;
+                    bar.style.width = '0%';
+                    setTimeout(() => {
+                        bar.style.width = width;
+                    }, 100);
+                });
+            }, 500);
+        }
+
+        // 添加CSS動畫
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+            @keyframes slideUp {
+                from { transform: translateY(0); opacity: 1; }
+                to { transform: translateY(-20px); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // 頁面載入完成後的初始化
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log('案件管理頁面載入完成');
+
+            // 初始化進度動畫
+            initProgressAnimations();
+
+            // 檢查截止日期
+            checkDeadlines();
+
+            // 每分鐘檢查一次截止日期
+            setInterval(checkDeadlines, 60000);
+        });
+    </script>
+</body>
+
+</html>

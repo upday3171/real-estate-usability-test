@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>媒合結果</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .top-bar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .back-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 18px;
+            padding: 0;
+        }
+        .top-title {
+            font-size: 16px;
+            font-weight: bold;
+            flex: 1;
+            text-align: center;
+            margin: 0 20px;
+        }
+        .filter-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+        .brand-info-bar {
+            background: white;
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .brand-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            margin-right: 15px;
+        }
+        .brand-details h3 {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 2px;
+        }
+        .brand-details p {
+            font-size: 12px;
+            color: #666;
+            margin: 0;
+        }
+        .results-header {
+            padding: 15px 20px;
+            background: white;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .results-count {
+            font-size: 14px;
+            color: #333;
+        }
+        .sort-options {
+            display: flex;
+            gap: 8px;
+        }
+        .sort-btn {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            padding: 6px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            color: #666;
+        }
+        .sort-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        .results-list {
+            padding: 0 20px;
+            padding-bottom: 80px;
+        }
+        .result-card {
+            background: white;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .result-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+        .match-score {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .score-percentage {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .score-label {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        .match-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 4px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+        }
+        .property-content {
+            padding: 20px;
+        }
+        .property-header {
+            margin-bottom: 15px;
+        }
+        .property-address {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .property-building {
+            font-size: 12px;
+            color: #666;
+        }
+        .property-specs {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        .spec-item {
+            text-align: center;
+        }
+        .spec-value {
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+        }
+        .spec-label {
+            font-size: 10px;
+            color: #666;
+        }
+        .match-analysis {
+            margin-bottom: 15px;
+        }
+        .analysis-title {
+            font-size: 12px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        .criteria-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .criteria-item {
+            display: flex;
+            align-items: center;
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 10px;
+        }
+        .criteria-match {
+            background: #d4edda;
+            color: #155724;
+        }
+        .criteria-partial {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .criteria-miss {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .criteria-icon {
+            margin-right: 4px;
+            font-size: 10px;
+        }
+        .property-actions {
+            display: flex;
+            gap: 8px;
+        }
+        .action-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-primary-custom {
+            background: #667eea;
+            color: white;
+        }
+        .btn-outline-custom {
+            background: transparent;
+            border: 1px solid #667eea;
+            color: #667eea;
+        }
+        .btn-success-custom {
+            background: #28a745;
+            color: white;
+        }
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e9ecef;
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+        .nav-item {
+            text-align: center;
+            color: #666;
+            text-decoration: none;
+            padding: 5px;
+        }
+        .nav-item.active {
+            color: #667eea;
+        }
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 2px;
+        }
+        .nav-item span {
+            font-size: 10px;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- 頂部導航 -->
+    <div class="top-bar">
+        <button class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+        </button>
+        <div class="top-title">為「麥當勞」推薦物件</div>
+        <button class="filter-btn">
+            <i class="fas fa-filter"></i>
+        </button>
+    </div>
+
+    <!-- 品牌資訊欄 -->
+    <div class="brand-info-bar">
+        <div class="brand-avatar">🍔</div>
+        <div class="brand-details">
+            <h3>麥當勞</h3>
+            <p>需求：30-50坪 | 8-15萬/月 | 台北市、新北市</p>
+        </div>
+    </div>
+
+    <!-- 結果統計 -->
+    <div class="results-header">
+        <div class="results-count">
+            <i class="fas fa-search me-1"></i>找到 5 個推薦物件
+        </div>
+        <div class="sort-options">
+            <button class="sort-btn active">匹配度</button>
+            <button class="sort-btn">租金</button>
+            <button class="sort-btn">面積</button>
+        </div>
+    </div>
+
+    <!-- 結果列表 -->
+    <div class="results-list">
+        <!-- 結果卡片 1 -->
+        <div class="result-card">
+            <div class="match-score">
+                <div>
+                    <div class="score-percentage">95%</div>
+                    <div class="score-label">匹配度</div>
+                </div>
+                <div class="match-badge">極佳匹配</div>
+            </div>
+            <div class="property-content">
+                <div class="property-header">
+                    <div class="property-address">台北市信義區信義路五段7號</div>
+                    <div class="property-building">信義商業大樓 1樓</div>
+                </div>
+                <div class="property-specs">
+                    <div class="spec-item">
+                        <div class="spec-value">35坪</div>
+                        <div class="spec-label">面積</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-value">12萬</div>
+                        <div class="spec-label">月租</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-value">1樓</div>
+                        <div class="spec-label">樓層</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-value">空置</div>
+                        <div class="spec-label">狀態</div>
+                    </div>
+                </div>
+                <div class="match-analysis">
+                    <div class="analysis-title">匹配分析</div>
+                    <div class="criteria-list">
+                        <div class="criteria-item criteria-match">
+                            <i class="fas fa-check criteria-icon"></i>區域符合
+                        </div>
+                        <div class="criteria-item criteria-match">
+                            <i class="fas fa-check criteria-icon"></i>面積符合
+                        </div>
+                        <div class="criteria-item criteria-match">
+                            <i class="fas fa-check criteria-icon"></i>預算符合
+                        </div>
+                        <div class="criteria-item criteria-match">
+                            <i class="fas fa-check criteria-icon"></i>1樓店面
+                        </div>
+                        <div class="criteria-item criteria-match">
+                            <i class="fas fa-check criteria-icon"></i>角間位置
+                        </div>
+                    </div>
+                </div>
+                <div class="property-actions">
+                    <button class="action-btn btn-primary-custom">
+                        <i class="fas fa-eye me-1"></i>查看詳情
+                    </button>
+                    <button class="action-btn btn-success-custom">
+                        <i class="fas fa-handshake me-1"></i>立即媒合
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 結果卡片 2 -->
+        <div class="result-card">
+            <div class="match-score" style="background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);">
+                <div>
+                    <div class="score-percentage">87%</div>
+                    <div class="score-label">匹配度</div>
+                </div>
+                <div class="match-badge">良好匹配</div>
+            </div>
+            <div class="property-content">
+                <div class="property-header">
+                    <div class="property-address">台北市松山區八德路四段123號</div>
+                    <div class="property-building">八德商業中心 2樓</div>
+                </div>
+                <div class="property-specs">
+                    <div class="spec-item">
+                        <div class="spec-value">45坪</div>
+                        <div class="spec-label">面積</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-value">15萬</div>
+                        <div class="spec-label">月租</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-value">2樓</div>
+                        <div class="spec-label">樓層</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-value">空置</div>
+                        <div class="spec-label">狀態</div>
+                    </div>
+                </div>
+                <div class="match-analysis">
+                    <div class="analysis-title">匹配分析</div>
+                    <div class="criteria-list">
+                        <div class="criteria-item criteria-match">
+                            <i class="fas fa-check criteria-icon"></i>區域符合
+                        </div>
+                        <div class="criteria-item criteria-match">
+                            <i class="fas fa-check criteria-icon"></i>面積符合
+                        </div>
+                        <div class="criteria-item criteria-partial">
+                            <i class="fas fa-exclamation criteria-icon"></i>預算偏高
+                        </div>
+                        <div class="criteria-item criteria-miss">
+                            <i class="fas fa-times criteria-icon"></i>非1樓
+                        </div>
+                        <div class="criteria-item criteria-match">
+                            <i class="fas fa-check criteria-icon"></i>停車位
+                        </div>
+                    </div>
+                </div>
+                <div class="property-actions">
+                    <button class="action-btn btn-primary-custom">
+                        <i class="fas fa-eye me-1"></i>查看詳情
+                    </button>
+                    <button class="action-btn btn-success-custom">
+                        <i class="fas fa-handshake me-1"></i>立即媒合
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 結果卡片 3 -->
+        <div class="result-card">
+            <div class="match-score" style="background: linear-gradient(135deg, #17a2b8 0%, #6f42c1 100%);">
+                <div>
+                    <div class="score-percentage">78%</div>
+                    <div class="score-label">匹配度</div>
+                </div>
+                <div class="match-badge">可考慮</div>
+            </div>
+            <div class="property-content">
+                <div class="property-header">
+                    <div class="property-address">新北市板橋區文化路二段123號</div>
+                    <div class="property-building">文化商業廣場 1樓</div>
+                </div>
+                <div class="property-specs">
+                    <div class="spec-item">
+                        <div class="spec-value">28坪</div>
+                        <div class="spec-label">面積</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-value">8萬</div>
+                        <div class="spec-label">月租</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-value">1樓</div>
+                        <div class="spec-label">樓層</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-value">裝潢中</div>
+                        <div class="spec-label">狀態</div>
+                    </div>
+                </div>
+                <div class="match-analysis">
+                    <div class="analysis-title">匹配分析</div>
+                    <div class="criteria-list">
+                        <div class="criteria-item criteria-match">
+                            <i class="fas fa-check criteria-icon"></i>區域符合
+                        </div>
+                        <div class="criteria-item criteria-partial">
+                            <i class="fas fa-exclamation criteria-icon"></i>面積偏小
+                        </div>
+                        <div class="criteria-item criteria-match">
+                            <i class="fas fa-check criteria-icon"></i>預算符合
+                        </div>
+                        <div class="criteria-item criteria-match">
+                            <i class="fas fa-check criteria-icon"></i>1樓店面
+                        </div>
+                        <div class="criteria-item criteria-match">
+                            <i class="fas fa-check criteria-icon"></i>近捷運
+                        </div>
+                    </div>
+                </div>
+                <div class="property-actions">
+                    <button class="action-btn btn-primary-custom">
+                        <i class="fas fa-eye me-1"></i>查看詳情
+                    </button>
+                    <button class="action-btn btn-success-custom">
+                        <i class="fas fa-handshake me-1"></i>立即媒合
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部導航 -->
+    <div class="bottom-nav">
+        <a href="#" class="nav-item">
+            <i class="fas fa-home"></i>
+            <span>首頁</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-store"></i>
+            <span>品牌</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-building"></i>
+            <span>物件</span>
+        </a>
+        <a href="#" class="nav-item active">
+            <i class="fas fa-handshake"></i>
+            <span>案件</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-user"></i>
+            <span>我的</span>
+        </a>
+    </div>
+</body>
+</html>

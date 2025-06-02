@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>進階搜尋</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .top-bar {
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+
+        .page-title {
+            font-size: 18px;
+            font-weight: bold;
+            flex: 1;
+            text-align: center;
+            margin: 0 15px;
+        }
+
+        .reset-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+        }
+
+        .search-container {
+            padding: 20px;
+            padding-bottom: 100px;
+        }
+
+        .search-section {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title i {
+            margin-right: 10px;
+            color: #2563eb;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .form-control {
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 12px 15px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.25);
+        }
+
+        .form-select {
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 12px 15px;
+            font-size: 14px;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m1 6 7 7 7-7'/%3e%3c/svg%3e");
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .checkbox-item:hover {
+            background: #e9ecef;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            margin-right: 8px;
+            transform: scale(1.2);
+        }
+
+        .checkbox-item label {
+            font-size: 13px;
+            margin: 0;
+            cursor: pointer;
+        }
+
+        .range-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .range-input {
+            flex: 1;
+        }
+
+        .range-separator {
+            color: #666;
+            font-weight: bold;
+        }
+
+        .tag-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .tag-item {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 20px;
+            padding: 8px 15px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tag-item.active {
+            background: #2563eb;
+            border-color: #2563eb;
+            color: white;
+        }
+
+        .tag-item:hover {
+            border-color: #2563eb;
+        }
+
+        .map-section {
+            height: 200px;
+            background: #e9ecef;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            margin-top: 10px;
+        }
+
+        .search-actions {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 20px;
+            border-top: 1px solid #e9ecef;
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn-outline-primary {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #2563eb;
+            color: #2563eb;
+            background: transparent;
+            border-radius: 10px;
+            font-weight: 600;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .btn-primary {
+            flex: 2;
+            padding: 12px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            background: #1e40af;
+        }
+
+        .filter-summary {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .filter-summary h6 {
+            color: #0369a1;
+            margin-bottom: 10px;
+        }
+
+        .filter-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .filter-tag {
+            background: #0369a1;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+        }
+
+        .filter-tag .remove {
+            margin-left: 5px;
+            cursor: pointer;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 80px;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e9ecef;
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .nav-item {
+            text-align: center;
+            color: #666;
+            text-decoration: none;
+            padding: 5px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-item.active {
+            color: #2563eb;
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 2px;
+        }
+
+        .nav-item span {
+            font-size: 10px;
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 頂部導航 -->
+    <div class="top-bar">
+        <a href="search-results.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <div class="page-title">進階搜尋</div>
+        <button class="reset-btn" onclick="resetFilters()">
+            <i class="fas fa-undo me-1"></i>重置
+        </button>
+    </div>
+
+    <!-- 搜尋容器 -->
+    <div class="search-container">
+        <!-- 篩選摘要 -->
+        <div class="filter-summary" id="filterSummary" style="display: none;">
+            <h6><i class="fas fa-filter me-2"></i>已選擇的篩選條件</h6>
+            <div class="filter-tags" id="filterTags"></div>
+        </div>
+
+        <!-- 基本搜尋 -->
+        <div class="search-section">
+            <div class="section-title">
+                <i class="fas fa-search"></i>
+                基本搜尋
+            </div>
+            <div class="form-group">
+                <label class="form-label">關鍵字</label>
+                <input type="text" class="form-control" id="keyword" placeholder="輸入品牌名稱、物件地址或關鍵字...">
+            </div>
+            <div class="form-group">
+                <label class="form-label">搜尋類型</label>
+                <select class="form-select" id="searchType">
+                    <option value="all">全部</option>
+                    <option value="brand">僅品牌</option>
+                    <option value="property">僅物件</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- 地區篩選 -->
+        <div class="search-section">
+            <div class="section-title">
+                <i class="fas fa-map-marker-alt"></i>
+                地區篩選
+            </div>
+            <div class="form-group">
+                <label class="form-label">縣市</label>
+                <select class="form-select" id="city">
+                    <option value="">請選擇縣市</option>
+                    <option value="taipei">台北市</option>
+                    <option value="newtaipei">新北市</option>
+                    <option value="taoyuan">桃園市</option>
+                    <option value="taichung">台中市</option>
+                    <option value="tainan">台南市</option>
+                    <option value="kaohsiung">高雄市</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">行政區</label>
+                <div class="checkbox-group" id="districtGroup">
+                    <!-- 動態生成 -->
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">地圖選擇</label>
+                <div class="map-section">
+                    <i class="fas fa-map me-2"></i>點擊開啟地圖選擇
+                </div>
+            </div>
+        </div>
+
+        <!-- 價格範圍 -->
+        <div class="search-section">
+            <div class="section-title">
+                <i class="fas fa-dollar-sign"></i>
+                價格範圍
+            </div>
+            <div class="form-group">
+                <label class="form-label">月租金 (萬元)</label>
+                <div class="range-group">
+                    <input type="number" class="form-control range-input" id="priceMin" placeholder="最低">
+                    <span class="range-separator">~</span>
+                    <input type="number" class="form-control range-input" id="priceMax" placeholder="最高">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">快速選擇</label>
+                <div class="tag-group">
+                    <div class="tag-item" data-price="0-5">5萬以下</div>
+                    <div class="tag-item" data-price="5-10">5-10萬</div>
+                    <div class="tag-item" data-price="10-20">10-20萬</div>
+                    <div class="tag-item" data-price="20-30">20-30萬</div>
+                    <div class="tag-item" data-price="30-50">30-50萬</div>
+                    <div class="tag-item" data-price="50+">50萬以上</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 搜尋操作 -->
+    <div class="search-actions">
+        <a href="search-filters.html" class="btn-outline-primary">
+            <i class="fas fa-sliders-h me-2"></i>更多篩選
+        </a>
+        <button class="btn-primary" onclick="performSearch()">
+            <i class="fas fa-search me-2"></i>開始搜尋
+        </button>
+    </div>
+
+    <!-- 底部導航 -->
+    <div class="bottom-nav">
+        <a href="dashboard.html" class="nav-item">
+            <i class="fas fa-home"></i>
+            <span>首頁</span>
+        </a>
+        <a href="brands.html" class="nav-item">
+            <i class="fas fa-store"></i>
+            <span>品牌</span>
+        </a>
+        <a href="properties.html" class="nav-item">
+            <i class="fas fa-building"></i>
+            <span>物件</span>
+        </a>
+        <a href="cases.html" class="nav-item">
+            <i class="fas fa-handshake"></i>
+            <span>案件</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <i class="fas fa-user"></i>
+            <span>我的</span>
+        </a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 地區數據
+        const districtData = {
+            taipei: ['中正區', '大同區', '中山區', '松山區', '大安區', '萬華區', '信義區', '士林區', '北投區', '內湖區', '南港區', '文山區'],
+            newtaipei: ['板橋區', '三重區', '中和區', '永和區', '新莊區', '新店區', '樹林區', '鶯歌區', '三峽區', '淡水區'],
+            taoyuan: ['桃園區', '中壢區', '大溪區', '楊梅區', '蘆竹區', '大園區', '龜山區', '八德區', '龍潭區', '平鎮區'],
+            taichung: ['中區', '東區', '南區', '西區', '北區', '北屯區', '西屯區', '南屯區', '太平區', '大里區'],
+            tainan: ['中西區', '東區', '南區', '北區', '安平區', '安南區', '永康區', '歸仁區', '新化區', '左鎮區'],
+            kaohsiung: ['新興區', '前金區', '苓雅區', '鹽埕區', '鼓山區', '旗津區', '前鎮區', '三民區', '楠梓區', '小港區']
+        };
+
+        // 當前篩選條件
+        let currentFilters = {};
+
+        // 頁面載入完成後初始化
+        document.addEventListener('DOMContentLoaded', function () {
+            initializeAdvancedSearch();
+            setupEventListeners();
+        });
+
+        /**
+         * 初始化進階搜尋頁面
+         */
+        function initializeAdvancedSearch() {
+            loadSavedFilters();
+            updateFilterSummary();
+        }
+
+        /**
+         * 設置事件監聽器
+         */
+        function setupEventListeners() {
+            // 縣市選擇變更
+            document.getElementById('city').addEventListener('change', handleCityChange);
+
+            // 價格標籤點擊
+            document.querySelectorAll('.tag-item[data-price]').forEach(tag => {
+                tag.addEventListener('click', handlePriceTagClick);
+            });
+
+            // 表單輸入變更
+            ['keyword', 'searchType', 'priceMin', 'priceMax'].forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('input', updateCurrentFilters);
+                }
+            });
+        }
+
+        /**
+         * 處理縣市選擇變更
+         */
+        function handleCityChange(event) {
+            const city = event.target.value;
+            const districtGroup = document.getElementById('districtGroup');
+            
+            districtGroup.innerHTML = '';
+            
+            if (city && districtData[city]) {
+                districtData[city].forEach(district => {
+                    const checkboxItem = document.createElement('div');
+                    checkboxItem.className = 'checkbox-item';
+                    checkboxItem.innerHTML = `
+                        <input type="checkbox" id="district_${district}" value="${district}">
+                        <label for="district_${district}">${district}</label>
+                    `;
+                    districtGroup.appendChild(checkboxItem);
+                    
+                    // 添加事件監聽器
+                    checkboxItem.querySelector('input').addEventListener('change', updateCurrentFilters);
+                });
+            }
+            
+            updateCurrentFilters();
+        }
+
+        /**
+         * 處理價格標籤點擊
+         */
+        function handlePriceTagClick(event) {
+            // 移除其他標籤的active狀態
+            document.querySelectorAll('.tag-item[data-price]').forEach(tag => {
+                tag.classList.remove('active');
+            });
+            
+            // 添加當前標籤的active狀態
+            event.target.classList.add('active');
+            
+            // 設置價格範圍
+            const priceRange = event.target.dataset.price;
+            const [min, max] = priceRange.split('-');
+            
+            document.getElementById('priceMin').value = min === '50+' ? '50' : min;
+            document.getElementById('priceMax').value = max === '+' ? '' : max;
+            
+            updateCurrentFilters();
+            showToast(`已選擇價格範圍: ${event.target.textContent}`, 'info');
+        }
+
+        /**
+         * 更新當前篩選條件
+         */
+        function updateCurrentFilters() {
+            currentFilters = {
+                keyword: document.getElementById('keyword').value,
+                searchType: document.getElementById('searchType').value,
+                city: document.getElementById('city').value,
+                districts: Array.from(document.querySelectorAll('#districtGroup input:checked')).map(cb => cb.value),
+                priceMin: document.getElementById('priceMin').value,
+                priceMax: document.getElementById('priceMax').value
+            };
+            
+            updateFilterSummary();
+        }
+
+        /**
+         * 更新篩選摘要
+         */
+        function updateFilterSummary() {
+            const summary = document.getElementById('filterSummary');
+            const tagsContainer = document.getElementById('filterTags');
+            
+            tagsContainer.innerHTML = '';
+            let hasFilters = false;
+            
+            // 關鍵字
+            if (currentFilters.keyword) {
+                addFilterTag(`關鍵字: ${currentFilters.keyword}`, 'keyword');
+                hasFilters = true;
+            }
+            
+            // 搜尋類型
+            if (currentFilters.searchType && currentFilters.searchType !== 'all') {
+                const typeText = currentFilters.searchType === 'brand' ? '品牌' : '物件';
+                addFilterTag(`類型: ${typeText}`, 'searchType');
+                hasFilters = true;
+            }
+            
+            // 地區
+            if (currentFilters.city) {
+                const cityText = document.querySelector(`#city option[value="${currentFilters.city}"]`).textContent;
+                addFilterTag(`縣市: ${cityText}`, 'city');
+                hasFilters = true;
+            }
+            
+            if (currentFilters.districts && currentFilters.districts.length > 0) {
+                addFilterTag(`行政區: ${currentFilters.districts.join(', ')}`, 'districts');
+                hasFilters = true;
+            }
+            
+            // 價格
+            if (currentFilters.priceMin || currentFilters.priceMax) {
+                const priceText = `${currentFilters.priceMin || '0'}-${currentFilters.priceMax || '∞'}萬`;
+                addFilterTag(`價格: ${priceText}`, 'price');
+                hasFilters = true;
+            }
+            
+            summary.style.display = hasFilters ? 'block' : 'none';
+        }
+
+        /**
+         * 添加篩選標籤
+         */
+        function addFilterTag(text, type) {
+            const tagsContainer = document.getElementById('filterTags');
+            const tag = document.createElement('div');
+            tag.className = 'filter-tag';
+            tag.innerHTML = `
+                ${text}
+                <span class="remove" onclick="removeFilter('${type}')">
+                    <i class="fas fa-times"></i>
+                </span>
+            `;
+            tagsContainer.appendChild(tag);
+        }
+
+        /**
+         * 移除篩選條件
+         */
+        function removeFilter(type) {
+            switch (type) {
+                case 'keyword':
+                    document.getElementById('keyword').value = '';
+                    break;
+                case 'searchType':
+                    document.getElementById('searchType').value = 'all';
+                    break;
+                case 'city':
+                    document.getElementById('city').value = '';
+                    handleCityChange({ target: { value: '' } });
+                    break;
+                case 'districts':
+                    document.querySelectorAll('#districtGroup input:checked').forEach(cb => {
+                        cb.checked = false;
+                    });
+                    break;
+                case 'price':
+                    document.getElementById('priceMin').value = '';
+                    document.getElementById('priceMax').value = '';
+                    document.querySelectorAll('.tag-item[data-price]').forEach(tag => {
+                        tag.classList.remove('active');
+                    });
+                    break;
+            }
+            
+            updateCurrentFilters();
+            showToast('已移除篩選條件', 'info');
+        }
+
+        /**
+         * 重置所有篩選條件
+         */
+        function resetFilters() {
+            document.getElementById('keyword').value = '';
+            document.getElementById('searchType').value = 'all';
+            document.getElementById('city').value = '';
+            document.getElementById('priceMin').value = '';
+            document.getElementById('priceMax').value = '';
+            
+            document.getElementById('districtGroup').innerHTML = '';
+            document.querySelectorAll('.tag-item[data-price]').forEach(tag => {
+                tag.classList.remove('active');
+            });
+            
+            updateCurrentFilters();
+            showToast('已重置所有篩選條件', 'info');
+        }
+
+        /**
+         * 執行搜尋
+         */
+        function performSearch() {
+            // 保存篩選條件
+            localStorage.setItem('searchFilters', JSON.stringify(currentFilters));
+            
+            showToast('正在搜尋...', 'info');
+            
+            setTimeout(() => {
+                window.location.href = 'search-results.html';
+            }, 1000);
+        }
+
+        /**
+         * 載入已保存的篩選條件
+         */
+        function loadSavedFilters() {
+            const saved = localStorage.getItem('searchFilters');
+            if (saved) {
+                try {
+                    const filters = JSON.parse(saved);
+                    
+                    if (filters.keyword) document.getElementById('keyword').value = filters.keyword;
+                    if (filters.searchType) document.getElementById('searchType').value = filters.searchType;
+                    if (filters.city) {
+                        document.getElementById('city').value = filters.city;
+                        handleCityChange({ target: { value: filters.city } });
+                    }
+                    if (filters.priceMin) document.getElementById('priceMin').value = filters.priceMin;
+                    if (filters.priceMax) document.getElementById('priceMax').value = filters.priceMax;
+                    
+                    // 延遲設置行政區選擇，等待DOM更新
+                    setTimeout(() => {
+                        if (filters.districts) {
+                            filters.districts.forEach(district => {
+                                const checkbox = document.getElementById(`district_${district}`);
+                                if (checkbox) checkbox.checked = true;
+                            });
+                        }
+                        updateCurrentFilters();
+                    }, 100);
+                    
+                } catch (e) {
+                    console.error('載入篩選條件失敗:', e);
+                }
+            }
+        }
+
+        /**
+         * 工具函數：顯示提示訊息
+         */
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast-message toast-${type}`;
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'info' ? '#2563eb' : type === 'success' ? '#059669' : '#dc3545'};
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                z-index: 9999;
+                animation: slideIn 0.3s ease;
+                font-size: 14px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            `;
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    if (document.body.contains(toast)) {
+                        document.body.removeChild(toast);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // 添加CSS動畫
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+
+</html>

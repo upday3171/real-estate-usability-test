@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>通知中心</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #f5f7fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding-bottom: 100px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 20px;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .mark-all-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .mark-all-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .notifications-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+
+        .filter-tab {
+            background: white;
+            border: 2px solid #e9ecef;
+            color: #666;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .filter-tab.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .filter-tab:hover {
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        .filter-tab.active:hover {
+            background: #5a6fd8;
+        }
+
+        .notification-item {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .notification-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        .notification-item.unread {
+            border-left: 4px solid #667eea;
+        }
+
+        .notification-item.unread::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 8px;
+            height: 8px;
+            background: #667eea;
+            border-radius: 50%;
+        }
+
+        .notification-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .notification-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .notification-icon.success {
+            background: #059669;
+        }
+
+        .notification-icon.warning {
+            background: #f59e0b;
+        }
+
+        .notification-icon.info {
+            background: #2563eb;
+        }
+
+        .notification-icon.error {
+            background: #dc2626;
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .notification-message {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        .notification-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: #999;
+        }
+
+        .notification-time {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .notification-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            color: #666;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:hover {
+            background: #e9ecef;
+        }
+
+        .action-btn.primary {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .action-btn.primary:hover {
+            background: #5a6fd8;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .empty-icon {
+            font-size: 60px;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+
+        .empty-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .empty-desc {
+            font-size: 14px;
+            color: #999;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e9ecef;
+            padding: 10px 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-around;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #666;
+            transition: color 0.3s ease;
+        }
+
+        .nav-item.active {
+            color: #667eea;
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .nav-item span {
+            font-size: 10px;
+            display: block;
+        }
+
+        .notification-badge {
+            position: relative;
+        }
+
+        .notification-badge::after {
+            content: '3';
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #dc2626;
+            color: white;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- 頁面標題 -->
+    <div class="header">
+        <div class="container">
+            <div class="header-content">
+                <button class="back-btn" onclick="goBack()">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <h1 class="page-title">通知中心</h1>
+                <button class="mark-all-btn" onclick="markAllAsRead()">
+                    <i class="fas fa-check-double me-1"></i>全部已讀
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="notifications-container">
+        <!-- 篩選標籤 -->
+        <div class="filter-tabs">
+            <div class="filter-tab active" data-filter="all">全部 (8)</div>
+            <div class="filter-tab" data-filter="unread">未讀 (3)</div>
+            <div class="filter-tab" data-filter="success">成功 (2)</div>
+            <div class="filter-tab" data-filter="warning">提醒 (3)</div>
+            <div class="filter-tab" data-filter="info">資訊 (3)</div>
+        </div>
+
+        <!-- 通知列表 -->
+        <div class="notifications-list">
+            <!-- 媒合成功通知 -->
+            <div class="notification-item unread" data-type="success">
+                <div class="notification-header">
+                    <div class="notification-icon success">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <div class="notification-content">
+                        <div class="notification-title">媒合成功！</div>
+                        <div class="notification-message">
+                            恭喜！麥當勞與信義區店面媒合成功，雙方已確認合作意向。請盡快聯繫雙方安排後續事宜。
+                        </div>
+                        <div class="notification-meta">
+                            <div class="notification-time">
+                                <i class="fas fa-clock"></i>
+                                <span>2小時前</span>
+                            </div>
+                            <div class="notification-actions">
+                                <button class="action-btn primary">查看詳情</button>
+                                <button class="action-btn">聯繫雙方</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 新案件通知 -->
+            <div class="notification-item unread" data-type="info">
+                <div class="notification-header">
+                    <div class="notification-icon info">
+                        <i class="fas fa-plus-circle"></i>
+                    </div>
+                    <div class="notification-content">
+                        <div class="notification-title">新案件待處理</div>
+                        <div class="notification-message">
+                            星巴克提交了新的展店需求，目標區域：台北市大安區，預算：20-30萬/月。
+                        </div>
+                        <div class="notification-meta">
+                            <div class="notification-time">
+                                <i class="fas fa-clock"></i>
+                                <span>4小時前</span>
+                            </div>
+                            <div class="notification-actions">
+                                <button class="action-btn primary">立即處理</button>
+                                <button class="action-btn">稍後處理</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 追蹤提醒 -->
+            <div class="notification-item unread" data-type="warning">
+                <div class="notification-header">
+                    <div class="notification-icon warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="notification-content">
+                        <div class="notification-title">案件需要追蹤</div>
+                        <div class="notification-message">
+                            UNIQLO的展店案件已超過3天未更新，建議主動聯繫確認進度。
+                        </div>
+                        <div class="notification-meta">
+                            <div class="notification-time">
+                                <i class="fas fa-clock"></i>
+                                <span>6小時前</span>
+                            </div>
+                            <div class="notification-actions">
+                                <button class="action-btn primary">立即追蹤</button>
+                                <button class="action-btn">延後提醒</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 系統更新通知 -->
+            <div class="notification-item" data-type="info">
+                <div class="notification-header">
+                    <div class="notification-icon info">
+                        <i class="fas fa-download"></i>
+                    </div>
+                    <div class="notification-content">
+                        <div class="notification-title">系統更新可用</div>
+                        <div class="notification-message">
+                            新版本 v1.1.0 已發布，包含性能優化和新功能。建議盡快更新。
+                        </div>
+                        <div class="notification-meta">
+                            <div class="notification-time">
+                                <i class="fas fa-clock"></i>
+                                <span>今天</span>
+                            </div>
+                            <div class="notification-actions">
+                                <button class="action-btn primary">立即更新</button>
+                                <button class="action-btn">稍後提醒</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 物件新增通知 -->
+            <div class="notification-item" data-type="success">
+                <div class="notification-header">
+                    <div class="notification-icon success">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <div class="notification-content">
+                        <div class="notification-title">新物件已新增</div>
+                        <div class="notification-message">
+                            松山區辦公室已成功新增到系統，可開始進行媒合推薦。
+                        </div>
+                        <div class="notification-meta">
+                            <div class="notification-time">
+                                <i class="fas fa-clock"></i>
+                                <span>今天</span>
+                            </div>
+                            <div class="notification-actions">
+                                <button class="action-btn primary">查看物件</button>
+                                <button class="action-btn">開始媒合</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 合約到期提醒 -->
+            <div class="notification-item" data-type="warning">
+                <div class="notification-header">
+                    <div class="notification-icon warning">
+                        <i class="fas fa-calendar-times"></i>
+                    </div>
+                    <div class="notification-content">
+                        <div class="notification-title">合約即將到期</div>
+                        <div class="notification-message">
+                            麥當勞信義店的租約將於30天後到期，請提前安排續約事宜。
+                        </div>
+                        <div class="notification-meta">
+                            <div class="notification-time">
+                                <i class="fas fa-clock"></i>
+                                <span>昨天</span>
+                            </div>
+                            <div class="notification-actions">
+                                <button class="action-btn primary">處理續約</button>
+                                <button class="action-btn">設定提醒</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 數據報告通知 -->
+            <div class="notification-item" data-type="info">
+                <div class="notification-header">
+                    <div class="notification-icon info">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <div class="notification-content">
+                        <div class="notification-title">月度報告已生成</div>
+                        <div class="notification-message">
+                            12月份業績報告已生成，本月成功媒合15件，業績達成率120%。
+                        </div>
+                        <div class="notification-meta">
+                            <div class="notification-time">
+                                <i class="fas fa-clock"></i>
+                                <span>2天前</span>
+                            </div>
+                            <div class="notification-actions">
+                                <button class="action-btn primary">查看報告</button>
+                                <button class="action-btn">分享報告</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 客戶回饋通知 -->
+            <div class="notification-item" data-type="warning">
+                <div class="notification-header">
+                    <div class="notification-icon warning">
+                        <i class="fas fa-comment-dots"></i>
+                    </div>
+                    <div class="notification-content">
+                        <div class="notification-title">客戶回饋待處理</div>
+                        <div class="notification-message">
+                            星巴克對上次推薦的物件有意見回饋，請查看並回應。
+                        </div>
+                        <div class="notification-meta">
+                            <div class="notification-time">
+                                <i class="fas fa-clock"></i>
+                                <span>3天前</span>
+                            </div>
+                            <div class="notification-actions">
+                                <button class="action-btn primary">查看回饋</button>
+                                <button class="action-btn">回應客戶</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部導航 -->
+    <div class="bottom-nav">
+        <div class="nav-container">
+            <a href="dashboard.html" class="nav-item">
+                <i class="fas fa-home"></i>
+                <span>首頁</span>
+            </a>
+            <a href="brands.html" class="nav-item">
+                <i class="fas fa-store"></i>
+                <span>品牌</span>
+            </a>
+            <a href="properties.html" class="nav-item">
+                <i class="fas fa-building"></i>
+                <span>物件</span>
+            </a>
+            <a href="cases.html" class="nav-item">
+                <i class="fas fa-briefcase"></i>
+                <span>案件</span>
+            </a>
+            <a href="profile.html" class="nav-item">
+                <div class="notification-badge">
+                    <i class="fas fa-user"></i>
+                </div>
+                <span>我的</span>
+            </a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="common.js"></script>
+    <script>
+        let currentFilter = 'all';
+
+        // 頁面載入完成後初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
+            updateNotificationCounts();
+        });
+
+        // 設置事件監聽器
+        function setupEventListeners() {
+            // 篩選標籤事件
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.addEventListener('click', handleFilterClick);
+            });
+
+            // 通知項目事件
+            document.querySelectorAll('.notification-item').forEach(item => {
+                item.addEventListener('click', handleNotificationClick);
+            });
+
+            // 操作按鈕事件
+            document.querySelectorAll('.action-btn').forEach(btn => {
+                btn.addEventListener('click', handleActionClick);
+            });
+
+            // 底部導航事件
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const href = this.getAttribute('href');
+                    CommonUtils.navigateTo(href);
+                });
+            });
+        }
+
+        // 處理篩選點擊
+        function handleFilterClick(event) {
+            // 移除所有active類別
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // 添加active到當前點擊的標籤
+            event.target.classList.add('active');
+            currentFilter = event.target.getAttribute('data-filter');
+            
+            filterNotifications();
+        }
+
+        // 篩選通知
+        function filterNotifications() {
+            const notifications = document.querySelectorAll('.notification-item');
+            
+            notifications.forEach(notification => {
+                const type = notification.getAttribute('data-type');
+                const isUnread = notification.classList.contains('unread');
+                
+                let shouldShow = false;
+                
+                switch(currentFilter) {
+                    case 'all':
+                        shouldShow = true;
+                        break;
+                    case 'unread':
+                        shouldShow = isUnread;
+                        break;
+                    case 'success':
+                    case 'warning':
+                    case 'info':
+                    case 'error':
+                        shouldShow = type === currentFilter;
+                        break;
+                }
+                
+                notification.style.display = shouldShow ? 'block' : 'none';
+            });
+            
+            // 檢查是否有顯示的通知
+            const visibleNotifications = Array.from(notifications).filter(n => n.style.display !== 'none');
+            if (visibleNotifications.length === 0) {
+                showEmptyState();
+            } else {
+                hideEmptyState();
+            }
+        }
+
+        // 處理通知點擊
+        function handleNotificationClick(event) {
+            if (event.target.closest('.action-btn')) return;
+            
+            const notification = event.currentTarget;
+            
+            // 標記為已讀
+            notification.classList.remove('unread');
+            
+            // 更新計數
+            updateNotificationCounts();
+            
+            CommonUtils.showToast('通知已標記為已讀', 'success');
+        }
+
+        // 處理操作按鈕點擊
+        function handleActionClick(event) {
+            event.stopPropagation();
+            
+            const btnText = event.target.textContent.trim();
+            const notification = event.target.closest('.notification-item');
+            
+            // 標記為已讀
+            notification.classList.remove('unread');
+            
+            CommonUtils.showToast(`正在執行：${btnText}`, 'info');
+            
+            // 根據按鈕類型執行不同操作
+            switch(btnText) {
+                case '查看詳情':
+                case '查看物件':
+                case '查看報告':
+                case '查看回饋':
+                    CommonUtils.navigateTo('case-detail.html');
+                    break;
+                case '立即處理':
+                case '立即追蹤':
+                case '處理續約':
+                    CommonUtils.navigateTo('cases.html');
+                    break;
+                case '聯繫雙方':
+                case '回應客戶':
+                    CommonUtils.showToast('正在開啟聯繫功能...', 'info');
+                    break;
+                case '開始媒合':
+                    CommonUtils.navigateTo('matching.html');
+                    break;
+                case '立即更新':
+                    CommonUtils.showToast('正在下載更新...', 'info');
+                    break;
+            }
+            
+            updateNotificationCounts();
+        }
+
+        // 返回上一頁
+        function goBack() {
+            CommonUtils.navigateTo('dashboard.html');
+        }
+
+        // 標記全部為已讀
+        function markAllAsRead() {
+            document.querySelectorAll('.notification-item.unread').forEach(notification => {
+                notification.classList.remove('unread');
+            });
+            
+            updateNotificationCounts();
+            CommonUtils.showToast('所有通知已標記為已讀', 'success');
+        }
+
+        // 更新通知計數
+        function updateNotificationCounts() {
+            const allCount = document.querySelectorAll('.notification-item').length;
+            const unreadCount = document.querySelectorAll('.notification-item.unread').length;
+            const successCount = document.querySelectorAll('.notification-item[data-type="success"]').length;
+            const warningCount = document.querySelectorAll('.notification-item[data-type="warning"]').length;
+            const infoCount = document.querySelectorAll('.notification-item[data-type="info"]').length;
+            
+            // 更新標籤計數
+            document.querySelector('[data-filter="all"]').textContent = `全部 (${allCount})`;
+            document.querySelector('[data-filter="unread"]').textContent = `未讀 (${unreadCount})`;
+            document.querySelector('[data-filter="success"]').textContent = `成功 (${successCount})`;
+            document.querySelector('[data-filter="warning"]').textContent = `提醒 (${warningCount})`;
+            document.querySelector('[data-filter="info"]').textContent = `資訊 (${infoCount})`;
+            
+            // 更新底部導航徽章
+            const badge = document.querySelector('.notification-badge::after');
+            if (unreadCount === 0) {
+                document.querySelector('.notification-badge').style.display = 'none';
+            } else {
+                document.querySelector('.notification-badge').style.display = 'block';
+            }
+        }
+
+        // 顯示空狀態
+        function showEmptyState() {
+            const existingEmpty = document.querySelector('.empty-state');
+            if (existingEmpty) return;
+            
+            const emptyState = document.createElement('div');
+            emptyState.className = 'empty-state';
+            emptyState.innerHTML = `
+                <div class="empty-icon">
+                    <i class="fas fa-bell-slash"></i>
+                </div>
+                <div class="empty-title">沒有符合條件的通知</div>
+                <div class="empty-desc">請嘗試切換其他篩選條件</div>
+            `;
+            
+            document.querySelector('.notifications-list').appendChild(emptyState);
+        }
+
+        // 隱藏空狀態
+        function hideEmptyState() {
+            const emptyState = document.querySelector('.empty-state');
+            if (emptyState) {
+                emptyState.remove();
+            }
+        }
+    </script>
+</body>
+</html>

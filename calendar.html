@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>行事曆</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding-bottom: 100px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+
+        .calendar-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #ecf0f1;
+        }
+
+        .calendar-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .calendar-nav {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            background: #ecf0f1;
+            border: none;
+            color: #2c3e50;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: #3498db;
+            color: white;
+        }
+
+        .view-toggle {
+            display: flex;
+            gap: 5px;
+        }
+
+        .view-btn {
+            background: #ecf0f1;
+            border: none;
+            color: #2c3e50;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .view-btn.active {
+            background: #3498db;
+            color: white;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background: #ecf0f1;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .calendar-day-header {
+            background: #2c3e50;
+            color: white;
+            padding: 15px 10px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .calendar-day {
+            background: white;
+            min-height: 120px;
+            padding: 10px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .calendar-day:hover {
+            background: #f8f9fa;
+        }
+
+        .calendar-day.other-month {
+            background: #f8f9fa;
+            color: #bdc3c7;
+        }
+
+        .calendar-day.today {
+            background: #e8f4fd;
+        }
+
+        .calendar-day.selected {
+            background: #3498db;
+            color: white;
+        }
+
+        .day-number {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .day-events {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .event-item {
+            background: #3498db;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            cursor: pointer;
+        }
+
+        .event-item.meeting {
+            background: #e74c3c;
+        }
+
+        .event-item.viewing {
+            background: #27ae60;
+        }
+
+        .event-item.deadline {
+            background: #f39c12;
+        }
+
+        .event-item.follow-up {
+            background: #9b59b6;
+        }
+
+        .events-sidebar {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .sidebar-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .sidebar-icon {
+            margin-right: 10px;
+            color: #3498db;
+        }
+
+        .event-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .event-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #3498db;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .event-card:hover {
+            background: #ecf0f1;
+            transform: translateX(5px);
+        }
+
+        .event-card.meeting {
+            border-left-color: #e74c3c;
+        }
+
+        .event-card.viewing {
+            border-left-color: #27ae60;
+        }
+
+        .event-card.deadline {
+            border-left-color: #f39c12;
+        }
+
+        .event-card.follow-up {
+            border-left-color: #9b59b6;
+        }
+
+        .event-time {
+            font-size: 12px;
+            color: #7f8c8d;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .event-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .event-description {
+            font-size: 13px;
+            color: #7f8c8d;
+            line-height: 1.4;
+        }
+
+        .quick-add {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .quick-add-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        .quick-add-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .quick-add-btn {
+            background: #f8f9fa;
+            border: 2px solid #ecf0f1;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .quick-add-btn:hover {
+            background: #e8f4fd;
+            border-color: #3498db;
+            color: inherit;
+        }
+
+        .quick-add-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            margin: 0 auto 10px;
+        }
+
+        .quick-add-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .legend {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .legend-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .legend-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+            margin-right: 8px;
+        }
+
+        .legend-color.meeting {
+            background: #e74c3c;
+        }
+
+        .legend-color.viewing {
+            background: #27ae60;
+        }
+
+        .legend-color.deadline {
+            background: #f39c12;
+        }
+
+        .legend-color.follow-up {
+            background: #9b59b6;
+        }
+
+        .legend-color.default {
+            background: #3498db;
+        }
+
+        .action-buttons {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 20px;
+            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            border: none;
+            border-radius: 25px;
+            padding: 12px 30px;
+            font-weight: 600;
+            color: white;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.3);
+        }
+
+        .btn-secondary-custom {
+            background: transparent;
+            border: 2px solid #95a5a6;
+            color: #95a5a6;
+            border-radius: 25px;
+            padding: 12px 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary-custom:hover {
+            background: #95a5a6;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .calendar-day {
+                min-height: 80px;
+                padding: 5px;
+            }
+
+            .day-number {
+                font-size: 14px;
+            }
+
+            .event-item {
+                font-size: 10px;
+                padding: 1px 4px;
+            }
+
+            .calendar-nav {
+                gap: 10px;
+            }
+
+            .view-toggle {
+                flex-direction: column;
+                gap: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <div class="d-flex align-items-center justify-content-between">
+                <a href="dashboard.html" class="btn btn-outline-light">
+                    <i class="fas fa-arrow-left me-2"></i>返回
+                </a>
+                <h1 class="mb-0">行事曆</h1>
+                <div></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- 行事曆主體 -->
+        <div class="calendar-container">
+            <div class="calendar-header">
+                <h3 class="calendar-title" id="calendarTitle">2024年2月</h3>
+                <div class="calendar-nav">
+                    <button class="nav-btn" onclick="previousMonth()">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="nav-btn" onclick="today()">
+                        <i class="fas fa-calendar-day"></i>
+                    </button>
+                    <button class="nav-btn" onclick="nextMonth()">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                    <div class="view-toggle">
+                        <button class="view-btn active" onclick="changeView('month')">月</button>
+                        <button class="view-btn" onclick="changeView('week')">週</button>
+                        <button class="view-btn" onclick="changeView('day')">日</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="calendar-grid" id="calendarGrid">
+                <!-- 星期標題 -->
+                <div class="calendar-day-header">日</div>
+                <div class="calendar-day-header">一</div>
+                <div class="calendar-day-header">二</div>
+                <div class="calendar-day-header">三</div>
+                <div class="calendar-day-header">四</div>
+                <div class="calendar-day-header">五</div>
+                <div class="calendar-day-header">六</div>
+
+                <!-- 日期格子將由JavaScript動態生成 -->
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- 今日事件 -->
+                <div class="events-sidebar">
+                    <h3 class="sidebar-title">
+                        <i class="fas fa-calendar-check sidebar-icon"></i>
+                        今日行程
+                    </h3>
+                    <div class="event-list" id="todayEvents">
+                        <div class="event-card meeting">
+                            <div class="event-time">09:00 - 10:00</div>
+                            <div class="event-title">與麥當勞團隊會議</div>
+                            <div class="event-description">討論信義區店面租賃細節和合約條款</div>
+                        </div>
+
+                        <div class="event-card viewing">
+                            <div class="event-time">14:00 - 15:30</div>
+                            <div class="event-title">大安區物件實地勘查</div>
+                            <div class="event-description">陪同星巴克代表查看復興南路店面</div>
+                        </div>
+
+                        <div class="event-card follow-up">
+                            <div class="event-time">16:00 - 16:30</div>
+                            <div class="event-title">客戶追蹤電話</div>
+                            <div class="event-description">聯絡全家便利商店確認合約簽署進度</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <!-- 快速新增 -->
+                <div class="quick-add">
+                    <h3 class="quick-add-title">
+                        <i class="fas fa-plus me-2"></i>快速新增
+                    </h3>
+                    <div class="quick-add-grid">
+                        <div class="quick-add-btn" onclick="addEvent('meeting')">
+                            <div class="quick-add-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="quick-add-text">會議</div>
+                        </div>
+                        <div class="quick-add-btn" onclick="addEvent('viewing')">
+                            <div class="quick-add-icon">
+                                <i class="fas fa-eye"></i>
+                            </div>
+                            <div class="quick-add-text">看房</div>
+                        </div>
+                        <div class="quick-add-btn" onclick="addEvent('deadline')">
+                            <div class="quick-add-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="quick-add-text">截止日</div>
+                        </div>
+                        <div class="quick-add-btn" onclick="addEvent('follow-up')">
+                            <div class="quick-add-icon">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div class="quick-add-text">追蹤</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 圖例 -->
+                <div class="legend">
+                    <h4 class="legend-title">事件類型</h4>
+                    <div class="legend-items">
+                        <div class="legend-item">
+                            <div class="legend-color meeting"></div>
+                            <span>會議</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color viewing"></div>
+                            <span>看房</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color deadline"></div>
+                            <span>截止日</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color follow-up"></div>
+                            <span>追蹤</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color default"></div>
+                            <span>其他</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 操作按鈕 -->
+    <div class="action-buttons">
+        <button type="button" class="btn btn-secondary-custom" onclick="exportCalendar()">
+            <i class="fas fa-download me-2"></i>匯出行事曆
+        </button>
+        <button type="button" class="btn btn-primary-custom" onclick="addNewEvent()">
+            <i class="fas fa-plus me-2"></i>新增事件
+        </button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let currentDate = new Date();
+        let currentView = 'month';
+
+        // 模擬事件資料
+        const events = {
+            '2024-02-01': [
+                { type: 'meeting', title: '麥當勞會議', time: '09:00' },
+                { type: 'viewing', title: '大安區看房', time: '14:00' }
+            ],
+            '2024-02-05': [
+                { type: 'deadline', title: '合約截止', time: '17:00' }
+            ],
+            '2024-02-10': [
+                { type: 'follow-up', title: '客戶追蹤', time: '10:00' },
+                { type: 'meeting', title: '團隊會議', time: '15:00' }
+            ],
+            '2024-02-15': [
+                { type: 'viewing', title: '信義區看房', time: '11:00' }
+            ]
+        };
+
+        /**
+         * 頁面載入完成後初始化
+         */
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCalendar();
+            renderCalendar();
+        });
+
+        /**
+         * 初始化行事曆
+         */
+        function initializeCalendar() {
+            console.log('行事曆已載入');
+        }
+
+        /**
+         * 渲染行事曆
+         */
+        function renderCalendar() {
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            
+            // 更新標題
+            const monthNames = ['1月', '2月', '3月', '4月', '5月', '6月', 
+                               '7月', '8月', '9月', '10月', '11月', '12月'];
+            document.getElementById('calendarTitle').textContent = `${year}年${monthNames[month]}`;
+
+            // 獲取月份第一天和最後一天
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const startDate = new Date(firstDay);
+            startDate.setDate(startDate.getDate() - firstDay.getDay());
+
+            // 清空現有日期格子
+            const grid = document.getElementById('calendarGrid');
+            const dayHeaders = grid.querySelectorAll('.calendar-day-header');
+            grid.innerHTML = '';
+            dayHeaders.forEach(header => grid.appendChild(header));
+
+            // 生成42個日期格子（6週）
+            for (let i = 0; i < 42; i++) {
+                const date = new Date(startDate);
+                date.setDate(startDate.getDate() + i);
+                
+                const dayElement = createDayElement(date, month);
+                grid.appendChild(dayElement);
+            }
+        }
+
+        /**
+         * 創建日期元素
+         */
+        function createDayElement(date, currentMonth) {
+            const dayElement = document.createElement('div');
+            dayElement.className = 'calendar-day';
+            
+            // 判斷是否為其他月份
+            if (date.getMonth() !== currentMonth) {
+                dayElement.classList.add('other-month');
+            }
+            
+            // 判斷是否為今天
+            const today = new Date();
+            if (date.toDateString() === today.toDateString()) {
+                dayElement.classList.add('today');
+            }
+            
+            // 日期數字
+            const dayNumber = document.createElement('div');
+            dayNumber.className = 'day-number';
+            dayNumber.textContent = date.getDate();
+            dayElement.appendChild(dayNumber);
+            
+            // 事件列表
+            const eventsContainer = document.createElement('div');
+            eventsContainer.className = 'day-events';
+            
+            const dateKey = date.toISOString().split('T')[0];
+            if (events[dateKey]) {
+                events[dateKey].forEach(event => {
+                    const eventElement = document.createElement('div');
+                    eventElement.className = `event-item ${event.type}`;
+                    eventElement.textContent = event.title;
+                    eventElement.onclick = (e) => {
+                        e.stopPropagation();
+                        viewEvent(event);
+                    };
+                    eventsContainer.appendChild(eventElement);
+                });
+            }
+            
+            dayElement.appendChild(eventsContainer);
+            
+            // 點擊事件
+            dayElement.onclick = () => selectDay(dayElement, date);
+            
+            return dayElement;
+        }
+
+        /**
+         * 選擇日期
+         */
+        function selectDay(element, date) {
+            // 移除其他選中狀態
+            document.querySelectorAll('.calendar-day.selected').forEach(day => {
+                day.classList.remove('selected');
+            });
+            
+            // 添加選中狀態
+            element.classList.add('selected');
+            
+            showToast(`已選擇 ${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`, 'info');
+        }
+
+        /**
+         * 上一個月
+         */
+        function previousMonth() {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            renderCalendar();
+        }
+
+        /**
+         * 下一個月
+         */
+        function nextMonth() {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            renderCalendar();
+        }
+
+        /**
+         * 回到今天
+         */
+        function today() {
+            currentDate = new Date();
+            renderCalendar();
+        }
+
+        /**
+         * 切換檢視模式
+         */
+        function changeView(view) {
+            currentView = view;
+            
+            // 更新按鈕狀態
+            document.querySelectorAll('.view-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            showToast(`已切換到${getViewName(view)}檢視`, 'info');
+        }
+
+        /**
+         * 獲取檢視名稱
+         */
+        function getViewName(view) {
+            const names = {
+                month: '月',
+                week: '週',
+                day: '日'
+            };
+            return names[view] || view;
+        }
+
+        /**
+         * 查看事件
+         */
+        function viewEvent(event) {
+            showToast(`查看事件：${event.title}`, 'info');
+        }
+
+        /**
+         * 新增事件
+         */
+        function addEvent(type) {
+            const typeNames = {
+                meeting: '會議',
+                viewing: '看房',
+                deadline: '截止日',
+                'follow-up': '追蹤'
+            };
+            
+            showToast(`正在新增${typeNames[type]}事件...`, 'info');
+        }
+
+        /**
+         * 新增新事件
+         */
+        function addNewEvent() {
+            showToast('正在開啟事件建立器...', 'info');
+        }
+
+        /**
+         * 匯出行事曆
+         */
+        function exportCalendar() {
+            showToast('正在匯出行事曆...', 'info');
+            
+            setTimeout(() => {
+                showToast('行事曆已匯出至下載資料夾', 'success');
+            }, 2000);
+        }
+
+        /**
+         * 顯示提示訊息
+         */
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.innerHTML = `<i class="fas fa-info-circle me-2"></i>${message}`;
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#27ae60' : type === 'error' ? '#e74c3c' : '#3498db'};
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                z-index: 9999;
+                font-size: 14px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                max-width: 300px;
+            `;
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                if (document.body.contains(toast)) {
+                    document.body.removeChild(toast);
+                }
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

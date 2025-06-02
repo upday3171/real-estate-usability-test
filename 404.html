@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>頁面未找到 - 404</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .error-container {
+            text-align: center;
+            color: white;
+            padding: 40px 20px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .error-code {
+            font-size: 120px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            animation: bounce 2s infinite;
+        }
+
+        .error-title {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .error-message {
+            font-size: 18px;
+            margin-bottom: 30px;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .error-icon {
+            font-size: 80px;
+            margin-bottom: 30px;
+            opacity: 0.8;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .btn-primary-custom {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            min-width: 200px;
+        }
+
+        .btn-primary-custom:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary-custom {
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            min-width: 200px;
+        }
+
+        .btn-secondary-custom:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.5);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .suggestions {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .suggestions h4 {
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        .suggestion-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .suggestion-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+
+        .suggestion-item i {
+            margin-right: 15px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .suggestion-item a {
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .suggestion-item a:hover {
+            color: #ffd700;
+            text-decoration: underline;
+        }
+
+        .search-box {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            padding: 15px 20px;
+            margin: 20px 0;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .search-input {
+            background: transparent;
+            border: none;
+            color: white;
+            width: 100%;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .footer-info {
+            margin-top: 40px;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .footer-info a {
+            color: #ffd700;
+            text-decoration: none;
+        }
+
+        .footer-info a:hover {
+            text-decoration: underline;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .error-code {
+                font-size: 80px;
+            }
+            
+            .error-title {
+                font-size: 24px;
+            }
+            
+            .error-message {
+                font-size: 16px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .btn-primary-custom,
+            .btn-secondary-custom {
+                min-width: 250px;
+            }
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: particle-float 6s infinite linear;
+        }
+
+        @keyframes particle-float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 背景粒子效果 -->
+    <div class="particles" id="particles"></div>
+
+    <!-- 錯誤容器 -->
+    <div class="error-container">
+        <div class="error-icon">
+            <i class="fas fa-search"></i>
+        </div>
+        
+        <div class="error-code">404</div>
+        
+        <h1 class="error-title">頁面未找到</h1>
+        
+        <p class="error-message">
+            抱歉，您要尋找的頁面似乎不存在。<br>
+            可能是網址輸入錯誤，或是頁面已被移動或刪除。
+        </p>
+
+        <!-- 搜尋框 -->
+        <div class="search-box">
+            <input type="text" class="search-input" placeholder="搜尋您要找的內容..." id="searchInput">
+        </div>
+
+        <!-- 操作按鈕 -->
+        <div class="action-buttons">
+            <a href="dashboard.html" class="btn-primary-custom">
+                <i class="fas fa-home me-2"></i>返回首頁
+            </a>
+            <a href="javascript:history.back()" class="btn-secondary-custom">
+                <i class="fas fa-arrow-left me-2"></i>返回上一頁
+            </a>
+        </div>
+
+        <!-- 建議連結 -->
+        <div class="suggestions">
+            <h4><i class="fas fa-lightbulb me-2"></i>您可能在尋找</h4>
+            <ul class="suggestion-list">
+                <li class="suggestion-item">
+                    <i class="fas fa-store"></i>
+                    <a href="brands.html">品牌管理</a>
+                </li>
+                <li class="suggestion-item">
+                    <i class="fas fa-building"></i>
+                    <a href="properties.html">物件管理</a>
+                </li>
+                <li class="suggestion-item">
+                    <i class="fas fa-handshake"></i>
+                    <a href="cases.html">案件管理</a>
+                </li>
+                <li class="suggestion-item">
+                    <i class="fas fa-search"></i>
+                    <a href="search-results.html">搜尋功能</a>
+                </li>
+                <li class="suggestion-item">
+                    <i class="fas fa-chart-bar"></i>
+                    <a href="analytics.html">數據分析</a>
+                </li>
+                <li class="suggestion-item">
+                    <i class="fas fa-user"></i>
+                    <a href="profile.html">個人資料</a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- 底部資訊 -->
+        <div class="footer-info">
+            <p>如果問題持續發生，請 <a href="contact.html">聯絡我們</a> 或查看 <a href="faq.html">常見問題</a></p>
+            <p>錯誤代碼：404 | 時間：<span id="currentTime"></span></p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        /**
+         * 初始化頁面
+         */
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCurrentTime();
+            createParticles();
+            setupSearchFunction();
+            
+            // 每秒更新時間
+            setInterval(updateCurrentTime, 1000);
+        });
+
+        /**
+         * 更新當前時間
+         */
+        function updateCurrentTime() {
+            const now = new Date();
+            const timeString = now.toLocaleString('zh-TW', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            document.getElementById('currentTime').textContent = timeString;
+        }
+
+        /**
+         * 創建背景粒子效果
+         */
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 20;
+
+            for (let i = 0; i < particleCount; i++) {
+                setTimeout(() => {
+                    createParticle(particlesContainer);
+                }, i * 300);
+            }
+
+            // 持續創建新粒子
+            setInterval(() => {
+                createParticle(particlesContainer);
+            }, 2000);
+        }
+
+        /**
+         * 創建單個粒子
+         */
+        function createParticle(container) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            
+            const size = Math.random() * 4 + 2;
+            const left = Math.random() * 100;
+            const animationDuration = Math.random() * 3 + 4;
+            
+            particle.style.width = size + 'px';
+            particle.style.height = size + 'px';
+            particle.style.left = left + '%';
+            particle.style.animationDuration = animationDuration + 's';
+            
+            container.appendChild(particle);
+            
+            // 動畫結束後移除粒子
+            setTimeout(() => {
+                if (container.contains(particle)) {
+                    container.removeChild(particle);
+                }
+            }, animationDuration * 1000);
+        }
+
+        /**
+         * 設置搜尋功能
+         */
+        function setupSearchFunction() {
+            const searchInput = document.getElementById('searchInput');
+            
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const query = this.value.trim();
+                    if (query) {
+                        // 跳轉到搜尋結果頁面
+                        window.location.href = `search-results.html?q=${encodeURIComponent(query)}`;
+                    }
+                }
+            });
+        }
+
+        /**
+         * 記錄404錯誤（實際應用中會發送到服務器）
+         */
+        function log404Error() {
+            const errorData = {
+                url: window.location.href,
+                referrer: document.referrer,
+                userAgent: navigator.userAgent,
+                timestamp: new Date().toISOString()
+            };
+            
+            // 在實際應用中，這裡會發送到服務器
+            console.log('404 Error logged:', errorData);
+        }
+
+        // 記錄404錯誤
+        log404Error();
+
+        // 添加鍵盤快捷鍵
+        document.addEventListener('keydown', function(e) {
+            // ESC 鍵返回首頁
+            if (e.key === 'Escape') {
+                window.location.href = 'dashboard.html';
+            }
+            
+            // Ctrl/Cmd + H 返回首頁
+            if ((e.ctrlKey || e.metaKey) && e.key === 'h') {
+                e.preventDefault();
+                window.location.href = 'dashboard.html';
+            }
+        });
+    </script>
+</body>
+
+</html>

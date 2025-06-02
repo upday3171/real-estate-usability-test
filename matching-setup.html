@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>媒合條件設定</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding-bottom: 100px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            border-radius: 10px;
+            padding: 10px 15px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .setup-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f8f9fa;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-icon {
+            margin-right: 10px;
+            color: #3498db;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .required {
+            color: #dc3545;
+        }
+
+        .form-control,
+        .form-select {
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 12px 15px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+        }
+
+        .weight-slider {
+            margin: 15px 0;
+        }
+
+        .weight-value {
+            background: #3498db;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+            min-width: 40px;
+            text-align: center;
+            display: inline-block;
+        }
+
+        .criteria-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #3498db;
+            transition: all 0.3s ease;
+        }
+
+        .criteria-card:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+        }
+
+        .criteria-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .criteria-title {
+            font-weight: 600;
+            color: #333;
+            margin: 0;
+        }
+
+        .criteria-toggle {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .criteria-toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked+.toggle-slider {
+            background-color: #667eea;
+        }
+
+        input:checked+.toggle-slider:before {
+            transform: translateX(26px);
+        }
+
+        .range-input-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .range-input {
+            flex: 1;
+        }
+
+        .range-separator {
+            color: #666;
+            font-weight: 600;
+        }
+
+        .preset-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .preset-btn {
+            background: #e9ecef;
+            border: 2px solid #e9ecef;
+            color: #495057;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .preset-btn:hover,
+        .preset-btn.active {
+            background: #667eea;
+            border-color: #667eea;
+            color: white;
+        }
+
+        .algorithm-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .algorithm-option {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .algorithm-option:hover {
+            border-color: #667eea;
+            background: #f8f9fa;
+        }
+
+        .algorithm-option.selected {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .algorithm-icon {
+            font-size: 32px;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .algorithm-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .algorithm-desc {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .preview-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .preview-item {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .preview-item:last-child {
+            border-bottom: none;
+        }
+
+        .preview-label {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .preview-value {
+            color: #3498db;
+            font-weight: 600;
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            border: none;
+            border-radius: 25px;
+            padding: 12px 30px;
+            font-weight: 600;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.3);
+        }
+
+        .btn-secondary-custom {
+            background: transparent;
+            border: 2px solid #6c757d;
+            color: #6c757d;
+            border-radius: 25px;
+            padding: 12px 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary-custom:hover {
+            background: #6c757d;
+            color: white;
+        }
+
+        .action-buttons {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 20px;
+            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .alert-info-custom {
+            background: #e7f3ff;
+            color: #004085;
+            border: none;
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+        }
+
+        .tag-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .tag-item {
+            background: #e9ecef;
+            color: #495057;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .tag-item:hover,
+        .tag-item.selected {
+            background: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+
+        .progress-indicator {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-bar-custom {
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="matching.html" class="back-btn">
+                    <i class="fas fa-arrow-left me-2"></i>返回
+                </a>
+                <h1 class="page-title">媒合條件設定</h1>
+                <div></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- 進度指示器 -->
+        <div class="progress-indicator">
+            <div class="progress-bar-custom">
+                <div class="progress-fill" style="width: 0%" id="setupProgress"></div>
+            </div>
+            <div class="progress-text">設定完成度：<span id="progressText">0%</span></div>
+        </div>
+
+        <!-- 快速預設 -->
+        <div class="setup-container">
+            <h3 class="section-title">
+                <i class="fas fa-magic section-icon"></i>
+                快速預設
+            </h3>
+
+            <div class="alert alert-info-custom">
+                <i class="fas fa-lightbulb me-2"></i>
+                選擇預設配置可快速開始，您也可以自訂詳細條件以獲得更精準的媒合結果。
+            </div>
+
+            <div class="preset-buttons">
+                <button class="preset-btn" onclick="applyPreset('balanced')">平衡型媒合</button>
+                <button class="preset-btn" onclick="applyPreset('location')">位置優先</button>
+                <button class="preset-btn" onclick="applyPreset('budget')">預算優先</button>
+                <button class="preset-btn" onclick="applyPreset('size')">坪數優先</button>
+                <button class="preset-btn" onclick="applyPreset('custom')">自訂設定</button>
+            </div>
+        </div>
+
+        <!-- 媒合條件權重 -->
+        <div class="setup-container">
+            <h3 class="section-title">
+                <i class="fas fa-sliders-h section-icon"></i>
+                媒合條件權重
+            </h3>
+
+            <div class="criteria-card">
+                <div class="criteria-header">
+                    <h6 class="criteria-title">地理位置匹配</h6>
+                    <label class="criteria-toggle">
+                        <input type="checkbox" id="locationToggle" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="weight-slider">
+                    <label class="form-label">重要性權重：<span class="weight-value" id="locationWeight">80%</span></label>
+                    <input type="range" class="form-range" id="locationRange" min="0" max="100" value="80"
+                        onchange="updateWeight('location', this.value)">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">匹配範圍</label>
+                    <select class="form-select" id="locationScope">
+                        <option value="exact">精確地址</option>
+                        <option value="district" selected>同行政區</option>
+                        <option value="city">同城市</option>
+                        <option value="region">同區域</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="criteria-card">
+                <div class="criteria-header">
+                    <h6 class="criteria-title">租金預算匹配</h6>
+                    <label class="criteria-toggle">
+                        <input type="checkbox" id="budgetToggle" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="weight-slider">
+                    <label class="form-label">重要性權重：<span class="weight-value" id="budgetWeight">90%</span></label>
+                    <input type="range" class="form-range" id="budgetRange" min="0" max="100" value="90"
+                        onchange="updateWeight('budget', this.value)">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">預算彈性範圍</label>
+                    <div class="range-input-group">
+                        <input type="number" class="form-control range-input" id="budgetMin" placeholder="最低"
+                            value="-10">
+                        <span class="range-separator">%</span>
+                        <span class="range-separator">至</span>
+                        <input type="number" class="form-control range-input" id="budgetMax" placeholder="最高"
+                            value="15">
+                        <span class="range-separator">%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="criteria-card">
+                <div class="criteria-header">
+                    <h6 class="criteria-title">空間坪數匹配</h6>
+                    <label class="criteria-toggle">
+                        <input type="checkbox" id="sizeToggle" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="weight-slider">
+                    <label class="form-label">重要性權重：<span class="weight-value" id="sizeWeight">75%</span></label>
+                    <input type="range" class="form-range" id="sizeRange" min="0" max="100" value="75"
+                        onchange="updateWeight('size', this.value)">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">坪數彈性範圍</label>
+                    <div class="range-input-group">
+                        <input type="number" class="form-control range-input" id="sizeMin" placeholder="最小" value="-20">
+                        <span class="range-separator">%</span>
+                        <span class="range-separator">至</span>
+                        <input type="number" class="form-control range-input" id="sizeMax" placeholder="最大" value="30">
+                        <span class="range-separator">%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="criteria-card">
+                <div class="criteria-header">
+                    <h6 class="criteria-title">物件類型匹配</h6>
+                    <label class="criteria-toggle">
+                        <input type="checkbox" id="typeToggle" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="weight-slider">
+                    <label class="form-label">重要性權重：<span class="weight-value" id="typeWeight">85%</span></label>
+                    <input type="range" class="form-range" id="typeRange" min="0" max="100" value="85"
+                        onchange="updateWeight('type', this.value)">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">可接受類型</label>
+                    <div class="tag-selector">
+                        <span class="tag-item selected" onclick="toggleTag(this)">店面</span>
+                        <span class="tag-item selected" onclick="toggleTag(this)">商場櫃位</span>
+                        <span class="tag-item" onclick="toggleTag(this)">百貨專櫃</span>
+                        <span class="tag-item" onclick="toggleTag(this)">辦公室</span>
+                        <span class="tag-item" onclick="toggleTag(this)">獨棟建築</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="criteria-card">
+                <div class="criteria-header">
+                    <h6 class="criteria-title">特殊需求匹配</h6>
+                    <label class="criteria-toggle">
+                        <input type="checkbox" id="featuresToggle">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="weight-slider">
+                    <label class="form-label">重要性權重：<span class="weight-value" id="featuresWeight">50%</span></label>
+                    <input type="range" class="form-range" id="featuresRange" min="0" max="100" value="50"
+                        onchange="updateWeight('features', this.value)">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">重要特色</label>
+                    <div class="tag-selector">
+                        <span class="tag-item" onclick="toggleTag(this)">近捷運站</span>
+                        <span class="tag-item" onclick="toggleTag(this)">停車方便</span>
+                        <span class="tag-item" onclick="toggleTag(this)">人流量大</span>
+                        <span class="tag-item" onclick="toggleTag(this)">可明火</span>
+                        <span class="tag-item" onclick="toggleTag(this)">24小時營業</span>
+                        <span class="tag-item" onclick="toggleTag(this)">雙面臨路</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 媒合算法選擇 -->
+        <div class="setup-container">
+            <h3 class="section-title">
+                <i class="fas fa-brain section-icon"></i>
+                媒合算法選擇
+            </h3>
+
+            <div class="algorithm-selector">
+                <div class="algorithm-option selected" onclick="selectAlgorithm(this, 'weighted')">
+                    <div class="algorithm-icon">
+                        <i class="fas fa-balance-scale"></i>
+                    </div>
+                    <div class="algorithm-title">加權評分算法</div>
+                    <div class="algorithm-desc">根據設定權重計算綜合匹配分數，適合大多數情況</div>
+                </div>
+
+                <div class="algorithm-option" onclick="selectAlgorithm(this, 'fuzzy')">
+                    <div class="algorithm-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="algorithm-title">模糊匹配算法</div>
+                    <div class="algorithm-desc">允許更大彈性範圍，找出潛在合適選項</div>
+                </div>
+
+                <div class="algorithm-option" onclick="selectAlgorithm(this, 'ml')">
+                    <div class="algorithm-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="algorithm-title">機器學習算法</div>
+                    <div class="algorithm-desc">基於歷史成功案例學習，提供智能推薦</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 進階設定 -->
+        <div class="setup-container">
+            <h3 class="section-title">
+                <i class="fas fa-cogs section-icon"></i>
+                進階設定
+            </h3>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label">最大結果數量</label>
+                        <select class="form-select" id="maxResults">
+                            <option value="10">10個結果</option>
+                            <option value="20" selected>20個結果</option>
+                            <option value="50">50個結果</option>
+                            <option value="100">100個結果</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label">最低匹配分數</label>
+                        <select class="form-select" id="minScore">
+                            <option value="50">50分以上</option>
+                            <option value="60">60分以上</option>
+                            <option value="70" selected>70分以上</option>
+                            <option value="80">80分以上</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label">排序方式</label>
+                        <select class="form-select" id="sortBy">
+                            <option value="score" selected>匹配分數</option>
+                            <option value="price">租金價格</option>
+                            <option value="size">空間坪數</option>
+                            <option value="location">地理位置</option>
+                            <option value="date">發布時間</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label">結果更新頻率</label>
+                        <select class="form-select" id="updateFreq">
+                            <option value="realtime">即時更新</option>
+                            <option value="hourly" selected>每小時</option>
+                            <option value="daily">每日</option>
+                            <option value="manual">手動更新</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="excludeViewed" checked>
+                    <label class="form-check-label" for="excludeViewed">
+                        排除已查看的物件
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="includePartial">
+                    <label class="form-check-label" for="includePartial">
+                        包含部分匹配的結果
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="autoNotify" checked>
+                    <label class="form-check-label" for="autoNotify">
+                        有新匹配結果時自動通知
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- 設定預覽 -->
+        <div class="setup-container">
+            <h3 class="section-title">
+                <i class="fas fa-eye section-icon"></i>
+                設定預覽
+            </h3>
+
+            <div class="preview-section">
+                <div class="preview-item">
+                    <span class="preview-label">媒合算法：</span>
+                    <span class="preview-value" id="previewAlgorithm">加權評分算法</span>
+                </div>
+                <div class="preview-item">
+                    <span class="preview-label">啟用條件：</span>
+                    <span class="preview-value" id="previewCriteria">4項</span>
+                </div>
+                <div class="preview-item">
+                    <span class="preview-label">最高權重：</span>
+                    <span class="preview-value" id="previewHighest">租金預算 (90%)</span>
+                </div>
+                <div class="preview-item">
+                    <span class="preview-label">結果限制：</span>
+                    <span class="preview-value" id="previewLimit">最多20個，≥70分</span>
+                </div>
+                <div class="preview-item">
+                    <span class="preview-label">更新頻率：</span>
+                    <span class="preview-value" id="previewUpdate">每小時</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 操作按鈕 -->
+    <div class="action-buttons">
+        <button type="button" class="btn btn-secondary-custom" onclick="resetSettings()">
+            <i class="fas fa-undo me-2"></i>重設
+        </button>
+        <button type="button" class="btn btn-secondary-custom" onclick="saveTemplate()">
+            <i class="fas fa-save me-2"></i>儲存範本
+        </button>
+        <button type="button" class="btn btn-primary-custom flex-fill" onclick="startMatching()">
+            <i class="fas fa-play me-2"></i>開始媒合
+        </button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 全局變量
+        let selectedAlgorithm = 'weighted';
+        let criteriaWeights = {
+            location: 80,
+            budget: 90,
+            size: 75,
+            type: 85,
+            features: 50
+        };
+
+        /**
+         * 頁面載入完成後初始化
+         */
+        document.addEventListener('DOMContentLoaded', function () {
+            initializePage();
+            setupEventListeners();
+            updateProgress();
+        });
+
+        /**
+         * 初始化頁面
+         */
+        function initializePage() {
+            updatePreview();
+            console.log('媒合條件設定頁面已載入');
+        }
+
+        /**
+         * 設置事件監聽器
+         */
+        function setupEventListeners() {
+            // 監聽所有切換開關
+            document.querySelectorAll('.criteria-toggle input').forEach(toggle => {
+                toggle.addEventListener('change', function () {
+                    updateProgress();
+                    updatePreview();
+                });
+            });
+
+            // 監聽所有設定變更
+            document.querySelectorAll('select, input[type="checkbox"]').forEach(element => {
+                element.addEventListener('change', function () {
+                    updatePreview();
+                });
+            });
+        }
+
+        /**
+         * 應用預設配置
+         */
+        function applyPreset(presetType) {
+            // 移除其他按鈕的active狀態
+            document.querySelectorAll('.preset-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // 設置當前按鈕為active
+            event.target.classList.add('active');
+
+            const presets = {
+                balanced: {
+                    location: 70,
+                    budget: 80,
+                    size: 70,
+                    type: 75,
+                    features: 50
+                },
+                location: {
+                    location: 95,
+                    budget: 60,
+                    size: 50,
+                    type: 70,
+                    features: 40
+                },
+                budget: {
+                    location: 60,
+                    budget: 95,
+                    size: 70,
+                    type: 60,
+                    features: 30
+                },
+                size: {
+                    location: 60,
+                    budget: 70,
+                    size: 95,
+                    type: 70,
+                    features: 40
+                },
+                custom: {
+                    location: 80,
+                    budget: 90,
+                    size: 75,
+                    type: 85,
+                    features: 50
+                }
+            };
+
+            if (presets[presetType]) {
+                const preset = presets[presetType];
+                Object.keys(preset).forEach(key => {
+                    const range = document.getElementById(key + 'Range');
+                    const weight = document.getElementById(key + 'Weight');
+                    if (range && weight) {
+                        range.value = preset[key];
+                        weight.textContent = preset[key] + '%';
+                        criteriaWeights[key] = preset[key];
+                    }
+                });
+
+                updateProgress();
+                updatePreview();
+                showToast(`已應用${getPresetName(presetType)}配置`, 'success');
+            }
+        }
+
+        /**
+         * 獲取預設名稱
+         */
+        function getPresetName(presetType) {
+            const names = {
+                balanced: '平衡型媒合',
+                location: '位置優先',
+                budget: '預算優先',
+                size: '坪數優先',
+                custom: '自訂設定'
+            };
+            return names[presetType] || '未知';
+        }
+
+        /**
+         * 更新權重值
+         */
+        function updateWeight(criteria, value) {
+            const weightElement = document.getElementById(criteria + 'Weight');
+            if (weightElement) {
+                weightElement.textContent = value + '%';
+                criteriaWeights[criteria] = parseInt(value);
+            }
+            updateProgress();
+            updatePreview();
+        }
+
+        /**
+         * 切換標籤選擇
+         */
+        function toggleTag(element) {
+            element.classList.toggle('selected');
+            updatePreview();
+        }
+
+        /**
+         * 選擇算法
+         */
+        function selectAlgorithm(element, algorithm) {
+            // 移除其他選項的選中狀態
+            document.querySelectorAll('.algorithm-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+
+            // 設置當前選項為選中
+            element.classList.add('selected');
+            selectedAlgorithm = algorithm;
+
+            updatePreview();
+        }
+
+        /**
+         * 更新進度
+         */
+        function updateProgress() {
+            const toggles = document.querySelectorAll('.criteria-toggle input');
+            const enabledCount = Array.from(toggles).filter(toggle => toggle.checked).length;
+            const totalCount = toggles.length;
+            const progress = Math.round((enabledCount / totalCount) * 100);
+
+            document.getElementById('setupProgress').style.width = progress + '%';
+            document.getElementById('progressText').textContent = progress + '%';
+        }
+
+        /**
+         * 更新預覽
+         */
+        function updatePreview() {
+            // 算法名稱
+            const algorithmNames = {
+                weighted: '加權評分算法',
+                fuzzy: '模糊匹配算法',
+                ml: '機器學習算法'
+            };
+            document.getElementById('previewAlgorithm').textContent = algorithmNames[selectedAlgorithm];
+
+            // 啟用條件數量
+            const enabledCriteria = document.querySelectorAll('.criteria-toggle input:checked').length;
+            document.getElementById('previewCriteria').textContent = enabledCriteria + '項';
+
+            // 最高權重
+            const maxWeight = Math.max(...Object.values(criteriaWeights));
+            const maxCriteria = Object.keys(criteriaWeights).find(key => criteriaWeights[key] === maxWeight);
+            const criteriaNames = {
+                location: '地理位置',
+                budget: '租金預算',
+                size: '空間坪數',
+                type: '物件類型',
+                features: '特殊需求'
+            };
+            document.getElementById('previewHighest').textContent =
+                `${criteriaNames[maxCriteria]} (${maxWeight}%)`;
+
+            // 結果限制
+            const maxResults = document.getElementById('maxResults').value;
+            const minScore = document.getElementById('minScore').value;
+            document.getElementById('previewLimit').textContent = `最多${maxResults}個，≥${minScore}分`;
+
+            // 更新頻率
+            const updateFreq = document.getElementById('updateFreq').value;
+            const freqNames = {
+                realtime: '即時更新',
+                hourly: '每小時',
+                daily: '每日',
+                manual: '手動更新'
+            };
+            document.getElementById('previewUpdate').textContent = freqNames[updateFreq];
+        }
+
+        /**
+         * 重設設定
+         */
+        function resetSettings() {
+            if (confirm('確定要重設所有設定嗎？')) {
+                // 重設權重
+                criteriaWeights = {
+                    location: 80,
+                    budget: 90,
+                    size: 75,
+                    type: 85,
+                    features: 50
+                };
+
+                // 重設滑桿和顯示
+                Object.keys(criteriaWeights).forEach(key => {
+                    const range = document.getElementById(key + 'Range');
+                    const weight = document.getElementById(key + 'Weight');
+                    if (range && weight) {
+                        range.value = criteriaWeights[key];
+                        weight.textContent = criteriaWeights[key] + '%';
+                    }
+                });
+
+                // 重設切換開關
+                document.querySelectorAll('.criteria-toggle input').forEach(toggle => {
+                    toggle.checked = toggle.id !== 'featuresToggle';
+                });
+
+                // 重設算法選擇
+                document.querySelectorAll('.algorithm-option').forEach(option => {
+                    option.classList.remove('selected');
+                });
+                document.querySelector('.algorithm-option').classList.add('selected');
+                selectedAlgorithm = 'weighted';
+
+                // 重設預設按鈕
+                document.querySelectorAll('.preset-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+
+                updateProgress();
+                updatePreview();
+                showToast('設定已重設', 'info');
+            }
+        }
+
+        /**
+         * 儲存範本
+         */
+        function saveTemplate() {
+            const templateName = prompt('請輸入範本名稱：');
+            if (templateName) {
+                const template = {
+                    name: templateName,
+                    algorithm: selectedAlgorithm,
+                    weights: { ...criteriaWeights },
+                    settings: {
+                        maxResults: document.getElementById('maxResults').value,
+                        minScore: document.getElementById('minScore').value,
+                        sortBy: document.getElementById('sortBy').value,
+                        updateFreq: document.getElementById('updateFreq').value
+                    }
+                };
+
+                // 模擬儲存到本地存儲
+                const templates = JSON.parse(localStorage.getItem('matchingTemplates') || '[]');
+                templates.push(template);
+                localStorage.setItem('matchingTemplates', JSON.stringify(templates));
+
+                showToast(`範本「${templateName}」已儲存`, 'success');
+            }
+        }
+
+        /**
+         * 開始媒合
+         */
+        function startMatching() {
+            const enabledCriteria = document.querySelectorAll('.criteria-toggle input:checked').length;
+
+            if (enabledCriteria === 0) {
+                showToast('請至少啟用一個媒合條件', 'error');
+                return;
+            }
+
+            const startBtn = document.querySelector('.action-buttons .btn-primary-custom');
+            const originalText = startBtn.innerHTML;
+
+            // 顯示載入狀態
+            startBtn.disabled = true;
+            startBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>準備中...';
+
+            // 收集設定數據
+            const matchingConfig = {
+                algorithm: selectedAlgorithm,
+                weights: { ...criteriaWeights },
+                criteria: {
+                    location: document.getElementById('locationToggle').checked,
+                    budget: document.getElementById('budgetToggle').checked,
+                    size: document.getElementById('sizeToggle').checked,
+                    type: document.getElementById('typeToggle').checked,
+                    features: document.getElementById('featuresToggle').checked
+                },
+                settings: {
+                    maxResults: document.getElementById('maxResults').value,
+                    minScore: document.getElementById('minScore').value,
+                    sortBy: document.getElementById('sortBy').value,
+                    updateFreq: document.getElementById('updateFreq').value,
+                    excludeViewed: document.getElementById('excludeViewed').checked,
+                    includePartial: document.getElementById('includePartial').checked,
+                    autoNotify: document.getElementById('autoNotify').checked
+                }
+            };
+
+            // 模擬準備過程
+            setTimeout(() => {
+                showToast('媒合設定已儲存，正在啟動媒合引擎...', 'success');
+
+                setTimeout(() => {
+                    window.location.href = 'matching-results.html?config=' + encodeURIComponent(JSON.stringify(matchingConfig));
+                }, 1500);
+            }, 2000);
+
+            console.log('媒合配置:', matchingConfig);
+        }
+
+        /**
+         * 顯示提示訊息
+         */
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast-message toast-${type}`;
+            toast.innerHTML = `
+                <i class="fas fa-${getToastIcon(type)} me-2"></i>
+                ${message}
+            `;
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${getToastColor(type)};
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                z-index: 9999;
+                animation: slideIn 0.3s ease;
+                font-size: 14px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                max-width: 300px;
+            `;
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    if (document.body.contains(toast)) {
+                        document.body.removeChild(toast);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        /**
+         * 獲取提示訊息圖標
+         */
+        function getToastIcon(type) {
+            const icons = {
+                success: 'check-circle',
+                error: 'exclamation-circle',
+                info: 'info-circle',
+                warning: 'exclamation-triangle'
+            };
+            return icons[type] || 'info-circle';
+        }
+
+        /**
+         * 獲取提示訊息顏色
+         */
+        function getToastColor(type) {
+            const colors = {
+                success: '#28a745',
+                error: '#dc3545',
+                info: '#007bff',
+                warning: '#ffc107'
+            };
+            return colors[type] || '#007bff';
+        }
+
+        // 添加CSS動畫
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+
+</html>

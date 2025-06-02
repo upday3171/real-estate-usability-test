@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>數據匯入</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .top-bar {
+            background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+
+        .page-title {
+            font-size: 18px;
+            font-weight: bold;
+            flex: 1;
+            text-align: center;
+            margin: 0 15px;
+        }
+
+        .template-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            text-decoration: none;
+        }
+
+        .import-container {
+            padding: 20px;
+            padding-bottom: 80px;
+        }
+
+        .import-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title i {
+            margin-right: 12px;
+            color: #3b82f6;
+            font-size: 20px;
+        }
+
+        .upload-area {
+            border: 2px dashed #e9ecef;
+            border-radius: 12px;
+            padding: 40px 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .upload-area:hover {
+            border-color: #3b82f6;
+            background: #f8faff;
+        }
+
+        .upload-area.dragover {
+            border-color: #3b82f6;
+            background: #f0f9ff;
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            color: #9ca3af;
+            margin-bottom: 15px;
+        }
+
+        .upload-text {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .upload-hint {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .file-input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .btn-upload {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-upload:hover {
+            background: #1e40af;
+        }
+
+        .file-list {
+            margin-top: 20px;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .file-info {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+
+        .file-icon {
+            font-size: 24px;
+            color: #3b82f6;
+            margin-right: 12px;
+        }
+
+        .file-details {
+            flex: 1;
+        }
+
+        .file-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .file-meta {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .file-status {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-processing {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .status-success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .file-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-remove {
+            background: #dc2626;
+            color: white;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .import-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .option-group {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .option-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #3b82f6;
+        }
+
+        .checkbox-item label {
+            font-size: 14px;
+            color: #333;
+            cursor: pointer;
+        }
+
+        .progress-section {
+            background: #f0f9ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .progress-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #1e40af;
+            margin-bottom: 15px;
+        }
+
+        .progress-bar-custom {
+            width: 100%;
+            height: 12px;
+            background: #e9ecef;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #60a5fa);
+            border-radius: 6px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        .progress-text {
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+        }
+
+        .validation-results {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .validation-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #92400e;
+            margin-bottom: 15px;
+        }
+
+        .validation-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #fbbf24;
+        }
+
+        .validation-item:last-child {
+            border-bottom: none;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .btn-primary-custom {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 150px;
+        }
+
+        .btn-primary-custom:hover {
+            background: #1e40af;
+        }
+
+        .btn-primary-custom:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary-custom {
+            background: #6b7280;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 150px;
+        }
+
+        .btn-secondary-custom:hover {
+            background: #4b5563;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e9ecef;
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .nav-item {
+            text-align: center;
+            color: #666;
+            text-decoration: none;
+            padding: 5px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-item.active {
+            color: #3b82f6;
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 2px;
+        }
+
+        .nav-item span {
+            font-size: 10px;
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .import-options {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 頂部導航 -->
+    <div class="top-bar">
+        <a href="admin-dashboard.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <div class="page-title">數據匯入</div>
+        <a href="#" class="template-btn" onclick="downloadTemplate()">
+            <i class="fas fa-download me-1"></i>範本
+        </a>
+    </div>
+
+    <!-- 匯入容器 -->
+    <div class="import-container">
+        <!-- 檔案上傳 -->
+        <div class="import-section">
+            <div class="section-title">
+                <i class="fas fa-cloud-upload-alt"></i>
+                上傳檔案
+            </div>
+            <div class="upload-area" id="uploadArea">
+                <input type="file" class="file-input" id="fileInput" multiple accept=".csv,.xlsx,.json,.xml">
+                <div class="upload-icon">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                </div>
+                <div class="upload-text">拖拽檔案到此處或點擊上傳</div>
+                <div class="upload-hint">支援 CSV、Excel、JSON、XML 格式，最大 10MB</div>
+                <button class="btn-upload">選擇檔案</button>
+            </div>
+            <div class="file-list" id="fileList">
+                <!-- 檔案列表將由JavaScript生成 -->
+            </div>
+        </div>
+
+        <!-- 匯入選項 -->
+        <div class="import-section">
+            <div class="section-title">
+                <i class="fas fa-cog"></i>
+                匯入設定
+            </div>
+            <div class="import-options">
+                <div class="option-group">
+                    <div class="option-title">數據類型</div>
+                    <div class="form-group">
+                        <label class="form-label">目標表格</label>
+                        <select class="form-select" id="targetTable">
+                            <option value="users">用戶數據</option>
+                            <option value="brands">品牌數據</option>
+                            <option value="properties">物件數據</option>
+                            <option value="cases">案件數據</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">編碼格式</label>
+                        <select class="form-select" id="encoding">
+                            <option value="utf8">UTF-8</option>
+                            <option value="big5">Big5</option>
+                            <option value="gb2312">GB2312</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="option-group">
+                    <div class="option-title">處理選項</div>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="skipHeader" checked>
+                            <label for="skipHeader">跳過標題行</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="validateData" checked>
+                            <label for="validateData">驗證數據格式</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="updateExisting">
+                            <label for="updateExisting">更新現有記錄</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="createBackup" checked>
+                            <label for="createBackup">匯入前備份</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 進度顯示 -->
+        <div class="progress-section" id="progressSection">
+            <div class="progress-title">匯入進度</div>
+            <div class="progress-bar-custom">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">準備中...</div>
+        </div>
+
+        <!-- 驗證結果 -->
+        <div class="validation-results" id="validationResults">
+            <div class="validation-title">數據驗證結果</div>
+            <div id="validationList">
+                <!-- 驗證結果將由JavaScript生成 -->
+            </div>
+        </div>
+
+        <!-- 操作按鈕 -->
+        <div class="action-buttons">
+            <button class="btn-secondary-custom" onclick="clearFiles()">清除檔案</button>
+            <button class="btn-primary-custom" onclick="startImport()" id="importBtn" disabled>開始匯入</button>
+        </div>
+    </div>
+
+    <!-- 底部導航 -->
+    <div class="bottom-nav">
+        <a href="dashboard.html" class="nav-item">
+            <i class="fas fa-home"></i>
+            <span>首頁</span>
+        </a>
+        <a href="admin-dashboard.html" class="nav-item active">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>管理</span>
+        </a>
+        <a href="analytics.html" class="nav-item">
+            <i class="fas fa-chart-bar"></i>
+            <span>分析</span>
+        </a>
+        <a href="reports.html" class="nav-item">
+            <i class="fas fa-file-alt"></i>
+            <span>報表</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <i class="fas fa-user"></i>
+            <span>我的</span>
+        </a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let uploadedFiles = [];
+
+        /**
+         * 初始化頁面
+         */
+        document.addEventListener('DOMContentLoaded', function() {
+            setupFileUpload();
+        });
+
+        /**
+         * 設置檔案上傳
+         */
+        function setupFileUpload() {
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('fileInput');
+
+            // 點擊上傳區域
+            uploadArea.addEventListener('click', () => {
+                fileInput.click();
+            });
+
+            // 檔案選擇
+            fileInput.addEventListener('change', handleFileSelect);
+
+            // 拖拽事件
+            uploadArea.addEventListener('dragover', handleDragOver);
+            uploadArea.addEventListener('dragleave', handleDragLeave);
+            uploadArea.addEventListener('drop', handleDrop);
+        }
+
+        /**
+         * 處理檔案選擇
+         */
+        function handleFileSelect(event) {
+            const files = Array.from(event.target.files);
+            addFiles(files);
+        }
+
+        /**
+         * 處理拖拽懸停
+         */
+        function handleDragOver(event) {
+            event.preventDefault();
+            event.currentTarget.classList.add('dragover');
+        }
+
+        /**
+         * 處理拖拽離開
+         */
+        function handleDragLeave(event) {
+            event.currentTarget.classList.remove('dragover');
+        }
+
+        /**
+         * 處理檔案拖拽
+         */
+        function handleDrop(event) {
+            event.preventDefault();
+            event.currentTarget.classList.remove('dragover');
+            
+            const files = Array.from(event.dataTransfer.files);
+            addFiles(files);
+        }
+
+        /**
+         * 添加檔案
+         */
+        function addFiles(files) {
+            files.forEach(file => {
+                if (validateFile(file)) {
+                    const fileObj = {
+                        id: Date.now() + Math.random(),
+                        file: file,
+                        name: file.name,
+                        size: formatFileSize(file.size),
+                        type: file.type,
+                        status: 'pending'
+                    };
+                    uploadedFiles.push(fileObj);
+                }
+            });
+            
+            renderFileList();
+            updateImportButton();
+        }
+
+        /**
+         * 驗證檔案
+         */
+        function validateFile(file) {
+            const allowedTypes = ['.csv', '.xlsx', '.json', '.xml'];
+            const maxSize = 10 * 1024 * 1024; // 10MB
+            
+            const extension = '.' + file.name.split('.').pop().toLowerCase();
+            
+            if (!allowedTypes.includes(extension)) {
+                showToast(`不支援的檔案格式：${extension}`, 'error');
+                return false;
+            }
+            
+            if (file.size > maxSize) {
+                showToast(`檔案過大：${file.name}`, 'error');
+                return false;
+            }
+            
+            return true;
+        }
+
+        /**
+         * 格式化檔案大小
+         */
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        /**
+         * 渲染檔案列表
+         */
+        function renderFileList() {
+            const fileList = document.getElementById('fileList');
+            fileList.innerHTML = '';
+
+            uploadedFiles.forEach(fileObj => {
+                const fileItem = createFileItem(fileObj);
+                fileList.appendChild(fileItem);
+            });
+        }
+
+        /**
+         * 創建檔案項目
+         */
+        function createFileItem(fileObj) {
+            const div = document.createElement('div');
+            div.className = 'file-item';
+            div.dataset.fileId = fileObj.id;
+
+            div.innerHTML = `
+                <div class="file-info">
+                    <div class="file-icon">
+                        <i class="fas fa-file-${getFileIcon(fileObj.name)}"></i>
+                    </div>
+                    <div class="file-details">
+                        <div class="file-name">${fileObj.name}</div>
+                        <div class="file-meta">${fileObj.size} | ${getFileType(fileObj.name)}</div>
+                    </div>
+                </div>
+                <div class="file-status status-${fileObj.status}">${getStatusText(fileObj.status)}</div>
+                <div class="file-actions">
+                    <button class="btn-remove" onclick="removeFile('${fileObj.id}')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+
+            return div;
+        }
+
+        /**
+         * 獲取檔案圖標
+         */
+        function getFileIcon(filename) {
+            const extension = filename.split('.').pop().toLowerCase();
+            const icons = {
+                'csv': 'csv',
+                'xlsx': 'excel',
+                'json': 'code',
+                'xml': 'code'
+            };
+            return icons[extension] || 'alt';
+        }
+
+        /**
+         * 獲取檔案類型
+         */
+        function getFileType(filename) {
+            const extension = filename.split('.').pop().toLowerCase();
+            const types = {
+                'csv': 'CSV 檔案',
+                'xlsx': 'Excel 檔案',
+                'json': 'JSON 檔案',
+                'xml': 'XML 檔案'
+            };
+            return types[extension] || '未知格式';
+        }
+
+        /**
+         * 獲取狀態文字
+         */
+        function getStatusText(status) {
+            const texts = {
+                'pending': '待處理',
+                'processing': '處理中',
+                'success': '成功',
+                'error': '錯誤'
+            };
+            return texts[status] || status;
+        }
+
+        /**
+         * 移除檔案
+         */
+        function removeFile(fileId) {
+            uploadedFiles = uploadedFiles.filter(file => file.id != fileId);
+            renderFileList();
+            updateImportButton();
+        }
+
+        /**
+         * 清除所有檔案
+         */
+        function clearFiles() {
+            uploadedFiles = [];
+            renderFileList();
+            updateImportButton();
+            showToast('已清除所有檔案', 'info');
+        }
+
+        /**
+         * 更新匯入按鈕狀態
+         */
+        function updateImportButton() {
+            const importBtn = document.getElementById('importBtn');
+            importBtn.disabled = uploadedFiles.length === 0;
+        }
+
+        /**
+         * 開始匯入
+         */
+        function startImport() {
+            if (uploadedFiles.length === 0) {
+                showToast('請先上傳檔案', 'warning');
+                return;
+            }
+
+            const progressSection = document.getElementById('progressSection');
+            const importBtn = document.getElementById('importBtn');
+
+            progressSection.style.display = 'block';
+            importBtn.disabled = true;
+            importBtn.textContent = '匯入中...';
+
+            simulateImport();
+        }
+
+        /**
+         * 模擬匯入過程
+         */
+        function simulateImport() {
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+            let progress = 0;
+
+            const interval = setInterval(() => {
+                progress += Math.random() * 10;
+                if (progress > 100) progress = 100;
+
+                progressFill.style.width = progress + '%';
+                progressText.textContent = `正在匯入... ${Math.round(progress)}%`;
+
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    completeImport();
+                }
+            }, 500);
+        }
+
+        /**
+         * 完成匯入
+         */
+        function completeImport() {
+            const progressSection = document.getElementById('progressSection');
+            const importBtn = document.getElementById('importBtn');
+            const validationResults = document.getElementById('validationResults');
+
+            setTimeout(() => {
+                progressSection.style.display = 'none';
+                validationResults.style.display = 'block';
+                importBtn.disabled = false;
+                importBtn.textContent = '開始匯入';
+
+                showValidationResults();
+                showToast('匯入完成！', 'success');
+
+                // 重置進度
+                document.getElementById('progressFill').style.width = '0%';
+                document.getElementById('progressText').textContent = '準備中...';
+            }, 1000);
+        }
+
+        /**
+         * 顯示驗證結果
+         */
+        function showValidationResults() {
+            const validationList = document.getElementById('validationList');
+            const results = [
+                { label: '成功匯入', value: '1,234 筆' },
+                { label: '跳過重複', value: '56 筆' },
+                { label: '格式錯誤', value: '12 筆' },
+                { label: '總處理時間', value: '2.3 秒' }
+            ];
+
+            validationList.innerHTML = '';
+            results.forEach(result => {
+                const item = document.createElement('div');
+                item.className = 'validation-item';
+                item.innerHTML = `
+                    <span>${result.label}</span>
+                    <span>${result.value}</span>
+                `;
+                validationList.appendChild(item);
+            });
+        }
+
+        /**
+         * 下載範本
+         */
+        function downloadTemplate() {
+            showToast('正在下載匯入範本...', 'info');
+        }
+
+        /**
+         * 工具函數：顯示提示訊息
+         */
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast-message toast-${type}`;
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'info' ? '#2563eb' : type === 'success' ? '#059669' : type === 'warning' ? '#d97706' : '#dc3545'};
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                z-index: 9999;
+                animation: slideIn 0.3s ease;
+                font-size: 14px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            `;
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    if (document.body.contains(toast)) {
+                        document.body.removeChild(toast);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // 添加CSS動畫
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+
+</html>

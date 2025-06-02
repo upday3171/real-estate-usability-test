@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>註冊</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px 0;
+        }
+
+        .register-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .register-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px 25px;
+            width: 100%;
+            max-width: 320px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .register-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .register-icon {
+            font-size: 40px;
+            color: #3498db;
+            margin-bottom: 10px;
+        }
+
+        .register-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .register-subtitle {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 6px;
+            font-size: 13px;
+        }
+
+        .form-control {
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 10px 12px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-group-text {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            color: #666;
+            z-index: 10;
+            font-size: 14px;
+        }
+
+        .form-control.with-icon {
+            padding-left: 38px;
+        }
+
+        .btn-register {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            border: none;
+            color: white;
+            font-weight: bold;
+            padding: 12px;
+            border-radius: 10px;
+            width: 100%;
+            font-size: 15px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-register:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+            color: white;
+        }
+
+        .terms-agreement {
+            margin-bottom: 20px;
+        }
+
+        .terms-agreement input {
+            margin-right: 8px;
+        }
+
+        .terms-agreement label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 0;
+            line-height: 1.4;
+        }
+
+        .terms-agreement a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .terms-agreement a:hover {
+            text-decoration: underline;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .login-link a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        .step-indicator {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .step-indicator span {
+            font-size: 12px;
+            color: #3498db;
+            font-weight: 600;
+        }
+
+        .required {
+            color: #dc3545;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="register-container">
+        <div class="register-card">
+            <div class="register-header">
+                <div class="register-icon">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <h2 class="register-title">建立新帳號</h2>
+                <p class="register-subtitle">加入我們，開始您的展店顧問之旅</p>
+            </div>
+
+            <div class="step-indicator">
+                <span>步驟 1/3 - 基本資料</span>
+            </div>
+
+            <form>
+                <div class="form-group">
+                    <label class="form-label">姓名 <span class="required">*</span></label>
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="fas fa-user"></i>
+                        </span>
+                        <input type="text" class="form-control with-icon" placeholder="請輸入您的姓名" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">手機號碼 <span class="required">*</span></label>
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="fas fa-phone"></i>
+                        </span>
+                        <input type="tel" class="form-control with-icon" placeholder="0912-345-678" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">電子郵件 <span class="required">*</span></label>
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="fas fa-envelope"></i>
+                        </span>
+                        <input type="email" class="form-control with-icon" placeholder="your@email.com" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">公司名稱 <span class="required">*</span></label>
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="fas fa-building"></i>
+                        </span>
+                        <input type="text" class="form-control with-icon" placeholder="請輸入公司名稱" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">密碼 <span class="required">*</span></label>
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="fas fa-lock"></i>
+                        </span>
+                        <input type="password" class="form-control with-icon" placeholder="至少8個字元" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">確認密碼 <span class="required">*</span></label>
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="fas fa-lock"></i>
+                        </span>
+                        <input type="password" class="form-control with-icon" placeholder="請再次輸入密碼" required>
+                    </div>
+                </div>
+
+                <div class="terms-agreement">
+                    <input type="checkbox" id="terms" required>
+                    <label for="terms">
+                        我已閱讀並同意<a href="#">服務條款</a>和<a href="#">隱私政策</a>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-register">
+                    <i class="fas fa-arrow-right me-2"></i>下一步
+                </button>
+
+                <div class="login-link">
+                    <span>已有帳號？</span>
+                    <a href="#">立即登入</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

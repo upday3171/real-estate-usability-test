@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能媒合</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+            height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+        }
+
+        .matching-container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .top-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 18px;
+            padding: 0;
+        }
+
+        .top-title {
+            font-size: 18px;
+            font-weight: bold;
+            flex: 1;
+            text-align: center;
+            margin: 0 20px;
+        }
+
+        .header-section {
+            margin-bottom: 50px;
+            color: white;
+        }
+
+        .matching-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .matching-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .matching-subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-bottom: 40px;
+        }
+
+        .options-section {
+            width: 100%;
+            max-width: 320px;
+        }
+
+        .option-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .option-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 1);
+        }
+
+        .option-icon {
+            font-size: 50px;
+            margin-bottom: 15px;
+            color: #2563eb;
+        }
+
+        .option-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .option-description {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .option-features {
+            margin-bottom: 20px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .feature-icon {
+            color: #28a745;
+            margin-right: 8px;
+            font-size: 10px;
+        }
+
+        .option-button {
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+            border: none;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: bold;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .option-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(37, 99, 235, 0.4);
+        }
+
+        .option-card.brand-to-property {
+            border-left: 4px solid #2563eb;
+        }
+
+        .option-card.property-to-brand {
+            border-left: 4px solid #059669;
+        }
+
+        .option-card.property-to-brand .option-icon {
+            color: #059669;
+        }
+
+        .option-card.property-to-brand .option-button {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+        }
+
+        .stats-section {
+            position: absolute;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            text-align: center;
+        }
+
+        .stats-row {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+
+        .stat-label {
+            font-size: 10px;
+            opacity: 0.8;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .nav-item {
+            text-align: center;
+            color: #666;
+            text-decoration: none;
+            padding: 5px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-item.active {
+            color: #2563eb;
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 2px;
+        }
+
+        .nav-item span {
+            font-size: 10px;
+            display: block;
+        }
+
+        /* AI推薦理由說明樣式 */
+        .recommendation-section {
+            background: white;
+            margin: 20px;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .recommendation-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .ai-badge {
+            display: inline-flex;
+            align-items: center;
+            background: linear-gradient(135deg, #8b5cf6, #a855f7);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .ai-badge i {
+            margin-right: 6px;
+        }
+
+        .recommendation-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .recommendation-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .recommendation-item {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .recommendation-item:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+        }
+
+        .recommendation-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: #2563eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+
+        .recommendation-icon i {
+            color: white;
+            font-size: 18px;
+        }
+
+        .recommendation-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 6px;
+        }
+
+        .recommendation-desc {
+            font-size: 11px;
+            color: #666;
+            line-height: 1.4;
+            margin-bottom: 8px;
+        }
+
+        .recommendation-stats {
+            font-size: 10px;
+            color: #2563eb;
+            font-weight: 600;
+        }
+
+        .stat-highlight {
+            background: #dbeafe;
+            color: #1e40af;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        /* 演算法說明樣式 */
+        .algorithm-explanation {
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            border: 1px solid #0ea5e9;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .algorithm-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #0369a1;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .algorithm-content {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .algorithm-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .step-number {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #0ea5e9;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .step-desc {
+            font-size: 11px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        /* 成功案例樣式 */
+        .success-cases {
+            background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+            border: 1px solid #10b981;
+            border-radius: 12px;
+            padding: 15px;
+        }
+
+        .cases-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #166534;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .cases-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .case-item {
+            background: white;
+            border-radius: 8px;
+            padding: 12px;
+            border-left: 4px solid #10b981;
+        }
+
+        .case-brands {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+
+        .brand-name,
+        .property-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .case-brands i {
+            color: #10b981;
+            font-size: 10px;
+        }
+
+        .case-stats {
+            display: flex;
+            gap: 12px;
+            font-size: 10px;
+        }
+
+        .match-score {
+            background: #dcfce7;
+            color: #166534;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .case-time {
+            background: #dbeafe;
+            color: #1e40af;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .recommendation-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .algorithm-step {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .case-brands {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 頂部導航 -->
+    <div class="top-bar">
+        <button class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+        </button>
+        <div class="top-title">智能媒合</div>
+        <div style="width: 18px;"></div>
+    </div>
+
+    <div class="matching-container">
+        <!-- 標題區域 -->
+        <div class="header-section">
+            <div class="matching-icon">
+                <i class="fas fa-magic"></i>
+            </div>
+            <h1 class="matching-title">智能媒合</h1>
+            <p class="matching-subtitle">選擇媒合方向，讓AI為您找到最佳配對</p>
+        </div>
+
+        <!-- AI推薦理由說明 -->
+        <div class="recommendation-section">
+            <div class="recommendation-header">
+                <div class="ai-badge">
+                    <i class="fas fa-brain"></i>
+                    <span>AI智能推薦</span>
+                </div>
+                <div class="recommendation-title">為什麼選擇智能媒合？</div>
+            </div>
+
+            <div class="recommendation-grid">
+                <div class="recommendation-item">
+                    <div class="recommendation-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="recommendation-content">
+                        <div class="recommendation-name">精準匹配</div>
+                        <div class="recommendation-desc">基於大數據分析，考量地理位置、租金預算、業態適配等多維度因素</div>
+                        <div class="recommendation-stats">
+                            <span class="stat-highlight">95%</span> 匹配準確率
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recommendation-item">
+                    <div class="recommendation-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="recommendation-content">
+                        <div class="recommendation-name">快速媒合</div>
+                        <div class="recommendation-desc">AI演算法即時分析，秒級完成初步篩選，大幅縮短媒合時間</div>
+                        <div class="recommendation-stats">
+                            平均 <span class="stat-highlight">2.3天</span> 完成媒合
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recommendation-item">
+                    <div class="recommendation-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <div class="recommendation-content">
+                        <div class="recommendation-name">智能建議</div>
+                        <div class="recommendation-desc">提供詳細的匹配度分析報告，包含風險評估和談判建議</div>
+                        <div class="recommendation-stats">
+                            <span class="stat-highlight">5個維度</span> 深度分析
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recommendation-item">
+                    <div class="recommendation-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="recommendation-content">
+                        <div class="recommendation-name">風險控制</div>
+                        <div class="recommendation-desc">智能識別潛在風險點，提前預警，降低媒合失敗機率</div>
+                        <div class="recommendation-stats">
+                            風險預警準確率 <span class="stat-highlight">92%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="algorithm-explanation">
+                <div class="algorithm-title">
+                    <i class="fas fa-cogs me-2"></i>AI演算法說明
+                </div>
+                <div class="algorithm-content">
+                    <div class="algorithm-step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <div class="step-title">數據收集</div>
+                            <div class="step-desc">收集品牌需求、物件條件、市場數據等多維度資訊</div>
+                        </div>
+                    </div>
+                    <div class="algorithm-step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <div class="step-title">智能分析</div>
+                            <div class="step-desc">運用機器學習演算法，分析歷史成功案例模式</div>
+                        </div>
+                    </div>
+                    <div class="algorithm-step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <div class="step-title">匹配評分</div>
+                            <div class="step-desc">計算多維度匹配度評分，生成推薦排序</div>
+                        </div>
+                    </div>
+                    <div class="algorithm-step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <div class="step-title">持續優化</div>
+                            <div class="step-desc">根據實際成交結果，持續優化演算法準確性</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="success-cases">
+                <div class="cases-title">
+                    <i class="fas fa-trophy me-2"></i>近期成功案例
+                </div>
+                <div class="cases-list">
+                    <div class="case-item">
+                        <div class="case-brands">
+                            <span class="brand-name">麥當勞</span>
+                            <i class="fas fa-exchange-alt"></i>
+                            <span class="property-name">信義區精華店面</span>
+                        </div>
+                        <div class="case-stats">
+                            <span class="match-score">匹配度 95%</span>
+                            <span class="case-time">2天成交</span>
+                        </div>
+                    </div>
+                    <div class="case-item">
+                        <div class="case-brands">
+                            <span class="brand-name">星巴克</span>
+                            <i class="fas fa-exchange-alt"></i>
+                            <span class="property-name">松山區角間店面</span>
+                        </div>
+                        <div class="case-stats">
+                            <span class="match-score">匹配度 87%</span>
+                            <span class="case-time">3天成交</span>
+                        </div>
+                    </div>
+                    <div class="case-item">
+                        <div class="case-brands">
+                            <span class="brand-name">UNIQLO</span>
+                            <i class="fas fa-exchange-alt"></i>
+                            <span class="property-name">中山區旗艦店面</span>
+                        </div>
+                        <div class="case-stats">
+                            <span class="match-score">匹配度 92%</span>
+                            <span class="case-time">1天成交</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 選項區域 -->
+        <div class="options-section">
+            <!-- 品牌找物件 -->
+            <div class="option-card brand-to-property">
+                <div class="option-icon">
+                    <i class="fas fa-store-alt"></i>
+                </div>
+                <div class="option-title">品牌找物件</div>
+                <div class="option-description">
+                    為手上的品牌客戶尋找最適合的展店物件
+                </div>
+                <div class="option-features">
+                    <div class="feature-item">
+                        <i class="fas fa-check-circle feature-icon"></i>
+                        <span>根據品牌需求智能篩選</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check-circle feature-icon"></i>
+                        <span>匹配度分析與排序</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check-circle feature-icon"></i>
+                        <span>一鍵建立媒合案件</span>
+                    </div>
+                </div>
+                <button class="option-button">
+                    <i class="fas fa-arrow-right me-2"></i>開始尋找物件
+                </button>
+            </div>
+
+            <!-- 物件找品牌 -->
+            <div class="option-card property-to-brand">
+                <div class="option-icon">
+                    <i class="fas fa-building"></i>
+                </div>
+                <div class="option-title">物件找品牌</div>
+                <div class="option-description">
+                    為優質物件尋找最適合的品牌承租方
+                </div>
+                <div class="option-features">
+                    <div class="feature-item">
+                        <i class="fas fa-check-circle feature-icon"></i>
+                        <span>根據物件條件推薦品牌</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check-circle feature-icon"></i>
+                        <span>品牌適配度評估</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check-circle feature-icon"></i>
+                        <span>快速聯絡品牌方</span>
+                    </div>
+                </div>
+                <button class="option-button">
+                    <i class="fas fa-arrow-right me-2"></i>開始尋找品牌
+                </button>
+            </div>
+        </div>
+
+        <!-- 統計資訊 -->
+        <div class="stats-section">
+            <div class="stats-row">
+                <div class="stat-item">
+                    <div class="stat-number">95%</div>
+                    <div class="stat-label">媒合準確率</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">2.3天</div>
+                    <div class="stat-label">平均媒合時間</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">156</div>
+                    <div class="stat-label">本月成功案件</div>
+                </div>
+            </div>
+            <div style="font-size: 11px; opacity: 0.7; margin-top: 5px;">
+                AI智能演算法持續優化中
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部導航 -->
+    <div class="bottom-nav">
+        <a href="#" class="nav-item">
+            <i class="fas fa-home"></i>
+            <span>首頁</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-store"></i>
+            <span>品牌</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-building"></i>
+            <span>物件</span>
+        </a>
+        <a href="#" class="nav-item active">
+            <i class="fas fa-handshake"></i>
+            <span>案件</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-user"></i>
+            <span>我的</span>
+        </a>
+    </div>
+
+    <script>
+        // 模擬數據
+        const matchingData = {
+            stats: {
+                accuracy: '95%',
+                avgTime: '2.3天',
+                monthlySuccess: 156
+            },
+            brands: [
+                { id: 1, name: '麥當勞', type: '餐飲業' },
+                { id: 2, name: '星巴克', type: '餐飲業' },
+                { id: 3, name: 'UNIQLO', type: '零售業' }
+            ],
+            properties: [
+                { id: 1, address: '信義區店面', area: '35坪' },
+                { id: 2, address: '松山區店面', area: '45坪' },
+                { id: 3, address: '板橋區店面', area: '28坪' }
+            ]
+        };
+
+        // 頁面載入完成後初始化
+        document.addEventListener('DOMContentLoaded', function () {
+            initializeMatching();
+            setupEventListeners();
+            startStatsAnimation();
+        });
+
+        // 初始化媒合頁面
+        function initializeMatching() {
+            updateStats();
+            setupOptionCards();
+        }
+
+        // 設置事件監聽器
+        function setupEventListeners() {
+            // 返回按鈕
+            const backBtn = document.querySelector('.back-btn');
+            if (backBtn) {
+                backBtn.addEventListener('click', function () {
+                    showToast('返回首頁...', 'info');
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 500);
+                });
+            }
+
+            // 選項卡片點擊事件
+            document.querySelectorAll('.option-card').forEach(card => {
+                card.addEventListener('click', handleOptionClick);
+            });
+
+            // 選項按鈕點擊事件
+            document.querySelectorAll('.option-button').forEach(button => {
+                button.addEventListener('click', handleButtonClick);
+            });
+        }
+
+        // 處理選項卡片點擊
+        function handleOptionClick(event) {
+            if (event.target.closest('.option-button')) return;
+
+            const card = event.currentTarget;
+            const isPropertyToBrand = card.classList.contains('property-to-brand');
+
+            // 添加點擊動畫效果
+            card.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                card.style.transform = 'translateY(-5px)';
+            }, 150);
+
+            // 顯示選擇提示
+            const optionType = isPropertyToBrand ? '物件找品牌' : '品牌找物件';
+            showToast(`您選擇了：${optionType}`, 'info');
+
+            // 延遲跳轉
+            setTimeout(() => {
+                if (isPropertyToBrand) {
+                    showPropertySelection();
+                } else {
+                    showBrandSelection();
+                }
+            }, 1000);
+        }
+
+        // 處理按鈕點擊
+        function handleButtonClick(event) {
+            event.stopPropagation();
+
+            const button = event.currentTarget;
+            const card = button.closest('.option-card');
+            const isPropertyToBrand = card.classList.contains('property-to-brand');
+
+            // 按鈕點擊動畫
+            button.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                button.style.transform = 'scale(1)';
+            }, 150);
+
+            // 顯示載入狀態
+            const originalText = button.innerHTML;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>處理中...';
+            button.disabled = true;
+
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.disabled = false;
+
+                if (isPropertyToBrand) {
+                    showPropertySelection();
+                } else {
+                    showBrandSelection();
+                }
+            }, 1500);
+        }
+
+        // 顯示品牌選擇
+        function showBrandSelection() {
+            showToast('正在載入品牌列表...', 'info');
+
+            // 模擬品牌選擇界面
+            setTimeout(() => {
+                const brandOptions = matchingData.brands.map(brand =>
+                    `<div class="selection-item" onclick="selectBrand(${brand.id})">${brand.name} (${brand.type})</div>`
+                ).join('');
+
+                showModal('選擇要媒合的品牌', `
+                    <div class="selection-list">
+                        ${brandOptions}
+                    </div>
+                    <button class="btn btn-secondary mt-3" onclick="closeModal()">取消</button>
+                `);
+            }, 800);
+        }
+
+        // 顯示物件選擇
+        function showPropertySelection() {
+            showToast('正在載入物件列表...', 'info');
+
+            // 模擬物件選擇界面
+            setTimeout(() => {
+                const propertyOptions = matchingData.properties.map(property =>
+                    `<div class="selection-item" onclick="selectProperty(${property.id})">${property.address} (${property.area})</div>`
+                ).join('');
+
+                showModal('選擇要媒合的物件', `
+                    <div class="selection-list">
+                        ${propertyOptions}
+                    </div>
+                    <button class="btn btn-secondary mt-3" onclick="closeModal()">取消</button>
+                `);
+            }, 800);
+        }
+
+        // 選擇品牌
+        function selectBrand(brandId) {
+            const brand = matchingData.brands.find(b => b.id === brandId);
+            closeModal();
+            showToast(`已選擇品牌：${brand.name}，正在尋找合適物件...`, 'success');
+
+            setTimeout(() => {
+                window.location.href = 'matching-results.html';
+            }, 1500);
+        }
+
+        // 選擇物件
+        function selectProperty(propertyId) {
+            const property = matchingData.properties.find(p => p.id === propertyId);
+            closeModal();
+            showToast(`已選擇物件：${property.address}，正在尋找合適品牌...`, 'success');
+
+            setTimeout(() => {
+                window.location.href = 'matching-results.html';
+            }, 1500);
+        }
+
+        // 設置選項卡片
+        function setupOptionCards() {
+            document.querySelectorAll('.option-card').forEach(card => {
+                // 添加懸停效果
+                card.addEventListener('mouseenter', function () {
+                    this.style.transform = 'translateY(-8px)';
+                    this.style.boxShadow = '0 20px 50px rgba(0,0,0,0.4)';
+                });
+
+                card.addEventListener('mouseleave', function () {
+                    this.style.transform = 'translateY(-5px)';
+                    this.style.boxShadow = '0 15px 40px rgba(0,0,0,0.3)';
+                });
+            });
+        }
+
+        // 更新統計數據
+        function updateStats() {
+            // 統計數據已在HTML中顯示，這裡可以添加動態更新邏輯
+        }
+
+        // 開始統計動畫
+        function startStatsAnimation() {
+            // 每5秒更新一次統計數據
+            setInterval(() => {
+                updateRandomStats();
+            }, 5000);
+        }
+
+        // 隨機更新統計數據
+        function updateRandomStats() {
+            const randomStat = Math.floor(Math.random() * 3);
+            const statElements = document.querySelectorAll('.stat-number');
+
+            if (statElements[randomStat]) {
+                statElements[randomStat].style.animation = 'pulse 0.5s ease';
+                setTimeout(() => {
+                    statElements[randomStat].style.animation = '';
+                }, 500);
+            }
+        }
+
+        // 工具函數：顯示提示訊息
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast-message toast-${type}`;
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'info' ? '#2563eb' : type === 'success' ? '#059669' : '#ea580c'};
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                z-index: 9999;
+                animation: slideIn 0.3s ease;
+                font-size: 14px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            `;
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    if (document.body.contains(toast)) {
+                        document.body.removeChild(toast);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // 工具函數：顯示模態框
+        function showModal(title, content) {
+            const modal = document.createElement('div');
+            modal.className = 'custom-modal';
+            modal.innerHTML = `
+                <div class="modal-backdrop" onclick="closeModal()"></div>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5>${title}</h5>
+                        <button onclick="closeModal()">&times;</button>
+                    </div>
+                    <div class="modal-body">${content}</div>
+                </div>
+            `;
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 10000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                animation: fadeIn 0.3s ease;
+            `;
+
+            document.body.appendChild(modal);
+        }
+
+        // 工具函數：關閉模態框
+        function closeModal() {
+            const modal = document.querySelector('.custom-modal');
+            if (modal) {
+                modal.style.animation = 'fadeOut 0.3s ease';
+                setTimeout(() => {
+                    if (document.body.contains(modal)) {
+                        document.body.removeChild(modal);
+                    }
+                }, 300);
+            }
+        }
+
+        // 添加額外的CSS樣式
+        const additionalStyle = document.createElement('style');
+        additionalStyle.textContent = `
+            @keyframes fadeIn {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
+            @keyframes fadeOut {
+                from { opacity: 1; }
+                to { opacity: 0; }
+            }
+            @keyframes pulse {
+                0%, 100% { transform: scale(1); }
+                50% { transform: scale(1.1); }
+            }
+            .modal-backdrop {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0,0,0,0.7);
+            }
+            .modal-content {
+                background: white;
+                border-radius: 15px;
+                padding: 20px;
+                max-width: 400px;
+                width: 90%;
+                position: relative;
+                animation: slideUp 0.3s ease;
+            }
+            @keyframes slideUp {
+                from { transform: translateY(50px); opacity: 0; }
+                to { transform: translateY(0); opacity: 1; }
+            }
+            .modal-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 15px;
+                border-bottom: 1px solid #eee;
+                padding-bottom: 10px;
+            }
+            .modal-header button {
+                background: none;
+                border: none;
+                font-size: 24px;
+                cursor: pointer;
+                color: #666;
+            }
+            .selection-list {
+                max-height: 300px;
+                overflow-y: auto;
+            }
+            .selection-item {
+                padding: 12px;
+                border: 1px solid #eee;
+                border-radius: 8px;
+                margin-bottom: 8px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+            .selection-item:hover {
+                background: #f8f9fa;
+                border-color: #2563eb;
+                transform: translateX(5px);
+            }
+            .option-card {
+                cursor: pointer;
+                transition: all 0.4s ease;
+            }
+            .option-button:disabled {
+                opacity: 0.7;
+                cursor: not-allowed;
+            }
+        `;
+        document.head.appendChild(additionalStyle);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>系統設定</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .admin-header {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            color: white;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .admin-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .admin-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .admin-nav {
+            background: white;
+            padding: 15px 20px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+        }
+
+        .nav-tab {
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: #f8f9fa;
+            color: #666;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .nav-tab.active {
+            background: #2563eb;
+            color: white;
+        }
+
+        .nav-tab:hover {
+            background: #e9ecef;
+            color: #333;
+        }
+
+        .nav-tab.active:hover {
+            background: #1e40af;
+            color: white;
+        }
+
+        .settings-container {
+            padding: 20px;
+            padding-bottom: 80px;
+        }
+
+        .settings-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title i {
+            margin-right: 12px;
+            color: #2563eb;
+            font-size: 20px;
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+
+        .setting-info {
+            flex: 1;
+        }
+
+        .setting-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .setting-description {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .setting-control {
+            margin-left: 20px;
+        }
+
+        .form-control {
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.25);
+            outline: none;
+        }
+
+        .form-select {
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 14px;
+            min-width: 150px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 24px;
+            background: #e9ecef;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-switch.active {
+            background: #2563eb;
+        }
+
+        .toggle-switch::before {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .toggle-switch.active::before {
+            transform: translateX(26px);
+        }
+
+        .btn-primary-custom {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .btn-primary-custom:hover {
+            background: #1e40af;
+        }
+
+        .btn-secondary-custom {
+            background: #6b7280;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .btn-secondary-custom:hover {
+            background: #4b5563;
+        }
+
+        .btn-danger-custom {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .btn-danger-custom:hover {
+            background: #b91c1c;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #f1f5f9;
+        }
+
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 12px;
+        }
+
+        .status-online {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-offline {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .status-warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e9ecef;
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .nav-item {
+            text-align: center;
+            color: #666;
+            text-decoration: none;
+            padding: 5px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-item.active {
+            color: #2563eb;
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 2px;
+        }
+
+        .nav-item span {
+            font-size: 10px;
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .setting-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .setting-control {
+                margin-left: 0;
+                width: 100%;
+            }
+            
+            .form-control,
+            .form-select {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 管理員標題 -->
+    <div class="admin-header">
+        <div class="admin-title">系統設定</div>
+        <div class="admin-subtitle">配置系統參數和功能設定</div>
+    </div>
+
+    <!-- 導航標籤 -->
+    <div class="admin-nav">
+        <a href="admin-dashboard.html" class="nav-tab">總覽</a>
+        <a href="user-management.html" class="nav-tab">用戶管理</a>
+        <a href="system-settings.html" class="nav-tab active">系統設定</a>
+        <a href="audit-log.html" class="nav-tab">操作日誌</a>
+        <a href="analytics.html" class="nav-tab">數據分析</a>
+        <a href="reports.html" class="nav-tab">報表中心</a>
+    </div>
+
+    <!-- 設定容器 -->
+    <div class="settings-container">
+        <!-- 基本設定 -->
+        <div class="settings-section">
+            <div class="section-title">
+                <i class="fas fa-cog"></i>
+                基本設定
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">系統名稱</div>
+                    <div class="setting-description">設定系統顯示的名稱</div>
+                </div>
+                <div class="setting-control">
+                    <input type="text" class="form-control" value="商業不動產媒合平台" id="systemName">
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">系統描述</div>
+                    <div class="setting-description">系統的簡短描述</div>
+                </div>
+                <div class="setting-control">
+                    <input type="text" class="form-control" value="連接品牌與物件，創造雙贏價值" id="systemDescription">
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">時區設定</div>
+                    <div class="setting-description">系統使用的時區</div>
+                </div>
+                <div class="setting-control">
+                    <select class="form-select" id="timezone">
+                        <option value="Asia/Taipei" selected>台北時間 (UTC+8)</option>
+                        <option value="UTC">世界標準時間 (UTC)</option>
+                        <option value="Asia/Tokyo">東京時間 (UTC+9)</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">語言設定</div>
+                    <div class="setting-description">系統預設語言</div>
+                </div>
+                <div class="setting-control">
+                    <select class="form-select" id="language">
+                        <option value="zh-TW" selected>繁體中文</option>
+                        <option value="zh-CN">簡體中文</option>
+                        <option value="en-US">English</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- 功能設定 -->
+        <div class="settings-section">
+            <div class="section-title">
+                <i class="fas fa-toggle-on"></i>
+                功能設定
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">用戶註冊</div>
+                    <div class="setting-description">允許新用戶自行註冊</div>
+                </div>
+                <div class="setting-control">
+                    <div class="toggle-switch active" onclick="toggleSetting(this)" data-setting="userRegistration"></div>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">郵件驗證</div>
+                    <div class="setting-description">註冊時需要郵件驗證</div>
+                </div>
+                <div class="setting-control">
+                    <div class="toggle-switch active" onclick="toggleSetting(this)" data-setting="emailVerification"></div>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">自動媒合</div>
+                    <div class="setting-description">啟用AI自動媒合功能</div>
+                </div>
+                <div class="setting-control">
+                    <div class="toggle-switch active" onclick="toggleSetting(this)" data-setting="autoMatching"></div>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">維護模式</div>
+                    <div class="setting-description">啟用系統維護模式</div>
+                </div>
+                <div class="setting-control">
+                    <div class="toggle-switch" onclick="toggleSetting(this)" data-setting="maintenanceMode"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 安全設定 -->
+        <div class="settings-section">
+            <div class="section-title">
+                <i class="fas fa-shield-alt"></i>
+                安全設定
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">密碼最小長度</div>
+                    <div class="setting-description">用戶密碼的最小字符數</div>
+                </div>
+                <div class="setting-control">
+                    <input type="number" class="form-control" value="8" min="6" max="20" id="minPasswordLength">
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">登入失敗次數限制</div>
+                    <div class="setting-description">連續登入失敗後鎖定帳戶</div>
+                </div>
+                <div class="setting-control">
+                    <input type="number" class="form-control" value="5" min="3" max="10" id="maxLoginAttempts">
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">會話超時時間</div>
+                    <div class="setting-description">用戶閒置多久後自動登出（分鐘）</div>
+                </div>
+                <div class="setting-control">
+                    <input type="number" class="form-control" value="30" min="15" max="120" id="sessionTimeout">
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">雙重驗證</div>
+                    <div class="setting-description">強制管理員使用雙重驗證</div>
+                </div>
+                <div class="setting-control">
+                    <div class="toggle-switch" onclick="toggleSetting(this)" data-setting="twoFactorAuth"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 系統狀態 -->
+        <div class="settings-section">
+            <div class="section-title">
+                <i class="fas fa-server"></i>
+                系統狀態
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">資料庫狀態</div>
+                    <div class="setting-description">資料庫連接和性能狀態</div>
+                </div>
+                <div class="setting-control">
+                    <span class="status-indicator status-online">正常運行</span>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">郵件服務</div>
+                    <div class="setting-description">SMTP郵件發送服務狀態</div>
+                </div>
+                <div class="setting-control">
+                    <span class="status-indicator status-online">正常運行</span>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">文件存儲</div>
+                    <div class="setting-description">文件上傳和存儲服務狀態</div>
+                </div>
+                <div class="setting-control">
+                    <span class="status-indicator status-warning">輕微延遲</span>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">API服務</div>
+                    <div class="setting-description">外部API接口服務狀態</div>
+                </div>
+                <div class="setting-control">
+                    <span class="status-indicator status-online">正常運行</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 操作按鈕 -->
+        <div class="settings-section">
+            <div class="action-buttons">
+                <button class="btn-secondary-custom" onclick="resetSettings()">重置設定</button>
+                <button class="btn-danger-custom" onclick="clearCache()">清除快取</button>
+                <button class="btn-primary-custom" onclick="saveSettings()">儲存設定</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部導航 -->
+    <div class="bottom-nav">
+        <a href="dashboard.html" class="nav-item">
+            <i class="fas fa-home"></i>
+            <span>首頁</span>
+        </a>
+        <a href="admin-dashboard.html" class="nav-item active">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>管理</span>
+        </a>
+        <a href="analytics.html" class="nav-item">
+            <i class="fas fa-chart-bar"></i>
+            <span>分析</span>
+        </a>
+        <a href="reports.html" class="nav-item">
+            <i class="fas fa-file-alt"></i>
+            <span>報表</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <i class="fas fa-user"></i>
+            <span>我的</span>
+        </a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 系統設定數據
+        let systemSettings = {
+            userRegistration: true,
+            emailVerification: true,
+            autoMatching: true,
+            maintenanceMode: false,
+            twoFactorAuth: false
+        };
+
+        /**
+         * 切換設定開關
+         */
+        function toggleSetting(element) {
+            const setting = element.dataset.setting;
+            const isActive = element.classList.contains('active');
+            
+            if (isActive) {
+                element.classList.remove('active');
+                systemSettings[setting] = false;
+            } else {
+                element.classList.add('active');
+                systemSettings[setting] = true;
+            }
+            
+            showToast(`${getSettingName(setting)} 已${systemSettings[setting] ? '啟用' : '停用'}`, 'info');
+        }
+
+        /**
+         * 獲取設定名稱
+         */
+        function getSettingName(setting) {
+            const names = {
+                userRegistration: '用戶註冊',
+                emailVerification: '郵件驗證',
+                autoMatching: '自動媒合',
+                maintenanceMode: '維護模式',
+                twoFactorAuth: '雙重驗證'
+            };
+            return names[setting] || setting;
+        }
+
+        /**
+         * 儲存設定
+         */
+        function saveSettings() {
+            // 收集所有設定值
+            const settings = {
+                systemName: document.getElementById('systemName').value,
+                systemDescription: document.getElementById('systemDescription').value,
+                timezone: document.getElementById('timezone').value,
+                language: document.getElementById('language').value,
+                minPasswordLength: document.getElementById('minPasswordLength').value,
+                maxLoginAttempts: document.getElementById('maxLoginAttempts').value,
+                sessionTimeout: document.getElementById('sessionTimeout').value,
+                ...systemSettings
+            };
+            
+            // 模擬保存
+            showToast('設定已儲存', 'success');
+            console.log('Saved settings:', settings);
+        }
+
+        /**
+         * 重置設定
+         */
+        function resetSettings() {
+            if (confirm('確定要重置所有設定為預設值嗎？')) {
+                // 重置表單值
+                document.getElementById('systemName').value = '商業不動產媒合平台';
+                document.getElementById('systemDescription').value = '連接品牌與物件，創造雙贏價值';
+                document.getElementById('timezone').value = 'Asia/Taipei';
+                document.getElementById('language').value = 'zh-TW';
+                document.getElementById('minPasswordLength').value = '8';
+                document.getElementById('maxLoginAttempts').value = '5';
+                document.getElementById('sessionTimeout').value = '30';
+                
+                // 重置開關
+                systemSettings = {
+                    userRegistration: true,
+                    emailVerification: true,
+                    autoMatching: true,
+                    maintenanceMode: false,
+                    twoFactorAuth: false
+                };
+                
+                // 更新UI
+                document.querySelectorAll('.toggle-switch').forEach((toggle, index) => {
+                    const setting = toggle.dataset.setting;
+                    if (systemSettings[setting]) {
+                        toggle.classList.add('active');
+                    } else {
+                        toggle.classList.remove('active');
+                    }
+                });
+                
+                showToast('設定已重置為預設值', 'info');
+            }
+        }
+
+        /**
+         * 清除快取
+         */
+        function clearCache() {
+            if (confirm('確定要清除系統快取嗎？這可能會暫時影響系統性能。')) {
+                showToast('正在清除快取...', 'info');
+                
+                setTimeout(() => {
+                    showToast('快取已清除', 'success');
+                }, 2000);
+            }
+        }
+
+        /**
+         * 工具函數：顯示提示訊息
+         */
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast-message toast-${type}`;
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'info' ? '#2563eb' : type === 'success' ? '#059669' : '#dc3545'};
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                z-index: 9999;
+                animation: slideIn 0.3s ease;
+                font-size: 14px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            `;
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    if (document.body.contains(toast)) {
+                        document.body.removeChild(toast);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // 添加CSS動畫
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+
+</html>

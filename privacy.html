@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>隱私政策</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .top-bar {
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+
+        .page-title {
+            font-size: 18px;
+            font-weight: bold;
+            flex: 1;
+            text-align: center;
+            margin: 0 15px;
+        }
+
+        .download-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .privacy-container {
+            padding: 20px;
+            padding-bottom: 80px;
+        }
+
+        .privacy-header {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .privacy-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .privacy-subtitle {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .last-updated {
+            background: #f0f9ff;
+            color: #0369a1;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            display: inline-block;
+        }
+
+        .privacy-content {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .privacy-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #2563eb;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title i {
+            margin-right: 10px;
+            color: #2563eb;
+        }
+
+        .section-content {
+            color: #666;
+            line-height: 1.7;
+            font-size: 14px;
+        }
+
+        .section-content p {
+            margin-bottom: 12px;
+        }
+
+        .section-content ol,
+        .section-content ul {
+            padding-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .section-content li {
+            margin-bottom: 8px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 13px;
+        }
+
+        .data-table th,
+        .data-table td {
+            border: 1px solid #e9ecef;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .data-table th {
+            background: #f8f9fa;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .data-table td {
+            color: #666;
+        }
+
+        .security-box {
+            background: #d1fae5;
+            border: 1px solid #a7f3d0;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .security-box .title {
+            font-weight: bold;
+            color: #065f46;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+
+        .security-box .title i {
+            margin-right: 8px;
+        }
+
+        .security-box .content {
+            color: #065f46;
+            font-size: 13px;
+        }
+
+        .rights-box {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .rights-box .title {
+            font-weight: bold;
+            color: #92400e;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+
+        .rights-box .title i {
+            margin-right: 8px;
+        }
+
+        .rights-box .content {
+            color: #92400e;
+            font-size: 13px;
+        }
+
+        .contact-info {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .contact-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .contact-item i {
+            width: 20px;
+            color: #2563eb;
+            margin-right: 12px;
+        }
+
+        .contact-item a {
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        .quick-nav {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            position: sticky;
+            top: 20px;
+        }
+
+        .quick-nav-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .quick-nav-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .quick-nav-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #e9ecef;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quick-nav-item:last-child {
+            border-bottom: none;
+        }
+
+        .quick-nav-item:hover {
+            color: #2563eb;
+            padding-left: 10px;
+        }
+
+        .quick-nav-item a {
+            color: inherit;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e9ecef;
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .nav-item {
+            text-align: center;
+            color: #666;
+            text-decoration: none;
+            padding: 5px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-item.active {
+            color: #2563eb;
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 2px;
+        }
+
+        .nav-item span {
+            font-size: 10px;
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 頂部導航 -->
+    <div class="top-bar">
+        <a href="dashboard.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <div class="page-title">隱私政策</div>
+        <button class="download-btn" onclick="downloadPrivacy()">
+            <i class="fas fa-download"></i>
+        </button>
+    </div>
+
+    <!-- 隱私政策容器 -->
+    <div class="privacy-container">
+        <!-- 隱私政策標題 -->
+        <div class="privacy-header">
+            <div class="privacy-title">隱私保護政策</div>
+            <div class="privacy-subtitle">商業不動產媒合平台</div>
+            <div class="last-updated">
+                <i class="fas fa-shield-alt me-1"></i>
+                最後更新：2024年2月1日
+            </div>
+        </div>
+
+        <!-- 快速導航 -->
+        <div class="privacy-content">
+            <div class="quick-nav">
+                <div class="quick-nav-title">
+                    <i class="fas fa-list me-2"></i>快速導航
+                </div>
+                <ul class="quick-nav-list">
+                    <li class="quick-nav-item"><a href="#section1">資料收集</a></li>
+                    <li class="quick-nav-item"><a href="#section2">資料使用</a></li>
+                    <li class="quick-nav-item"><a href="#section3">資料分享</a></li>
+                    <li class="quick-nav-item"><a href="#section4">資料安全</a></li>
+                    <li class="quick-nav-item"><a href="#section5">您的權利</a></li>
+                    <li class="quick-nav-item"><a href="#section6">Cookie政策</a></li>
+                    <li class="quick-nav-item"><a href="#section7">政策更新</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 隱私政策內容 -->
+        <div class="privacy-content">
+            <div class="privacy-section">
+                <div class="section-content">
+                    <p>我們深知個人資料保護的重要性，致力於保護您的隱私權益。本隱私政策說明我們如何收集、使用、儲存和保護您的個人資料。</p>
+                    
+                    <div class="security-box">
+                        <div class="title">
+                            <i class="fas fa-shield-alt"></i>
+                            我們的承諾
+                        </div>
+                        <div class="content">
+                            我們承諾遵循個人資料保護法等相關法規，採用業界標準的安全措施保護您的個人資料，絕不會在未經您同意的情況下將資料用於其他目的。
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="privacy-section" id="section1">
+                <div class="section-title">
+                    <i class="fas fa-database"></i>
+                    我們收集的資料
+                </div>
+                <div class="section-content">
+                    <p>為了提供優質的媒合服務，我們可能收集以下類型的資料：</p>
+                    
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>資料類型</th>
+                                <th>收集目的</th>
+                                <th>收集方式</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>基本資料</td>
+                                <td>帳戶註冊、身份驗證</td>
+                                <td>註冊表單</td>
+                            </tr>
+                            <tr>
+                                <td>聯絡資訊</td>
+                                <td>服務通知、客戶服務</td>
+                                <td>註冊表單、聯絡表單</td>
+                            </tr>
+                            <tr>
+                                <td>商業資訊</td>
+                                <td>媒合服務、市場分析</td>
+                                <td>品牌/物件資料表單</td>
+                            </tr>
+                            <tr>
+                                <td>使用行為</td>
+                                <td>服務優化、個人化推薦</td>
+                                <td>網站分析工具</td>
+                            </tr>
+                            <tr>
+                                <td>技術資訊</td>
+                                <td>系統安全、故障排除</td>
+                                <td>自動收集</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="privacy-section" id="section2">
+                <div class="section-title">
+                    <i class="fas fa-cogs"></i>
+                    資料使用目的
+                </div>
+                <div class="section-content">
+                    <p>我們使用您的個人資料用於以下目的：</p>
+                    <ul>
+                        <li><strong>提供媒合服務：</strong>根據您的需求進行品牌與物件的精準媒合</li>
+                        <li><strong>帳戶管理：</strong>建立和維護您的用戶帳戶</li>
+                        <li><strong>客戶服務：</strong>回應您的詢問和提供技術支援</li>
+                        <li><strong>服務改善：</strong>分析使用模式以優化平台功能</li>
+                        <li><strong>安全防護：</strong>防範詐騙和保護平台安全</li>
+                        <li><strong>法律遵循：</strong>遵守相關法律法規要求</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="privacy-section" id="section3">
+                <div class="section-title">
+                    <i class="fas fa-share-alt"></i>
+                    資料分享與揭露
+                </div>
+                <div class="section-content">
+                    <p>我們不會販售您的個人資料。僅在以下情況下可能分享您的資料：</p>
+                    <ol>
+                        <li><strong>經您同意：</strong>在獲得您明確同意的情況下</li>
+                        <li><strong>媒合需要：</strong>為完成媒合服務，與相關方分享必要資訊</li>
+                        <li><strong>服務提供商：</strong>與協助我們提供服務的第三方合作夥伴</li>
+                        <li><strong>法律要求：</strong>依法律規定或政府機關要求</li>
+                        <li><strong>安全保護：</strong>保護我們或他人的權利、財產或安全</li>
+                    </ol>
+                    
+                    <div class="security-box">
+                        <div class="title">
+                            <i class="fas fa-user-shield"></i>
+                            第三方合作
+                        </div>
+                        <div class="content">
+                            我們與第三方服務提供商合作時，會要求其遵循嚴格的資料保護標準，並僅允許其在提供服務所需的範圍內使用您的資料。
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="privacy-section" id="section4">
+                <div class="section-title">
+                    <i class="fas fa-lock"></i>
+                    資料安全措施
+                </div>
+                <div class="section-content">
+                    <p>我們採用多層次的安全措施保護您的個人資料：</p>
+                    <ul>
+                        <li><strong>加密傳輸：</strong>使用SSL/TLS加密技術保護資料傳輸</li>
+                        <li><strong>存取控制：</strong>嚴格限制員工對個人資料的存取權限</li>
+                        <li><strong>定期備份：</strong>定期備份資料以防止資料遺失</li>
+                        <li><strong>安全監控：</strong>24/7監控系統以偵測異常活動</li>
+                        <li><strong>員工培訓：</strong>定期進行資料保護培訓</li>
+                        <li><strong>安全稽核：</strong>定期進行安全評估和改善</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="privacy-section" id="section5">
+                <div class="section-title">
+                    <i class="fas fa-user-check"></i>
+                    您的權利
+                </div>
+                <div class="section-content">
+                    <p>根據個人資料保護法，您享有以下權利：</p>
+                    
+                    <div class="rights-box">
+                        <div class="title">
+                            <i class="fas fa-gavel"></i>
+                            您的資料權利
+                        </div>
+                        <div class="content">
+                            <ul style="margin: 0; padding-left: 20px;">
+                                <li>查詢或請求閱覽您的個人資料</li>
+                                <li>請求製給複製本</li>
+                                <li>請求補充或更正您的個人資料</li>
+                                <li>請求停止收集、處理或利用您的個人資料</li>
+                                <li>請求刪除您的個人資料</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <p>如需行使上述權利，請透過以下方式聯絡我們：</p>
+                    <ul>
+                        <li>電子郵件：privacy@realestate-matching.com</li>
+                        <li>電話：02-2345-6789</li>
+                        <li>線上客服：平台內建客服系統</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="privacy-section" id="section6">
+                <div class="section-title">
+                    <i class="fas fa-cookie-bite"></i>
+                    Cookie政策
+                </div>
+                <div class="section-content">
+                    <p>我們使用Cookie和類似技術來改善您的使用體驗：</p>
+                    <ul>
+                        <li><strong>必要Cookie：</strong>維持網站基本功能運作</li>
+                        <li><strong>功能Cookie：</strong>記住您的偏好設定</li>
+                        <li><strong>分析Cookie：</strong>了解網站使用情況</li>
+                        <li><strong>行銷Cookie：</strong>提供個人化內容和廣告</li>
+                    </ul>
+                    <p>您可以透過瀏覽器設定管理Cookie偏好，但停用某些Cookie可能影響網站功能。</p>
+                </div>
+            </div>
+
+            <div class="privacy-section" id="section7">
+                <div class="section-title">
+                    <i class="fas fa-sync-alt"></i>
+                    政策更新
+                </div>
+                <div class="section-content">
+                    <p>我們可能會不定期更新本隱私政策，以反映服務變更或法律要求。重大變更時，我們會：</p>
+                    <ul>
+                        <li>在平台上發布更新通知</li>
+                        <li>透過電子郵件通知您</li>
+                        <li>在適當情況下重新取得您的同意</li>
+                    </ul>
+                    <p>建議您定期查看本政策以了解最新資訊。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 聯絡資訊 -->
+        <div class="privacy-content">
+            <div class="privacy-section">
+                <div class="section-title">
+                    <i class="fas fa-phone me-2"></i>隱私問題聯絡
+                </div>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <a href="mailto:privacy@realestate-matching.com">privacy@realestate-matching.com</a>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <a href="tel:02-2345-6789">02-2345-6789</a>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>台北市信義區信義路五段7號35樓</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-clock"></i>
+                        <span>服務時間：週一至週五 09:00-18:00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部導航 -->
+    <div class="bottom-nav">
+        <a href="dashboard.html" class="nav-item">
+            <i class="fas fa-home"></i>
+            <span>首頁</span>
+        </a>
+        <a href="brands.html" class="nav-item">
+            <i class="fas fa-store"></i>
+            <span>品牌</span>
+        </a>
+        <a href="properties.html" class="nav-item">
+            <i class="fas fa-building"></i>
+            <span>物件</span>
+        </a>
+        <a href="cases.html" class="nav-item">
+            <i class="fas fa-handshake"></i>
+            <span>案件</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <i class="fas fa-user"></i>
+            <span>我的</span>
+        </a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        /**
+         * 下載隱私政策
+         */
+        function downloadPrivacy() {
+            showToast('隱私政策PDF下載功能開發中...', 'info');
+        }
+
+        /**
+         * 平滑滾動到指定區塊
+         */
+        document.querySelectorAll('.quick-nav-item a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    
+                    // 高亮顯示目標區塊
+                    targetElement.style.backgroundColor = '#f0f9ff';
+                    setTimeout(() => {
+                        targetElement.style.backgroundColor = '';
+                    }, 2000);
+                }
+            });
+        });
+
+        /**
+         * 工具函數：顯示提示訊息
+         */
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast-message toast-${type}`;
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'info' ? '#2563eb' : type === 'success' ? '#059669' : '#dc3545'};
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                z-index: 9999;
+                animation: slideIn 0.3s ease;
+                font-size: 14px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            `;
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    if (document.body.contains(toast)) {
+                        document.body.removeChild(toast);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // 添加CSS動畫
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // 頁面載入動畫
+        document.addEventListener('DOMContentLoaded', function() {
+            const sections = document.querySelectorAll('.privacy-section');
+            sections.forEach((section, index) => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(20px)';
+                section.style.transition = 'all 0.5s ease';
+                
+                setTimeout(() => {
+                    section.style.opacity = '1';
+                    section.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+
+</html>

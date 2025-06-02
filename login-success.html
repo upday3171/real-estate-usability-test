@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登入成功</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .success-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 450px;
+            width: 100%;
+        }
+
+        .success-icon {
+            font-size: 80px;
+            color: #28a745;
+            margin-bottom: 30px;
+            animation: bounceIn 1s ease;
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .success-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .success-subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+            font-size: 16px;
+        }
+
+        .user-welcome {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 24px;
+        }
+
+        .user-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .user-role {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .quick-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-item {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 20px;
+            font-weight: bold;
+            color: #667eea;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .action-buttons {
+            display: grid;
+            gap: 15px;
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 25px;
+            padding: 15px 30px;
+            font-weight: 600;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            color: white;
+        }
+
+        .btn-secondary-custom {
+            background: transparent;
+            border: 2px solid #667eea;
+            color: #667eea;
+            border-radius: 25px;
+            padding: 15px 30px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-secondary-custom:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .quick-actions {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .quick-action-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .quick-action-btn {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            padding: 15px 10px;
+            text-align: center;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.3s ease;
+            font-size: 12px;
+        }
+
+        .quick-action-btn:hover {
+            background: #f8f9fa;
+            transform: translateY(-2px);
+            color: #333;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .quick-action-icon {
+            font-size: 20px;
+            color: #667eea;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .countdown-info {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            color: #856404;
+            font-size: 14px;
+        }
+
+        .countdown-timer {
+            font-weight: bold;
+            color: #d63031;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .loading-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .loading-content {
+            text-align: center;
+            color: #667eea;
+        }
+
+        .loading-spinner {
+            font-size: 40px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="success-container">
+        <div class="success-icon">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        
+        <h1 class="success-title">登入成功！</h1>
+        <p class="success-subtitle">
+            歡迎回到不動產品牌媒合系統，準備開始您的展店之旅。
+        </p>
+
+        <div class="user-welcome">
+            <div class="user-avatar">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="user-name" id="userName">張展店顧問</div>
+            <div class="user-role">專業展店顧問</div>
+        </div>
+
+        <div class="quick-stats">
+            <div class="stat-item">
+                <span class="stat-number" id="brandCount">12</span>
+                <div class="stat-label">管理品牌</div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" id="caseCount">8</span>
+                <div class="stat-label">進行案件</div>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <a href="dashboard.html" class="btn-primary-custom" onclick="navigateWithLoading(event, 'dashboard.html')">
+                <i class="fas fa-tachometer-alt me-2"></i>進入主控台
+            </a>
+            <a href="matching.html" class="btn-secondary-custom" onclick="navigateWithLoading(event, 'matching.html')">
+                <i class="fas fa-magic me-2"></i>開始智能媒合
+            </a>
+        </div>
+
+        <div class="quick-actions">
+            <h6><i class="fas fa-bolt me-2"></i>快速操作</h6>
+            <div class="quick-action-grid">
+                <a href="add-brand.html" class="quick-action-btn" onclick="navigateWithLoading(event, 'add-brand.html')">
+                    <i class="fas fa-plus-circle quick-action-icon"></i>
+                    新增品牌
+                </a>
+                <a href="add-property.html" class="quick-action-btn" onclick="navigateWithLoading(event, 'add-property.html')">
+                    <i class="fas fa-building quick-action-icon"></i>
+                    新增物件
+                </a>
+                <a href="cases.html" class="quick-action-btn" onclick="navigateWithLoading(event, 'cases.html')">
+                    <i class="fas fa-briefcase quick-action-icon"></i>
+                    查看案件
+                </a>
+            </div>
+        </div>
+
+        <div class="countdown-info">
+            <i class="fas fa-info-circle me-2"></i>
+            系統將在 <span class="countdown-timer" id="countdown">5</span> 秒後自動跳轉到主控台
+            <br>
+            <small>您也可以點擊上方按鈕立即前往</small>
+        </div>
+    </div>
+
+    <!-- 載入覆蓋層 -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <div class="loading-spinner">
+                <i class="fas fa-spinner"></i>
+            </div>
+            <div>載入中...</div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let countdownTime = 5;
+        let countdownInterval;
+
+        /**
+         * 頁面載入完成後初始化
+         */
+        document.addEventListener('DOMContentLoaded', function() {
+            initializePage();
+            startCountdown();
+            loadUserData();
+        });
+
+        /**
+         * 初始化頁面
+         */
+        function initializePage() {
+            // 檢查登入狀態
+            const urlParams = new URLSearchParams(window.location.search);
+            const loginType = urlParams.get('type');
+            
+            if (loginType === 'first-time') {
+                document.querySelector('.success-subtitle').textContent = 
+                    '歡迎首次使用不動產品牌媒合系統！讓我們開始設定您的帳號。';
+            }
+            
+            // 添加進入動畫
+            setTimeout(() => {
+                document.querySelector('.success-container').style.animation = 'fadeInUp 0.6s ease';
+            }, 100);
+        }
+
+        /**
+         * 載入用戶數據
+         */
+        function loadUserData() {
+            // 模擬從API載入用戶數據
+            setTimeout(() => {
+                const userData = {
+                    name: '張展店顧問',
+                    brandCount: 12,
+                    caseCount: 8,
+                    role: '專業展店顧問'
+                };
+                
+                document.getElementById('userName').textContent = userData.name;
+                animateNumber('brandCount', userData.brandCount);
+                animateNumber('caseCount', userData.caseCount);
+            }, 500);
+        }
+
+        /**
+         * 數字動畫效果
+         */
+        function animateNumber(elementId, targetNumber) {
+            const element = document.getElementById(elementId);
+            let currentNumber = 0;
+            const increment = targetNumber / 20;
+            
+            const timer = setInterval(() => {
+                currentNumber += increment;
+                if (currentNumber >= targetNumber) {
+                    currentNumber = targetNumber;
+                    clearInterval(timer);
+                }
+                element.textContent = Math.floor(currentNumber);
+            }, 50);
+        }
+
+        /**
+         * 開始倒數計時
+         */
+        function startCountdown() {
+            const countdownElement = document.getElementById('countdown');
+            
+            countdownInterval = setInterval(() => {
+                countdownTime--;
+                countdownElement.textContent = countdownTime;
+                
+                if (countdownTime <= 0) {
+                    clearInterval(countdownInterval);
+                    navigateWithLoading(null, 'dashboard.html');
+                }
+            }, 1000);
+        }
+
+        /**
+         * 帶載入動畫的導航
+         */
+        function navigateWithLoading(event, url) {
+            if (event) {
+                event.preventDefault();
+            }
+            
+            // 停止倒數計時
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+            }
+            
+            // 顯示載入覆蓋層
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            loadingOverlay.classList.add('show');
+            
+            // 模擬載入時間
+            setTimeout(() => {
+                window.location.href = url;
+            }, 1500);
+        }
+
+        /**
+         * 顯示提示訊息
+         */
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast-message toast-${type}`;
+            toast.innerHTML = `
+                <i class="fas fa-${getToastIcon(type)} me-2"></i>
+                ${message}
+            `;
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${getToastColor(type)};
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                z-index: 9999;
+                animation: slideIn 0.3s ease;
+                font-size: 14px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                max-width: 300px;
+            `;
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    if (document.body.contains(toast)) {
+                        document.body.removeChild(toast);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        /**
+         * 獲取提示訊息圖標
+         */
+        function getToastIcon(type) {
+            const icons = {
+                success: 'check-circle',
+                error: 'exclamation-circle',
+                info: 'info-circle',
+                warning: 'exclamation-triangle'
+            };
+            return icons[type] || 'info-circle';
+        }
+
+        /**
+         * 獲取提示訊息顏色
+         */
+        function getToastColor(type) {
+            const colors = {
+                success: '#28a745',
+                error: '#dc3545',
+                info: '#007bff',
+                warning: '#ffc107'
+            };
+            return colors[type] || '#007bff';
+        }
+
+        // 添加CSS動畫
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeInUp {
+                from { 
+                    opacity: 0; 
+                    transform: translateY(30px); 
+                }
+                to { 
+                    opacity: 1; 
+                    transform: translateY(0); 
+                }
+            }
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

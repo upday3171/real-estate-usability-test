@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>不動產媒合系統 - 可用性測試</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px 0;
+        }
+
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .test-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .test-header h1 {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .test-header p {
+            font-size: 16px;
+            opacity: 0.9;
+            margin: 0;
+        }
+
+        .test-info {
+            padding: 30px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #eee;
+        }
+
+        .info-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .info-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .info-title i {
+            margin-right: 10px;
+            color: #667eea;
+        }
+
+        .test-scenarios {
+            padding: 30px;
+        }
+
+        .scenario-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+
+        .scenario-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .scenario-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .scenario-steps {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .start-test-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 30px auto;
+            text-decoration: none;
+        }
+
+        .start-test-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            color: white;
+        }
+
+        .test-footer {
+            padding: 20px 30px;
+            background: #f8f9fa;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .badge-custom {
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .test-container {
+                margin: 0 10px;
+                border-radius: 15px;
+            }
+
+            .test-header {
+                padding: 20px;
+            }
+
+            .test-header h1 {
+                font-size: 24px;
+            }
+
+            .test-info,
+            .test-scenarios {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="test-container">
+        <!-- 測試標題 -->
+        <div class="test-header">
+            <h1><i class="fas fa-building me-3"></i>不動產媒合系統</h1>
+            <p>可用性測試 v7.0 - 感謝您參與我們的產品測試</p>
+        </div>
+
+        <!-- 測試說明 -->
+        <div class="test-info">
+            <div class="info-card">
+                <div class="info-title">
+                    <i class="fas fa-info-circle"></i>測試目標
+                </div>
+                <p>這是一個專為展店顧問設計的不動產媒合系統。我們希望了解系統的易用性，以及您在使用過程中的體驗和建議。</p>
+            </div>
+
+            <div class="info-card">
+                <div class="info-title">
+                    <i class="fas fa-clock"></i>預估時間
+                </div>
+                <p>完整測試約需 <strong>15-20分鐘</strong>，您可以隨時暫停或結束測試。</p>
+            </div>
+
+            <div class="info-card">
+                <div class="info-title">
+                    <i class="fas fa-user-check"></i>測試身份
+                </div>
+                <p>請以 <span class="badge-custom">展店顧問</span> 的身份進行測試，想像您正在為客戶尋找合適的展店物件。</p>
+            </div>
+        </div>
+
+        <!-- 測試場景 -->
+        <div class="test-scenarios">
+            <h3 class="mb-4"><i class="fas fa-tasks me-2"></i>測試場景</h3>
+
+            <div class="scenario-card">
+                <div class="scenario-title">場景一：系統登入和瀏覽</div>
+                <div class="scenario-steps">
+                    1. 登入系統（測試帳號：demo@example.com / demo123）<br>
+                    2. 瀏覽主儀表板，了解系統概況<br>
+                    3. 查看各項功能選單
+                </div>
+            </div>
+
+            <div class="scenario-card">
+                <div class="scenario-title">場景二：品牌和物件管理</div>
+                <div class="scenario-steps">
+                    1. 瀏覽現有品牌列表<br>
+                    2. 嘗試新增一個品牌<br>
+                    3. 查看物件列表和詳細資訊<br>
+                    4. 嘗試新增一個物件
+                </div>
+            </div>
+
+            <div class="scenario-card">
+                <div class="scenario-title">場景三：智能媒合功能</div>
+                <div class="scenario-steps">
+                    1. 使用智能媒合功能<br>
+                    2. 查看媒合結果和分析<br>
+                    3. 了解匹配度評分<br>
+                    4. 查看推薦理由
+                </div>
+            </div>
+
+            <div class="scenario-card">
+                <div class="scenario-title">場景四：案件管理</div>
+                <div class="scenario-steps">
+                    1. 查看案件列表<br>
+                    2. 查看案件詳細資訊<br>
+                    3. 了解案件進度追蹤<br>
+                    4. 嘗試更新案件狀態
+                </div>
+            </div>
+        </div>
+
+        <!-- 開始測試按鈕 -->
+        <a href="login.html" class="start-test-btn">
+            <i class="fas fa-play me-2"></i>開始測試
+        </a>
+
+        <!-- 測試說明 -->
+        <div class="test-footer">
+            <p><i class="fas fa-lightbulb me-2"></i>測試提示：請在使用過程中留意任何困惑或建議，我們將在測試後收集您的寶貴意見</p>
+            <p><i class="fas fa-link me-2"></i>分享此測試：<span id="shareUrl" style="font-size: 12px; color: #666;">載入中...</span></p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 記錄測試開始時間
+        localStorage.setItem('testStartTime', new Date().toISOString());
+
+        // 初始化測試數據
+        localStorage.setItem('testUser', JSON.stringify({
+            name: '測試用戶',
+            email: 'demo@example.com',
+            role: '展店顧問'
+        }));
+
+        // 顯示當前網址供分享
+        document.getElementById('shareUrl').textContent = window.location.href;
+
+        console.log('可用性測試環境已準備就緒');
+    </script>
+</body>
+
+</html>

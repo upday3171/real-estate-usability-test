@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>歡迎使用</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+            height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+        }
+
+        .welcome-container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            padding: 20px;
+        }
+
+        .logo-section {
+            margin-bottom: 40px;
+        }
+
+        .logo-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            color: #fff;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .app-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .app-subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-bottom: 50px;
+        }
+
+        .features-section {
+            margin-bottom: 50px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            margin-bottom: 15px;
+            padding: 0 20px;
+        }
+
+        .feature-icon {
+            font-size: 20px;
+            margin-right: 15px;
+            width: 30px;
+            text-align: center;
+        }
+
+        .feature-text {
+            font-size: 14px;
+            text-align: left;
+        }
+
+        .action-buttons {
+            width: 100%;
+            max-width: 280px;
+        }
+
+        .btn-primary-custom {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            font-weight: bold;
+            padding: 12px 30px;
+            border-radius: 25px;
+            margin-bottom: 15px;
+            width: 100%;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary-custom:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary-custom {
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            color: white;
+            font-weight: bold;
+            padding: 12px 30px;
+            border-radius: 25px;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary-custom:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.7);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .version-info {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="welcome-container">
+        <div class="logo-section">
+            <div class="logo-icon">
+                <i class="fas fa-building"></i>
+            </div>
+            <h1 class="app-title">不動產媒合</h1>
+            <p class="app-subtitle">專業展店顧問的最佳夥伴</p>
+        </div>
+
+        <div class="features-section">
+            <div class="feature-item">
+                <i class="fas fa-search feature-icon"></i>
+                <span class="feature-text">智能媒合，快速找到最適合的配對</span>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-chart-line feature-icon"></i>
+                <span class="feature-text">案件追蹤，掌握每個媒合進度</span>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-mobile-alt feature-icon"></i>
+                <span class="feature-text">行動辦公，隨時隨地處理業務</span>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-handshake feature-icon"></i>
+                <span class="feature-text">提升成交率，增加業績收入</span>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn btn-primary-custom" onclick="goToLogin()">
+                <i class="fas fa-sign-in-alt me-2"></i>立即登入
+            </button>
+            <button class="btn btn-secondary-custom" onclick="goToRegister()">
+                <i class="fas fa-user-plus me-2"></i>免費註冊
+            </button>
+        </div>
+
+        <div class="version-info">
+            版本 1.0.0 | © 2024 不動產媒合系統
+        </div>
+    </div>
+
+    <script>
+        // 頁面載入完成後初始化
+        document.addEventListener('DOMContentLoaded', function () {
+            setupAnimations();
+            setupEventListeners();
+        });
+
+        // 設置動畫效果
+        function setupAnimations() {
+            // 添加進入動畫
+            const elements = document.querySelectorAll('.logo-section, .features-section, .action-buttons');
+            elements.forEach((element, index) => {
+                element.style.opacity = '0';
+                element.style.transform = 'translateY(30px)';
+                element.style.transition = 'all 0.6s ease';
+
+                setTimeout(() => {
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateY(0)';
+                }, index * 200);
+            });
+
+            // 特徵項目動畫
+            const featureItems = document.querySelectorAll('.feature-item');
+            featureItems.forEach((item, index) => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateX(-20px)';
+                item.style.transition = 'all 0.4s ease';
+
+                setTimeout(() => {
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateX(0)';
+                }, 800 + index * 100);
+            });
+        }
+
+        // 設置事件監聽器
+        function setupEventListeners() {
+            // 按鈕懸停效果
+            document.querySelectorAll('.btn').forEach(btn => {
+                btn.addEventListener('mouseenter', function () {
+                    this.style.transform = 'translateY(-3px) scale(1.05)';
+                });
+
+                btn.addEventListener('mouseleave', function () {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+
+            // 特徵項目懸停效果
+            document.querySelectorAll('.feature-item').forEach(item => {
+                item.addEventListener('mouseenter', function () {
+                    this.style.transform = 'translateX(10px)';
+                    this.style.background = 'rgba(255, 255, 255, 0.1)';
+                    this.style.borderRadius = '10px';
+                    this.style.padding = '10px';
+                });
+
+                item.addEventListener('mouseleave', function () {
+                    this.style.transform = 'translateX(0)';
+                    this.style.background = 'transparent';
+                    this.style.padding = '0';
+                });
+            });
+        }
+
+        // 前往登入頁面
+        function goToLogin() {
+            const btn = event.target.closest('button');
+            const originalText = btn.innerHTML;
+
+            // 顯示載入狀態
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>前往登入...';
+            btn.disabled = true;
+
+            // 添加頁面退出動畫
+            document.querySelector('.welcome-container').style.transform = 'scale(0.95)';
+            document.querySelector('.welcome-container').style.opacity = '0.8';
+
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 1000);
+        }
+
+        // 前往註冊頁面
+        function goToRegister() {
+            const btn = event.target.closest('button');
+            const originalText = btn.innerHTML;
+
+            // 顯示載入狀態
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>前往註冊...';
+            btn.disabled = true;
+
+            // 添加頁面退出動畫
+            document.querySelector('.welcome-container').style.transform = 'scale(0.95)';
+            document.querySelector('.welcome-container').style.opacity = '0.8';
+
+            setTimeout(() => {
+                window.location.href = 'register.html';
+            }, 1000);
+        }
+
+        // 工具函數：顯示提示訊息
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast-message toast-${type}`;
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'info' ? '#2563eb' : type === 'success' ? '#059669' : '#dc3545'};
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                z-index: 9999;
+                animation: slideIn 0.3s ease;
+                font-size: 14px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            `;
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    if (document.body.contains(toast)) {
+                        document.body.removeChild(toast);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // 添加CSS動畫
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+            .welcome-container {
+                transition: all 0.5s ease;
+            }
+            .feature-item {
+                transition: all 0.3s ease;
+                cursor: pointer;
+            }
+            .btn {
+                transition: all 0.3s ease;
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+
+</html>

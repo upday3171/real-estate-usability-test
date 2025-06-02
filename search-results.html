@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>搜尋結果</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .top-bar {
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+
+        .page-title {
+            font-size: 18px;
+            font-weight: bold;
+            flex: 1;
+            text-align: center;
+            margin: 0 15px;
+        }
+
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .search-header {
+            background: white;
+            padding: 20px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .search-box {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 45px 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 25px;
+            font-size: 14px;
+            background: #f8f9fa;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #2563eb;
+            background: white;
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+        }
+
+        .search-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .result-count {
+            font-weight: 600;
+        }
+
+        .sort-dropdown {
+            border: 1px solid #e9ecef;
+            border-radius: 20px;
+            padding: 5px 12px;
+            font-size: 12px;
+            background: white;
+        }
+
+        .filter-tabs {
+            display: flex;
+            padding: 0 20px;
+            margin-bottom: 15px;
+            overflow-x: auto;
+        }
+
+        .filter-tab {
+            background: white;
+            border: none;
+            padding: 8px 16px;
+            margin-right: 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #666;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+        }
+
+        .filter-tab.active {
+            background: #2563eb;
+            color: white;
+        }
+
+        .results-container {
+            padding: 0 20px;
+            padding-bottom: 80px;
+        }
+
+        .result-item {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .result-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .result-type {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .result-type.brand {
+            background: #e0f2fe;
+            color: #0277bd;
+        }
+
+        .result-type.property {
+            background: #e8f5e8;
+            color: #2e7d32;
+        }
+
+        .result-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .result-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            margin-right: 15px;
+        }
+
+        .result-info {
+            flex: 1;
+        }
+
+        .result-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 2px;
+        }
+
+        .result-subtitle {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .result-match {
+            background: #f0f9ff;
+            color: #0369a1;
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-size: 10px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .result-details {
+            margin-bottom: 15px;
+        }
+
+        .detail-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+
+        .detail-icon {
+            width: 16px;
+            color: #2563eb;
+            margin-right: 8px;
+        }
+
+        .detail-text {
+            color: #666;
+        }
+
+        .result-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .btn-primary-custom {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-outline-custom {
+            background: transparent;
+            border: 1px solid #2563eb;
+            color: #2563eb;
+        }
+
+        .btn-success-custom {
+            background: #059669;
+            color: white;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .empty-state i {
+            font-size: 60px;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .empty-state p {
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e9ecef;
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .nav-item {
+            text-align: center;
+            color: #666;
+            text-decoration: none;
+            padding: 5px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-item.active {
+            color: #2563eb;
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 2px;
+        }
+
+        .nav-item span {
+            font-size: 10px;
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 頂部導航 -->
+    <div class="top-bar">
+        <a href="dashboard.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <div class="page-title">搜尋結果</div>
+        <button class="filter-btn" onclick="openAdvancedSearch()">
+            <i class="fas fa-sliders-h"></i>
+        </button>
+    </div>
+
+    <!-- 搜尋區域 -->
+    <div class="search-header">
+        <div class="search-box">
+            <input type="text" class="search-input" placeholder="搜尋品牌或物件..." id="searchInput">
+            <i class="fas fa-search search-icon"></i>
+        </div>
+        <div class="search-stats">
+            <span class="result-count">找到 <strong id="resultCount">8</strong> 個結果</span>
+            <select class="sort-dropdown" id="sortSelect">
+                <option value="relevance">相關性</option>
+                <option value="newest">最新</option>
+                <option value="price-low">價格低到高</option>
+                <option value="price-high">價格高到低</option>
+                <option value="area">面積大小</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- 篩選標籤 -->
+    <div class="filter-tabs">
+        <button class="filter-tab active" data-filter="all">全部 (8)</button>
+        <button class="filter-tab" data-filter="brand">品牌 (3)</button>
+        <button class="filter-tab" data-filter="property">物件 (5)</button>
+        <button class="filter-tab" data-filter="available">空置中 (3)</button>
+        <button class="filter-tab" data-filter="high-match">高匹配 (4)</button>
+    </div>
+
+    <!-- 搜尋結果 -->
+    <div class="results-container" id="resultsContainer">
+        <!-- 結果將由JavaScript動態生成 -->
+    </div>
+
+    <!-- 底部導航 -->
+    <div class="bottom-nav">
+        <a href="dashboard.html" class="nav-item">
+            <i class="fas fa-home"></i>
+            <span>首頁</span>
+        </a>
+        <a href="brands.html" class="nav-item">
+            <i class="fas fa-store"></i>
+            <span>品牌</span>
+        </a>
+        <a href="properties.html" class="nav-item">
+            <i class="fas fa-building"></i>
+            <span>物件</span>
+        </a>
+        <a href="cases.html" class="nav-item">
+            <i class="fas fa-handshake"></i>
+            <span>案件</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <i class="fas fa-user"></i>
+            <span>我的</span>
+        </a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 模擬搜尋結果數據
+        const searchResults = [
+            {
+                id: 1,
+                type: 'brand',
+                title: '麥當勞',
+                subtitle: '餐飲業 | 積極找點',
+                icon: 'fas fa-hamburger',
+                match: '92%',
+                details: [
+                    { icon: 'fas fa-map-marker-alt', text: '台北市、新北市' },
+                    { icon: 'fas fa-dollar-sign', text: '預算: 8-15萬/月' },
+                    { icon: 'fas fa-expand-arrows-alt', text: '面積: 30-50坪' },
+                    { icon: 'fas fa-phone', text: '張經理 0912-345-678' }
+                ],
+                actions: [
+                    { text: '聯絡', class: 'btn-primary-custom', href: '#' },
+                    { text: '詳情', class: 'btn-outline-custom', href: 'brand-detail.html' },
+                    { text: '找物件', class: 'btn-success-custom', href: 'matching-results.html' }
+                ]
+            },
+            {
+                id: 2,
+                type: 'property',
+                title: '信義區店面',
+                subtitle: '台北市信義區信義路五段7號 | 空置中',
+                icon: 'fas fa-store',
+                match: '88%',
+                details: [
+                    { icon: 'fas fa-building', text: '1樓 | 35坪' },
+                    { icon: 'fas fa-dollar-sign', text: '月租: 12萬' },
+                    { icon: 'fas fa-star', text: '角間位置、近捷運' },
+                    { icon: 'fas fa-user', text: '王先生 0912-345-678' }
+                ],
+                actions: [
+                    { text: '聯絡', class: 'btn-primary-custom', href: '#' },
+                    { text: '詳情', class: 'btn-outline-custom', href: 'property-detail.html' },
+                    { text: '找品牌', class: 'btn-success-custom', href: 'matching-results.html' }
+                ]
+            },
+            {
+                id: 3,
+                type: 'brand',
+                title: '星巴克',
+                subtitle: '餐飲業 | 已有候選',
+                icon: 'fas fa-coffee',
+                match: '85%',
+                details: [
+                    { icon: 'fas fa-map-marker-alt', text: '台北市信義區' },
+                    { icon: 'fas fa-dollar-sign', text: '預算: 15-25萬/月' },
+                    { icon: 'fas fa-expand-arrows-alt', text: '面積: 25-40坪' },
+                    { icon: 'fas fa-phone', text: '李經理 0923-456-789' }
+                ],
+                actions: [
+                    { text: '聯絡', class: 'btn-primary-custom', href: '#' },
+                    { text: '詳情', class: 'btn-outline-custom', href: 'brand-detail.html' },
+                    { text: '找物件', class: 'btn-success-custom', href: 'matching-results.html' }
+                ]
+            },
+            {
+                id: 4,
+                type: 'property',
+                title: '松山區店面',
+                subtitle: '台北市松山區八德路四段123號 | 空置中',
+                icon: 'fas fa-store-alt',
+                match: '82%',
+                details: [
+                    { icon: 'fas fa-building', text: '2樓 | 45坪' },
+                    { icon: 'fas fa-dollar-sign', text: '月租: 15萬' },
+                    { icon: 'fas fa-star', text: '電梯大樓、停車位' },
+                    { icon: 'fas fa-user', text: '李小姐 0923-456-789' }
+                ],
+                actions: [
+                    { text: '聯絡', class: 'btn-primary-custom', href: '#' },
+                    { text: '詳情', class: 'btn-outline-custom', href: 'property-detail.html' },
+                    { text: '找品牌', class: 'btn-success-custom', href: 'matching-results.html' }
+                ]
+            },
+            {
+                id: 5,
+                type: 'brand',
+                title: 'UNIQLO',
+                subtitle: '零售業 | 積極找點',
+                icon: 'fas fa-tshirt',
+                match: '79%',
+                details: [
+                    { icon: 'fas fa-map-marker-alt', text: '台北市、桃園市' },
+                    { icon: 'fas fa-dollar-sign', text: '預算: 20-35萬/月' },
+                    { icon: 'fas fa-expand-arrows-alt', text: '面積: 80-120坪' },
+                    { icon: 'fas fa-phone', text: '陳經理 0934-567-890' }
+                ],
+                actions: [
+                    { text: '聯絡', class: 'btn-primary-custom', href: '#' },
+                    { text: '詳情', class: 'btn-outline-custom', href: 'brand-detail.html' },
+                    { text: '找物件', class: 'btn-success-custom', href: 'matching-results.html' }
+                ]
+            }
+        ];
+
+        // 頁面載入完成後初始化
+        document.addEventListener('DOMContentLoaded', function () {
+            initializeSearchResults();
+            setupEventListeners();
+        });
+
+        // 初始化搜尋結果
+        function initializeSearchResults() {
+            renderSearchResults();
+            updateResultCount();
+        }
+
+        // 設置事件監聽器
+        function setupEventListeners() {
+            // 搜尋輸入
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', handleSearch);
+            }
+
+            // 排序選擇
+            const sortSelect = document.getElementById('sortSelect');
+            if (sortSelect) {
+                sortSelect.addEventListener('change', handleSort);
+            }
+
+            // 篩選標籤
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.addEventListener('click', handleFilterClick);
+            });
+        }
+
+        // 渲染搜尋結果
+        function renderSearchResults(filteredResults = searchResults) {
+            const container = document.getElementById('resultsContainer');
+            if (!container) return;
+
+            container.innerHTML = '';
+
+            if (filteredResults.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-search"></i>
+                        <h3>沒有找到符合條件的結果</h3>
+                        <p>請嘗試調整搜尋關鍵字或篩選條件</p>
+                        <button class="btn btn-primary" onclick="openAdvancedSearch()">
+                            <i class="fas fa-sliders-h me-2"></i>進階搜尋
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            filteredResults.forEach(result => {
+                const resultElement = createResultElement(result);
+                container.appendChild(resultElement);
+            });
+
+            updateResultCount(filteredResults.length);
+        }
+
+        // 創建結果元素
+        function createResultElement(result) {
+            const div = document.createElement('div');
+            div.className = 'result-item';
+            div.dataset.resultId = result.id;
+            div.dataset.resultType = result.type;
+
+            const typeText = result.type === 'brand' ? '品牌' : '物件';
+            const typeClass = result.type;
+
+            div.innerHTML = `
+                <div class="result-type ${typeClass}">${typeText}</div>
+                <div class="result-header">
+                    <div class="result-icon">
+                        <i class="${result.icon}"></i>
+                    </div>
+                    <div class="result-info">
+                        <div class="result-title">${result.title}</div>
+                        <div class="result-subtitle">${result.subtitle}</div>
+                    </div>
+                    <div class="result-match">匹配 ${result.match}</div>
+                </div>
+                <div class="result-details">
+                    ${result.details.map(detail => `
+                        <div class="detail-row">
+                            <i class="${detail.icon} detail-icon"></i>
+                            <span class="detail-text">${detail.text}</span>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="result-actions">
+                    ${result.actions.map(action => `
+                        <a href="${action.href}" class="action-btn ${action.class}">${action.text}</a>
+                    `).join('')}
+                </div>
+            `;
+
+            // 添加點擊事件
+            div.addEventListener('click', function (event) {
+                if (!event.target.closest('.result-actions')) {
+                    handleResultClick(result);
+                }
+            });
+
+            return div;
+        }
+
+        // 處理搜尋
+        function handleSearch(event) {
+            const query = event.target.value.toLowerCase();
+
+            const filteredResults = searchResults.filter(result => {
+                return result.title.toLowerCase().includes(query) ||
+                    result.subtitle.toLowerCase().includes(query) ||
+                    result.details.some(detail => detail.text.toLowerCase().includes(query));
+            });
+
+            renderSearchResults(filteredResults);
+
+            if (query) {
+                showToast(`搜尋: "${query}" - 找到 ${filteredResults.length} 個結果`, 'info');
+            }
+        }
+
+        // 處理排序
+        function handleSort(event) {
+            const sortType = event.target.value;
+            let sortedResults = [...searchResults];
+
+            switch (sortType) {
+                case 'relevance':
+                    sortedResults.sort((a, b) => parseFloat(b.match) - parseFloat(a.match));
+                    break;
+                case 'newest':
+                    // 模擬按時間排序
+                    sortedResults.reverse();
+                    break;
+                case 'price-low':
+                    sortedResults.sort((a, b) => {
+                        const priceA = extractPrice(a);
+                        const priceB = extractPrice(b);
+                        return priceA - priceB;
+                    });
+                    break;
+                case 'price-high':
+                    sortedResults.sort((a, b) => {
+                        const priceA = extractPrice(a);
+                        const priceB = extractPrice(b);
+                        return priceB - priceA;
+                    });
+                    break;
+            }
+
+            renderSearchResults(sortedResults);
+            showToast(`已按 ${getSortText(sortType)} 排序`, 'info');
+        }
+
+        // 處理篩選點擊
+        function handleFilterClick(event) {
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            const filter = event.target.dataset.filter;
+            let filteredResults = searchResults;
+
+            switch (filter) {
+                case 'all':
+                    filteredResults = searchResults;
+                    break;
+                case 'brand':
+                    filteredResults = searchResults.filter(r => r.type === 'brand');
+                    break;
+                case 'property':
+                    filteredResults = searchResults.filter(r => r.type === 'property');
+                    break;
+                case 'available':
+                    filteredResults = searchResults.filter(r =>
+                        r.type === 'property' && r.subtitle.includes('空置中'));
+                    break;
+                case 'high-match':
+                    filteredResults = searchResults.filter(r =>
+                        parseFloat(r.match) >= 85);
+                    break;
+            }
+
+            renderSearchResults(filteredResults);
+            updateFilterCounts();
+        }
+
+        // 處理結果點擊
+        function handleResultClick(result) {
+            showToast(`查看 ${result.title} 詳情...`, 'info');
+
+            setTimeout(() => {
+                if (result.type === 'brand') {
+                    window.location.href = 'brand-detail.html';
+                } else {
+                    window.location.href = 'property-detail.html';
+                }
+            }, 500);
+        }
+
+        // 更新結果計數
+        function updateResultCount(count = searchResults.length) {
+            document.getElementById('resultCount').textContent = count;
+        }
+
+        // 更新篩選計數
+        function updateFilterCounts() {
+            const counts = {
+                all: searchResults.length,
+                brand: searchResults.filter(r => r.type === 'brand').length,
+                property: searchResults.filter(r => r.type === 'property').length,
+                available: searchResults.filter(r => r.type === 'property' && r.subtitle.includes('空置中')).length,
+                'high-match': searchResults.filter(r => parseFloat(r.match) >= 85).length
+            };
+
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                const filter = tab.dataset.filter;
+                const text = tab.textContent.split(' ')[0];
+                if (counts[filter] !== undefined) {
+                    tab.textContent = `${text} (${counts[filter]})`;
+                }
+            });
+        }
+
+        // 輔助函數：提取價格
+        function extractPrice(result) {
+            const priceDetail = result.details.find(d => d.text.includes('萬') || d.text.includes('預算'));
+            if (!priceDetail) return 0;
+
+            const match = priceDetail.text.match(/(\d+)/);
+            return match ? parseInt(match[1]) : 0;
+        }
+
+        // 輔助函數：獲取排序文字
+        function getSortText(sortType) {
+            const sortTexts = {
+                relevance: '相關性',
+                newest: '最新',
+                'price-low': '價格低到高',
+                'price-high': '價格高到低',
+                area: '面積大小'
+            };
+            return sortTexts[sortType] || '相關性';
+        }
+
+        // 開啟進階搜尋
+        function openAdvancedSearch() {
+            showToast('正在開啟進階搜尋...', 'info');
+            setTimeout(() => {
+                window.location.href = 'advanced-search.html';
+            }, 500);
+        }
+
+        // 工具函數：顯示提示訊息
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast-message toast-${type}`;
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'info' ? '#2563eb' : type === 'success' ? '#059669' : '#dc3545'};
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                z-index: 9999;
+                animation: slideIn 0.3s ease;
+                font-size: 14px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            `;
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    if (document.body.contains(toast)) {
+                        document.body.removeChild(toast);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // 添加CSS動畫
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+
+</html>

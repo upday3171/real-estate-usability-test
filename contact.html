@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>聯絡我們</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .top-bar {
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+
+        .page-title {
+            font-size: 18px;
+            font-weight: bold;
+            flex: 1;
+            text-align: center;
+            margin: 0 15px;
+        }
+
+        .help-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .contact-container {
+            padding: 20px;
+            padding-bottom: 80px;
+        }
+
+        .contact-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title i {
+            margin-right: 12px;
+            color: #2563eb;
+            font-size: 20px;
+        }
+
+        .contact-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .contact-method {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .contact-method:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-color: #2563eb;
+        }
+
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            margin: 0 auto 15px;
+        }
+
+        .contact-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .contact-info {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .contact-time {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .form-control {
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 12px 15px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .form-control:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.25);
+            outline: none;
+        }
+
+        .form-select {
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 12px 15px;
+            font-size: 14px;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m1 6 7 7 7-7'/%3e%3c/svg%3e");
+        }
+
+        .form-control.textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 30px;
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: #1e40af;
+            transform: translateY(-1px);
+        }
+
+        .office-info {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .office-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .office-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .office-item i {
+            width: 20px;
+            color: #2563eb;
+            margin-right: 12px;
+            margin-top: 2px;
+        }
+
+        .office-item a {
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        .map-placeholder {
+            height: 200px;
+            background: #e9ecef;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            margin-top: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .map-placeholder:hover {
+            background: #dee2e6;
+        }
+
+        .faq-section {
+            margin-top: 20px;
+        }
+
+        .faq-item {
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 15px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: #333;
+            transition: all 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background: #e9ecef;
+        }
+
+        .faq-answer {
+            padding: 0 20px 15px;
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+            display: none;
+        }
+
+        .faq-item.active .faq-answer {
+            display: block;
+        }
+
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e9ecef;
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .nav-item {
+            text-align: center;
+            color: #666;
+            text-decoration: none;
+            padding: 5px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-item.active {
+            color: #2563eb;
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 2px;
+        }
+
+        .nav-item span {
+            font-size: 10px;
+            display: block;
+        }
+
+        .success-message {
+            background: #d1fae5;
+            border: 1px solid #a7f3d0;
+            color: #065f46;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .error-message {
+            background: #fee2e2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 頂部導航 -->
+    <div class="top-bar">
+        <a href="dashboard.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <div class="page-title">聯絡我們</div>
+        <button class="help-btn" onclick="showHelp()">
+            <i class="fas fa-question"></i>
+        </button>
+    </div>
+
+    <!-- 聯絡容器 -->
+    <div class="contact-container">
+        <!-- 聯絡方式 -->
+        <div class="contact-section">
+            <div class="section-title">
+                <i class="fas fa-phone"></i>
+                聯絡方式
+            </div>
+            <div class="contact-methods">
+                <div class="contact-method" onclick="makeCall()">
+                    <div class="contact-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <div class="contact-title">電話聯絡</div>
+                    <div class="contact-info">02-2345-6789</div>
+                    <div class="contact-time">週一至週五 09:00-18:00</div>
+                </div>
+                <div class="contact-method" onclick="sendEmail()">
+                    <div class="contact-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="contact-title">電子郵件</div>
+                    <div class="contact-info">info@realestate-matching.com</div>
+                    <div class="contact-time">24小時內回覆</div>
+                </div>
+                <div class="contact-method" onclick="openChat()">
+                    <div class="contact-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <div class="contact-title">線上客服</div>
+                    <div class="contact-info">即時線上諮詢</div>
+                    <div class="contact-time">週一至週五 09:00-18:00</div>
+                </div>
+                <div class="contact-method" onclick="openLine()">
+                    <div class="contact-icon">
+                        <i class="fab fa-line"></i>
+                    </div>
+                    <div class="contact-title">LINE官方帳號</div>
+                    <div class="contact-info">@realestate-matching</div>
+                    <div class="contact-time">快速回應</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 聯絡表單 -->
+        <div class="contact-section">
+            <div class="section-title">
+                <i class="fas fa-edit"></i>
+                聯絡表單
+            </div>
+            <div class="success-message" id="successMessage">
+                <i class="fas fa-check-circle me-2"></i>
+                您的訊息已成功送出！我們會在24小時內回覆您。
+            </div>
+            <div class="error-message" id="errorMessage">
+                <i class="fas fa-exclamation-circle me-2"></i>
+                送出失敗，請檢查所有欄位是否正確填寫。
+            </div>
+            <form id="contactForm">
+                <div class="form-group">
+                    <label class="form-label">姓名 *</label>
+                    <input type="text" class="form-control" id="name" required placeholder="請輸入您的姓名">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">聯絡電話 *</label>
+                    <input type="tel" class="form-control" id="phone" required placeholder="請輸入您的聯絡電話">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">電子郵件 *</label>
+                    <input type="email" class="form-control" id="email" required placeholder="請輸入您的電子郵件">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">諮詢類型</label>
+                    <select class="form-select" id="inquiryType">
+                        <option value="">請選擇諮詢類型</option>
+                        <option value="brand">品牌展店諮詢</option>
+                        <option value="property">物件出租諮詢</option>
+                        <option value="matching">媒合服務諮詢</option>
+                        <option value="technical">技術支援</option>
+                        <option value="partnership">合作洽談</option>
+                        <option value="other">其他</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">訊息內容 *</label>
+                    <textarea class="form-control textarea" id="message" required placeholder="請詳細描述您的需求或問題..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-paper-plane me-2"></i>送出訊息
+                </button>
+            </form>
+        </div>
+
+        <!-- 辦公室資訊 -->
+        <div class="contact-section">
+            <div class="section-title">
+                <i class="fas fa-map-marker-alt"></i>
+                辦公室資訊
+            </div>
+            <div class="office-info">
+                <div class="office-item">
+                    <i class="fas fa-building"></i>
+                    <div>
+                        <strong>總公司</strong><br>
+                        台北市信義區信義路五段7號35樓
+                    </div>
+                </div>
+                <div class="office-item">
+                    <i class="fas fa-subway"></i>
+                    <div>
+                        <strong>交通資訊</strong><br>
+                        捷運信義線台北101/世貿站 2號出口步行3分鐘
+                    </div>
+                </div>
+                <div class="office-item">
+                    <i class="fas fa-car"></i>
+                    <div>
+                        <strong>停車資訊</strong><br>
+                        大樓地下停車場，訪客停車請事先聯絡
+                    </div>
+                </div>
+                <div class="office-item">
+                    <i class="fas fa-clock"></i>
+                    <div>
+                        <strong>營業時間</strong><br>
+                        週一至週五 09:00-18:00<br>
+                        週六、週日及國定假日休息
+                    </div>
+                </div>
+            </div>
+            <div class="map-placeholder" onclick="openMap()">
+                <div>
+                    <i class="fas fa-map me-2"></i>
+                    點擊查看地圖位置
+                </div>
+            </div>
+        </div>
+
+        <!-- 常見問題 -->
+        <div class="contact-section">
+            <div class="section-title">
+                <i class="fas fa-question-circle"></i>
+                常見問題
+            </div>
+            <div class="faq-section">
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span>如何開始使用媒合服務？</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        您可以直接在平台上註冊帳號，填寫品牌或物件資訊，我們的專業顧問會主動聯絡您，提供客製化的媒合服務。
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span>媒合服務需要收費嗎？</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        基本的媒合服務是免費的，只有在成功媒合並簽約後才會收取服務費用。詳細收費標準請聯絡我們的業務團隊。
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span>媒合成功率有多高？</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        我們的整體媒合成功率達到95%以上，透過AI智能分析和專業顧問服務，大幅提升媒合精準度。
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span>多久可以找到合適的媒合對象？</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        平均媒合時間為2-4週，具體時間會根據您的需求條件和市場狀況而有所不同。我們會定期提供媒合進度報告。
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部導航 -->
+    <div class="bottom-nav">
+        <a href="dashboard.html" class="nav-item">
+            <i class="fas fa-home"></i>
+            <span>首頁</span>
+        </a>
+        <a href="brands.html" class="nav-item">
+            <i class="fas fa-store"></i>
+            <span>品牌</span>
+        </a>
+        <a href="properties.html" class="nav-item">
+            <i class="fas fa-building"></i>
+            <span>物件</span>
+        </a>
+        <a href="cases.html" class="nav-item">
+            <i class="fas fa-handshake"></i>
+            <span>案件</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <i class="fas fa-user"></i>
+            <span>我的</span>
+        </a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        /**
+         * 撥打電話
+         */
+        function makeCall() {
+            window.location.href = 'tel:02-2345-6789';
+            showToast('正在撥打電話...', 'info');
+        }
+
+        /**
+         * 發送郵件
+         */
+        function sendEmail() {
+            window.location.href = 'mailto:info@realestate-matching.com?subject=諮詢服務&body=您好，我想了解更多關於商業不動產媒合服務的資訊。';
+            showToast('正在開啟郵件應用程式...', 'info');
+        }
+
+        /**
+         * 開啟線上客服
+         */
+        function openChat() {
+            showToast('線上客服功能開發中，請使用其他聯絡方式', 'info');
+        }
+
+        /**
+         * 開啟LINE
+         */
+        function openLine() {
+            window.open('https://line.me/R/ti/p/@realestate-matching', '_blank');
+            showToast('正在開啟LINE...', 'info');
+        }
+
+        /**
+         * 開啟地圖
+         */
+        function openMap() {
+            const address = '台北市信義區信義路五段7號35樓';
+            const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
+            window.open(googleMapsUrl, '_blank');
+            showToast('正在開啟Google地圖...', 'info');
+        }
+
+        /**
+         * 顯示幫助
+         */
+        function showHelp() {
+            showToast('如需協助，請使用上方任一聯絡方式與我們聯繫', 'info');
+        }
+
+        /**
+         * 切換FAQ項目
+         */
+        function toggleFaq(element) {
+            const faqItem = element.parentElement;
+            const isActive = faqItem.classList.contains('active');
+            
+            // 關閉所有FAQ項目
+            document.querySelectorAll('.faq-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // 如果當前項目不是active，則開啟它
+            if (!isActive) {
+                faqItem.classList.add('active');
+            }
+        }
+
+        /**
+         * 處理聯絡表單提交
+         */
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const phone = document.getElementById('phone').value;
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
+            
+            // 簡單驗證
+            if (!name || !phone || !email || !message) {
+                showErrorMessage();
+                return;
+            }
+            
+            // 模擬提交
+            showToast('正在送出訊息...', 'info');
+            
+            setTimeout(() => {
+                showSuccessMessage();
+                this.reset();
+            }, 2000);
+        });
+
+        /**
+         * 顯示成功訊息
+         */
+        function showSuccessMessage() {
+            document.getElementById('successMessage').style.display = 'block';
+            document.getElementById('errorMessage').style.display = 'none';
+            
+            setTimeout(() => {
+                document.getElementById('successMessage').style.display = 'none';
+            }, 5000);
+        }
+
+        /**
+         * 顯示錯誤訊息
+         */
+        function showErrorMessage() {
+            document.getElementById('errorMessage').style.display = 'block';
+            document.getElementById('successMessage').style.display = 'none';
+            
+            setTimeout(() => {
+                document.getElementById('errorMessage').style.display = 'none';
+            }, 5000);
+        }
+
+        /**
+         * 工具函數：顯示提示訊息
+         */
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast-message toast-${type}`;
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'info' ? '#2563eb' : type === 'success' ? '#059669' : '#dc3545'};
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                z-index: 9999;
+                animation: slideIn 0.3s ease;
+                font-size: 14px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            `;
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    if (document.body.contains(toast)) {
+                        document.body.removeChild(toast);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // 添加CSS動畫
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+
+</html>

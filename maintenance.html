@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>系統維護中</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .maintenance-container {
+            text-align: center;
+            color: white;
+            padding: 40px 20px;
+            max-width: 700px;
+            width: 100%;
+        }
+
+        .maintenance-icon {
+            font-size: 100px;
+            margin-bottom: 30px;
+            opacity: 0.9;
+            animation: rotate 4s linear infinite;
+        }
+
+        .maintenance-title {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .maintenance-message {
+            font-size: 18px;
+            margin-bottom: 40px;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .countdown-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .countdown-title {
+            font-size: 20px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .countdown-timer {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .time-unit {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 20px 15px;
+            min-width: 80px;
+            backdrop-filter: blur(5px);
+        }
+
+        .time-number {
+            font-size: 32px;
+            font-weight: bold;
+            display: block;
+            line-height: 1;
+        }
+
+        .time-label {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+
+        .progress-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 25px;
+            margin: 30px 0;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .progress-title {
+            font-size: 18px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .progress-bar-custom {
+            width: 100%;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .progress-fill-custom {
+            height: 100%;
+            background: linear-gradient(90deg, #ffd700, #ffed4e);
+            border-radius: 6px;
+            transition: width 0.5s ease;
+            animation: shimmer 2s infinite;
+        }
+
+        .progress-text {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .updates-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 25px;
+            margin: 30px 0;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: left;
+        }
+
+        .updates-title {
+            font-size: 18px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .update-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .update-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .update-time {
+            font-size: 12px;
+            opacity: 0.7;
+            min-width: 60px;
+            margin-right: 15px;
+        }
+
+        .update-content {
+            flex: 1;
+            font-size: 14px;
+        }
+
+        .contact-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 25px;
+            margin: 30px 0;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .contact-title {
+            font-size: 18px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            padding: 10px 15px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .contact-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #ffd700;
+            transform: translateY(-2px);
+        }
+
+        .contact-item i {
+            margin-right: 8px;
+            font-size: 16px;
+        }
+
+        .social-section {
+            margin-top: 30px;
+        }
+
+        .social-title {
+            font-size: 16px;
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .social-link {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .social-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #ffd700;
+            transform: translateY(-3px);
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: -200px 0;
+            }
+            100% {
+                background-position: 200px 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .maintenance-title {
+                font-size: 28px;
+            }
+            
+            .maintenance-message {
+                font-size: 16px;
+            }
+            
+            .countdown-timer {
+                gap: 10px;
+            }
+            
+            .time-unit {
+                min-width: 60px;
+                padding: 15px 10px;
+            }
+            
+            .time-number {
+                font-size: 24px;
+            }
+            
+            .contact-info {
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 維護容器 -->
+    <div class="maintenance-container">
+        <div class="maintenance-icon">
+            <i class="fas fa-cog"></i>
+        </div>
+        
+        <h1 class="maintenance-title">系統維護中</h1>
+        
+        <p class="maintenance-message">
+            我們正在進行系統升級和維護，以提供更好的服務體驗。<br>
+            維護期間暫時無法使用，造成不便敬請見諒。
+        </p>
+
+        <!-- 倒計時區域 -->
+        <div class="countdown-section">
+            <div class="countdown-title">
+                <i class="fas fa-clock me-2"></i>預計完成時間
+            </div>
+            <div class="countdown-timer">
+                <div class="time-unit">
+                    <span class="time-number" id="hours">02</span>
+                    <div class="time-label">小時</div>
+                </div>
+                <div class="time-unit">
+                    <span class="time-number" id="minutes">30</span>
+                    <div class="time-label">分鐘</div>
+                </div>
+                <div class="time-unit">
+                    <span class="time-number" id="seconds">45</span>
+                    <div class="time-label">秒</div>
+                </div>
+            </div>
+            <div class="progress-text">維護將於 <span id="endTime"></span> 完成</div>
+        </div>
+
+        <!-- 進度區域 -->
+        <div class="progress-section">
+            <div class="progress-title">
+                <i class="fas fa-tasks me-2"></i>維護進度
+            </div>
+            <div class="progress-bar-custom">
+                <div class="progress-fill-custom" id="progressBar"></div>
+            </div>
+            <div class="progress-text">
+                已完成 <span id="progressPercent">65</span>% | 
+                當前階段：<span id="currentStage">資料庫優化</span>
+            </div>
+        </div>
+
+        <!-- 更新動態 -->
+        <div class="updates-section">
+            <div class="updates-title">
+                <i class="fas fa-bell me-2"></i>維護動態
+            </div>
+            <div id="updatesList">
+                <div class="update-item">
+                    <div class="update-time">14:30</div>
+                    <div class="update-content">開始資料庫優化和索引重建</div>
+                </div>
+                <div class="update-item">
+                    <div class="update-time">14:15</div>
+                    <div class="update-content">完成系統備份，開始核心模組更新</div>
+                </div>
+                <div class="update-item">
+                    <div class="update-time">14:00</div>
+                    <div class="update-content">維護開始，系統進入維護模式</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 聯絡資訊 -->
+        <div class="contact-section">
+            <div class="contact-title">
+                <i class="fas fa-headset me-2"></i>需要協助？
+            </div>
+            <div class="contact-info">
+                <a href="mailto:support@realestate-matching.com" class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <span>客服信箱</span>
+                </a>
+                <a href="tel:02-2345-6789" class="contact-item">
+                    <i class="fas fa-phone"></i>
+                    <span>緊急專線</span>
+                </a>
+                <a href="#" class="contact-item" onclick="openStatusPage()">
+                    <i class="fas fa-chart-line"></i>
+                    <span>系統狀態</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- 社群媒體 -->
+        <div class="social-section">
+            <div class="social-title">關注我們獲取最新動態</div>
+            <div class="social-links">
+                <a href="#" class="social-link" title="Facebook">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="#" class="social-link" title="LINE">
+                    <i class="fab fa-line"></i>
+                </a>
+                <a href="#" class="social-link" title="Twitter">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="#" class="social-link" title="Instagram">
+                    <i class="fab fa-instagram"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 維護結束時間（示例：2小時30分45秒後）
+        const maintenanceEndTime = new Date(Date.now() + (2 * 60 * 60 + 30 * 60 + 45) * 1000);
+        
+        // 維護階段
+        const maintenanceStages = [
+            { name: '系統備份', progress: 20 },
+            { name: '核心模組更新', progress: 45 },
+            { name: '資料庫優化', progress: 65 },
+            { name: '功能測試', progress: 85 },
+            { name: '系統重啟', progress: 100 }
+        ];
+
+        let currentStageIndex = 2; // 當前在第3階段
+
+        /**
+         * 初始化頁面
+         */
+        document.addEventListener('DOMContentLoaded', function() {
+            updateEndTime();
+            startCountdown();
+            updateProgress();
+            startProgressSimulation();
+        });
+
+        /**
+         * 更新結束時間顯示
+         */
+        function updateEndTime() {
+            const endTimeString = maintenanceEndTime.toLocaleString('zh-TW', {
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            document.getElementById('endTime').textContent = endTimeString;
+        }
+
+        /**
+         * 開始倒計時
+         */
+        function startCountdown() {
+            function updateCountdown() {
+                const now = new Date();
+                const timeLeft = maintenanceEndTime - now;
+
+                if (timeLeft <= 0) {
+                    // 維護結束，重定向到首頁
+                    window.location.href = 'dashboard.html';
+                    return;
+                }
+
+                const hours = Math.floor(timeLeft / (1000 * 60 * 60));
+                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+                document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+                document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+                document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+            }
+
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+        }
+
+        /**
+         * 更新進度
+         */
+        function updateProgress() {
+            const currentStage = maintenanceStages[currentStageIndex];
+            document.getElementById('progressPercent').textContent = currentStage.progress;
+            document.getElementById('currentStage').textContent = currentStage.name;
+            document.getElementById('progressBar').style.width = currentStage.progress + '%';
+        }
+
+        /**
+         * 模擬進度更新
+         */
+        function startProgressSimulation() {
+            setInterval(() => {
+                if (currentStageIndex < maintenanceStages.length - 1) {
+                    // 隨機決定是否進入下一階段
+                    if (Math.random() > 0.7) {
+                        currentStageIndex++;
+                        updateProgress();
+                        addUpdateMessage();
+                    }
+                }
+            }, 30000); // 每30秒檢查一次
+        }
+
+        /**
+         * 添加更新訊息
+         */
+        function addUpdateMessage() {
+            const updatesList = document.getElementById('updatesList');
+            const currentTime = new Date().toLocaleTimeString('zh-TW', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            const currentStage = maintenanceStages[currentStageIndex];
+            const newUpdate = document.createElement('div');
+            newUpdate.className = 'update-item';
+            newUpdate.innerHTML = `
+                <div class="update-time">${currentTime}</div>
+                <div class="update-content">開始 ${currentStage.name}</div>
+            `;
+            
+            updatesList.insertBefore(newUpdate, updatesList.firstChild);
+            
+            // 限制顯示最新的5條更新
+            const updates = updatesList.children;
+            if (updates.length > 5) {
+                updatesList.removeChild(updates[updates.length - 1]);
+            }
+        }
+
+        /**
+         * 開啟系統狀態頁面
+         */
+        function openStatusPage() {
+            // 在實際應用中，這裡會開啟系統狀態頁面
+            alert('系統狀態頁面開發中...');
+        }
+
+        /**
+         * 自動重新整理檢查
+         */
+        function checkMaintenanceStatus() {
+            // 在實際應用中，這裡會向服務器查詢維護狀態
+            // 如果維護結束，自動跳轉到首頁
+            
+            // 模擬檢查
+            console.log('檢查維護狀態...');
+        }
+
+        // 每5分鐘檢查一次維護狀態
+        setInterval(checkMaintenanceStatus, 5 * 60 * 1000);
+
+        // 監聽頁面可見性變化
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
+                // 頁面重新可見時，檢查維護狀態
+                checkMaintenanceStatus();
+            }
+        });
+
+        // 添加鍵盤快捷鍵
+        document.addEventListener('keydown', function(e) {
+            // F5 重新整理
+            if (e.key === 'F5') {
+                e.preventDefault();
+                location.reload();
+            }
+            
+            // Ctrl+R 重新整理
+            if (e.ctrlKey && e.key === 'r') {
+                e.preventDefault();
+                location.reload();
+            }
+        });
+    </script>
+</body>
+
+</html>

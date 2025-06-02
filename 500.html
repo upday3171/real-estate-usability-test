@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>服務器錯誤 - 500</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .error-container {
+            text-align: center;
+            color: white;
+            padding: 40px 20px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .error-code {
+            font-size: 120px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        .error-title {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .error-message {
+            font-size: 18px;
+            margin-bottom: 30px;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .error-icon {
+            font-size: 80px;
+            margin-bottom: 30px;
+            opacity: 0.8;
+            animation: shake 3s ease-in-out infinite;
+        }
+
+        .status-indicator {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 30px 0;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .status-item:last-child {
+            border-bottom: none;
+        }
+
+        .status-label {
+            font-weight: 600;
+        }
+
+        .status-value {
+            display: flex;
+            align-items: center;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-left: 8px;
+            animation: blink 1.5s infinite;
+        }
+
+        .status-dot.checking {
+            background: #ffd700;
+        }
+
+        .status-dot.error {
+            background: #ff4757;
+        }
+
+        .status-dot.ok {
+            background: #2ed573;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .btn-primary-custom {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            min-width: 200px;
+        }
+
+        .btn-primary-custom:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary-custom {
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            min-width: 200px;
+        }
+
+        .btn-secondary-custom:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.5);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .retry-info {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .retry-timer {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #ffd700;
+            border-radius: 3px;
+            transition: width 1s linear;
+        }
+
+        .footer-info {
+            margin-top: 40px;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .footer-info a {
+            color: #ffd700;
+            text-decoration: none;
+        }
+
+        .footer-info a:hover {
+            text-decoration: underline;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes shake {
+            0%, 100% {
+                transform: translateX(0);
+            }
+            10%, 30%, 50%, 70%, 90% {
+                transform: translateX(-2px);
+            }
+            20%, 40%, 60%, 80% {
+                transform: translateX(2px);
+            }
+        }
+
+        @keyframes blink {
+            0%, 50% {
+                opacity: 1;
+            }
+            51%, 100% {
+                opacity: 0.3;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .error-code {
+                font-size: 80px;
+            }
+            
+            .error-title {
+                font-size: 24px;
+            }
+            
+            .error-message {
+                font-size: 16px;
+            }
+            
+            .btn-primary-custom,
+            .btn-secondary-custom {
+                min-width: 250px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 錯誤容器 -->
+    <div class="error-container">
+        <div class="error-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        
+        <div class="error-code">500</div>
+        
+        <h1 class="error-title">服務器內部錯誤</h1>
+        
+        <p class="error-message">
+            抱歉，服務器遇到了一個意外錯誤，無法完成您的請求。<br>
+            我們的技術團隊已經收到通知，正在緊急處理中。
+        </p>
+
+        <!-- 系統狀態指示器 -->
+        <div class="status-indicator">
+            <h4><i class="fas fa-server me-2"></i>系統狀態檢查</h4>
+            <div class="status-item">
+                <span class="status-label">資料庫連接</span>
+                <span class="status-value">
+                    檢查中...
+                    <span class="status-dot checking" id="dbStatus"></span>
+                </span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">API服務</span>
+                <span class="status-value">
+                    檢查中...
+                    <span class="status-dot checking" id="apiStatus"></span>
+                </span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">文件系統</span>
+                <span class="status-value">
+                    檢查中...
+                    <span class="status-dot checking" id="fileStatus"></span>
+                </span>
+            </div>
+        </div>
+
+        <!-- 自動重試資訊 -->
+        <div class="retry-info">
+            <h4><i class="fas fa-sync-alt me-2"></i>自動重試</h4>
+            <p>系統將在 <span class="retry-timer" id="retryTimer">30</span> 秒後自動重試</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <button class="btn-secondary-custom" onclick="cancelRetry()" id="cancelBtn">
+                <i class="fas fa-times me-2"></i>取消自動重試
+            </button>
+        </div>
+
+        <!-- 操作按鈕 -->
+        <div class="action-buttons">
+            <a href="javascript:location.reload()" class="btn-primary-custom">
+                <i class="fas fa-redo me-2"></i>重新載入頁面
+            </a>
+            <a href="dashboard.html" class="btn-secondary-custom">
+                <i class="fas fa-home me-2"></i>返回首頁
+            </a>
+        </div>
+
+        <!-- 底部資訊 -->
+        <div class="footer-info">
+            <p>如果問題持續發生，請 <a href="contact.html">聯絡技術支援</a></p>
+            <p>錯誤ID：<span id="errorId"></span> | 時間：<span id="currentTime"></span></p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let retryCountdown = 30;
+        let retryInterval;
+        let progressInterval;
+        let statusCheckInterval;
+
+        /**
+         * 初始化頁面
+         */
+        document.addEventListener('DOMContentLoaded', function() {
+            generateErrorId();
+            updateCurrentTime();
+            startRetryCountdown();
+            startStatusCheck();
+            
+            // 每秒更新時間
+            setInterval(updateCurrentTime, 1000);
+        });
+
+        /**
+         * 生成錯誤ID
+         */
+        function generateErrorId() {
+            const errorId = 'ERR-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).substr(2, 5).toUpperCase();
+            document.getElementById('errorId').textContent = errorId;
+        }
+
+        /**
+         * 更新當前時間
+         */
+        function updateCurrentTime() {
+            const now = new Date();
+            const timeString = now.toLocaleString('zh-TW', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            document.getElementById('currentTime').textContent = timeString;
+        }
+
+        /**
+         * 開始重試倒計時
+         */
+        function startRetryCountdown() {
+            const timerElement = document.getElementById('retryTimer');
+            const progressElement = document.getElementById('progressFill');
+            
+            retryInterval = setInterval(() => {
+                retryCountdown--;
+                timerElement.textContent = retryCountdown;
+                
+                // 更新進度條
+                const progress = ((30 - retryCountdown) / 30) * 100;
+                progressElement.style.width = progress + '%';
+                
+                if (retryCountdown <= 0) {
+                    clearInterval(retryInterval);
+                    location.reload();
+                }
+            }, 1000);
+        }
+
+        /**
+         * 取消自動重試
+         */
+        function cancelRetry() {
+            clearInterval(retryInterval);
+            clearInterval(progressInterval);
+            
+            document.getElementById('retryTimer').textContent = '已取消';
+            document.getElementById('progressFill').style.width = '0%';
+            document.getElementById('cancelBtn').style.display = 'none';
+        }
+
+        /**
+         * 開始系統狀態檢查
+         */
+        function startStatusCheck() {
+            const statuses = ['dbStatus', 'apiStatus', 'fileStatus'];
+            let currentCheck = 0;
+            
+            statusCheckInterval = setInterval(() => {
+                if (currentCheck < statuses.length) {
+                    const statusElement = document.getElementById(statuses[currentCheck]);
+                    const parentElement = statusElement.parentElement;
+                    
+                    // 模擬檢查結果
+                    const isOk = Math.random() > 0.3; // 70% 機率正常
+                    
+                    if (isOk) {
+                        statusElement.className = 'status-dot ok';
+                        parentElement.innerHTML = parentElement.innerHTML.replace('檢查中...', '正常');
+                    } else {
+                        statusElement.className = 'status-dot error';
+                        parentElement.innerHTML = parentElement.innerHTML.replace('檢查中...', '異常');
+                    }
+                    
+                    currentCheck++;
+                } else {
+                    clearInterval(statusCheckInterval);
+                }
+            }, 2000);
+        }
+
+        /**
+         * 記錄500錯誤（實際應用中會發送到服務器）
+         */
+        function log500Error() {
+            const errorData = {
+                errorId: document.getElementById('errorId').textContent,
+                url: window.location.href,
+                userAgent: navigator.userAgent,
+                timestamp: new Date().toISOString(),
+                stack: 'Server Error - Details would be logged server-side'
+            };
+            
+            // 在實際應用中，這裡會發送到錯誤追蹤服務
+            console.log('500 Error logged:', errorData);
+        }
+
+        // 記錄500錯誤
+        log500Error();
+
+        // 添加鍵盤快捷鍵
+        document.addEventListener('keydown', function(e) {
+            // F5 或 Ctrl+R 重新載入
+            if (e.key === 'F5' || (e.ctrlKey && e.key === 'r')) {
+                e.preventDefault();
+                location.reload();
+            }
+            
+            // ESC 鍵返回首頁
+            if (e.key === 'Escape') {
+                window.location.href = 'dashboard.html';
+            }
+        });
+
+        // 監聽網路狀態
+        window.addEventListener('online', function() {
+            console.log('網路連接已恢復');
+            // 可以在這裡添加重新連接的邏輯
+        });
+
+        window.addEventListener('offline', function() {
+            console.log('網路連接已斷開');
+            // 可以在這裡添加離線提示
+        });
+    </script>
+</body>
+
+</html>

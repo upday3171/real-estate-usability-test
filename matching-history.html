@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>媒合歷史</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding-bottom: 100px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            border-radius: 10px;
+            padding: 10px 15px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            border-radius: 10px;
+            padding: 8px 12px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+        }
+
+        .stats-container {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 24px;
+            color: white;
+        }
+
+        .stat-icon.success {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+        }
+
+        .stat-icon.pending {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+        }
+
+        .stat-icon.failed {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+
+        .stat-icon.total {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #7f8c8d;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .history-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #ecf0f1;
+        }
+
+        .history-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 10px;
+        }
+
+        .filter-tab {
+            background: #ecf0f1;
+            border: none;
+            color: #2c3e50;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-tab.active {
+            background: #3498db;
+            color: white;
+        }
+
+        .history-item {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .history-item:hover {
+            background: #ecf0f1;
+            transform: translateX(5px);
+        }
+
+        .history-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .item-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .item-subtitle {
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+
+        .item-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-success {
+            background: #d5f4e6;
+            color: #27ae60;
+        }
+
+        .status-pending {
+            background: #fef5e7;
+            color: #f39c12;
+        }
+
+        .status-failed {
+            background: #fadbd8;
+            color: #e74c3c;
+        }
+
+        .item-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .detail-label {
+            font-size: 12px;
+            color: #7f8c8d;
+            margin-bottom: 4px;
+        }
+
+        .detail-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .item-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .action-btn {
+            background: none;
+            border: 1px solid #ecf0f1;
+            color: #7f8c8d;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:hover {
+            background: #3498db;
+            border-color: #3498db;
+            color: white;
+        }
+
+        .action-btn.primary {
+            background: #3498db;
+            border-color: #3498db;
+            color: white;
+        }
+
+        .action-btn.primary:hover {
+            background: #2980b9;
+            border-color: #2980b9;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #7f8c8d;
+        }
+
+        .empty-state i {
+            font-size: 60px;
+            color: #bdc3c7;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .search-container {
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 20px;
+            border: 2px solid #ecf0f1;
+            border-radius: 25px;
+            font-size: 14px;
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+        }
+
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .pagination-btn {
+            background: white;
+            border: 1px solid #ecf0f1;
+            color: #2c3e50;
+            padding: 8px 12px;
+            margin: 0 2px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .pagination-btn:hover,
+        .pagination-btn.active {
+            background: #3498db;
+            border-color: #3498db;
+            color: white;
+        }
+
+        .pagination-btn:disabled {
+            background: #ecf0f1;
+            color: #bdc3c7;
+            cursor: not-allowed;
+        }
+
+        .action-buttons {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 20px;
+            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            border: none;
+            border-radius: 25px;
+            padding: 12px 30px;
+            font-weight: 600;
+            color: white;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.3);
+        }
+
+        .btn-secondary-custom {
+            background: transparent;
+            border: 2px solid #95a5a6;
+            color: #95a5a6;
+            border-radius: 25px;
+            padding: 12px 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary-custom:hover {
+            background: #95a5a6;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="dashboard.html" class="back-btn">
+                    <i class="fas fa-arrow-left me-2"></i>返回
+                </a>
+                <h1 class="page-title">媒合歷史</h1>
+                <button class="filter-btn" onclick="showAdvancedFilter()">
+                    <i class="fas fa-filter me-2"></i>進階篩選
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- 統計卡片 -->
+        <div class="stats-container">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon total">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <div class="stat-number">156</div>
+                    <div class="stat-label">總媒合次數</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon success">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-number">89</div>
+                    <div class="stat-label">成功媒合</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon pending">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-number">42</div>
+                    <div class="stat-label">進行中</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon failed">
+                        <i class="fas fa-times-circle"></i>
+                    </div>
+                    <div class="stat-number">25</div>
+                    <div class="stat-label">未成功</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 媒合歷史列表 -->
+        <div class="history-container">
+            <div class="history-header">
+                <h3 class="history-title">
+                    <i class="fas fa-history me-2"></i>媒合記錄
+                </h3>
+                <div class="filter-tabs">
+                    <button class="filter-tab active" onclick="filterHistory('all')">全部</button>
+                    <button class="filter-tab" onclick="filterHistory('success')">成功</button>
+                    <button class="filter-tab" onclick="filterHistory('pending')">進行中</button>
+                    <button class="filter-tab" onclick="filterHistory('failed')">未成功</button>
+                </div>
+            </div>
+
+            <!-- 搜尋框 -->
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="搜尋品牌名稱、物件地址或案件編號..."
+                    onkeyup="searchHistory(this.value)">
+            </div>
+
+            <!-- 歷史記錄項目 -->
+            <div id="historyList">
+                <!-- 媒合記錄 1 -->
+                <div class="history-item" data-status="success" onclick="viewHistoryDetail(1)">
+                    <div class="item-header">
+                        <div>
+                            <div class="item-title">麥當勞 × 信義區店面</div>
+                            <div class="item-subtitle">案件編號：#MC2024001</div>
+                        </div>
+                        <div class="item-status status-success">媒合成功</div>
+                    </div>
+                    <div class="item-details">
+                        <div class="detail-item">
+                            <div class="detail-label">媒合日期</div>
+                            <div class="detail-value">2024/01/15</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">完成日期</div>
+                            <div class="detail-value">2024/01/28</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">匹配度</div>
+                            <div class="detail-value">95%</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">租金</div>
+                            <div class="detail-value">$120,000/月</div>
+                        </div>
+                    </div>
+                    <div class="item-actions">
+                        <button class="action-btn" onclick="event.stopPropagation(); exportReport(1)">
+                            <i class="fas fa-download me-1"></i>報告
+                        </button>
+                        <button class="action-btn primary" onclick="event.stopPropagation(); viewDetail(1)">
+                            <i class="fas fa-eye me-1"></i>詳情
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 媒合記錄 2 -->
+                <div class="history-item" data-status="pending" onclick="viewHistoryDetail(2)">
+                    <div class="item-header">
+                        <div>
+                            <div class="item-title">星巴克 × 大安區店面</div>
+                            <div class="item-subtitle">案件編號：#SB2024002</div>
+                        </div>
+                        <div class="item-status status-pending">洽談中</div>
+                    </div>
+                    <div class="item-details">
+                        <div class="detail-item">
+                            <div class="detail-label">媒合日期</div>
+                            <div class="detail-value">2024/01/20</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">進行天數</div>
+                            <div class="detail-value">5天</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">匹配度</div>
+                            <div class="detail-value">88%</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">預估租金</div>
+                            <div class="detail-value">$150,000/月</div>
+                        </div>
+                    </div>
+                    <div class="item-actions">
+                        <button class="action-btn" onclick="event.stopPropagation(); followUp(2)">
+                            <i class="fas fa-phone me-1"></i>追蹤
+                        </button>
+                        <button class="action-btn primary" onclick="event.stopPropagation(); viewDetail(2)">
+                            <i class="fas fa-eye me-1"></i>詳情
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 媒合記錄 3 -->
+                <div class="history-item" data-status="failed" onclick="viewHistoryDetail(3)">
+                    <div class="item-header">
+                        <div>
+                            <div class="item-title">肯德基 × 松山區店面</div>
+                            <div class="item-subtitle">案件編號：#KFC2024003</div>
+                        </div>
+                        <div class="item-status status-failed">媒合失敗</div>
+                    </div>
+                    <div class="item-details">
+                        <div class="detail-item">
+                            <div class="detail-label">媒合日期</div>
+                            <div class="detail-value">2024/01/10</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">結束日期</div>
+                            <div class="detail-value">2024/01/18</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">匹配度</div>
+                            <div class="detail-value">72%</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">失敗原因</div>
+                            <div class="detail-value">租金條件不符</div>
+                        </div>
+                    </div>
+                    <div class="item-actions">
+                        <button class="action-btn" onclick="event.stopPropagation(); retryMatching(3)">
+                            <i class="fas fa-redo me-1"></i>重新媒合
+                        </button>
+                        <button class="action-btn primary" onclick="event.stopPropagation(); viewDetail(3)">
+                            <i class="fas fa-eye me-1"></i>詳情
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 分頁 -->
+            <div class="pagination-container">
+                <button class="pagination-btn" onclick="changePage(1)" disabled>
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="pagination-btn active" onclick="changePage(1)">1</button>
+                <button class="pagination-btn" onclick="changePage(2)">2</button>
+                <button class="pagination-btn" onclick="changePage(3)">3</button>
+                <button class="pagination-btn" onclick="changePage(2)">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 操作按鈕 -->
+    <div class="action-buttons">
+        <button type="button" class="btn btn-secondary-custom" onclick="exportAllHistory()">
+            <i class="fas fa-download me-2"></i>匯出全部
+        </button>
+        <button type="button" class="btn btn-primary-custom" onclick="startNewMatching()">
+            <i class="fas fa-plus me-2"></i>新增媒合
+        </button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let currentFilter = 'all';
+        let currentPage = 1;
+
+        /**
+         * 頁面載入完成後初始化
+         */
+        document.addEventListener('DOMContentLoaded', function () {
+            initializePage();
+            updateStats();
+        });
+
+        /**
+         * 初始化頁面
+         */
+        function initializePage() {
+            console.log('媒合歷史頁面已載入');
+        }
+
+        /**
+         * 篩選歷史記錄
+         */
+        function filterHistory(status) {
+            currentFilter = status;
+
+            // 更新標籤狀態
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // 篩選項目
+            const items = document.querySelectorAll('.history-item');
+            items.forEach(item => {
+                if (status === 'all' || item.dataset.status === status) {
+                    item.style.display = 'block';
+                    item.style.animation = 'fadeIn 0.3s ease';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            showToast(`已篩選${getStatusName(status)}記錄`, 'info');
+        }
+
+        /**
+         * 獲取狀態名稱
+         */
+        function getStatusName(status) {
+            const names = {
+                all: '全部',
+                success: '成功',
+                pending: '進行中',
+                failed: '失敗'
+            };
+            return names[status] || '未知';
+        }
+
+        /**
+         * 搜尋歷史記錄
+         */
+        function searchHistory(query) {
+            const items = document.querySelectorAll('.history-item');
+
+            items.forEach(item => {
+                const title = item.querySelector('.item-title').textContent.toLowerCase();
+                const subtitle = item.querySelector('.item-subtitle').textContent.toLowerCase();
+
+                if (title.includes(query.toLowerCase()) || subtitle.includes(query.toLowerCase())) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        /**
+         * 查看歷史詳情
+         */
+        function viewHistoryDetail(id) {
+            window.location.href = `case-detail.html?id=${id}`;
+        }
+
+        /**
+         * 查看詳情
+         */
+        function viewDetail(id) {
+            window.location.href = `case-detail.html?id=${id}`;
+        }
+
+        /**
+         * 匯出報告
+         */
+        function exportReport(id) {
+            showToast(`正在匯出案件 #${id} 的報告...`, 'info');
+
+            setTimeout(() => {
+                showToast('報告已匯出至下載資料夾', 'success');
+            }, 2000);
+        }
+
+        /**
+         * 追蹤案件
+         */
+        function followUp(id) {
+            showToast(`正在開啟案件 #${id} 的追蹤功能...`, 'info');
+
+            setTimeout(() => {
+                window.location.href = `case-timeline.html?id=${id}`;
+            }, 1000);
+        }
+
+        /**
+         * 重新媒合
+         */
+        function retryMatching(id) {
+            if (confirm('確定要重新啟動此案件的媒合流程嗎？')) {
+                showToast(`正在重新啟動案件 #${id} 的媒合...`, 'info');
+
+                setTimeout(() => {
+                    showToast('媒合流程已重新啟動', 'success');
+                }, 2000);
+            }
+        }
+
+        /**
+         * 更新統計數據
+         */
+        function updateStats() {
+            const items = document.querySelectorAll('.history-item');
+            const successCount = document.querySelectorAll('[data-status="success"]').length;
+            const pendingCount = document.querySelectorAll('[data-status="pending"]').length;
+            const failedCount = document.querySelectorAll('[data-status="failed"]').length;
+
+            // 更新統計卡片
+            const statNumbers = document.querySelectorAll('.stat-number');
+            if (statNumbers.length >= 4) {
+                statNumbers[0].textContent = items.length;
+                statNumbers[1].textContent = successCount;
+                statNumbers[2].textContent = pendingCount;
+                statNumbers[3].textContent = failedCount;
+            }
+        }
+
+        /**
+         * 切換頁面
+         */
+        function changePage(page) {
+            currentPage = page;
+            showToast(`已切換到第 ${page} 頁`, 'info');
+        }
+
+        /**
+         * 顯示進階篩選
+         */
+        function showAdvancedFilter() {
+            showToast('進階篩選功能開發中...', 'info');
+        }
+
+        /**
+         * 匯出全部歷史
+         */
+        function exportAllHistory() {
+            showToast('正在準備匯出全部歷史記錄...', 'info');
+
+            setTimeout(() => {
+                showToast('歷史記錄已匯出至下載資料夾', 'success');
+            }, 3000);
+        }
+
+        /**
+         * 開始新媒合
+         */
+        function startNewMatching() {
+            window.location.href = 'matching-setup.html';
+        }
+
+        /**
+         * 顯示提示訊息
+         */
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.innerHTML = `<i class="fas fa-info-circle me-2"></i>${message}`;
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#27ae60' : type === 'error' ? '#e74c3c' : '#3498db'};
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                z-index: 9999;
+                font-size: 14px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                max-width: 300px;
+                animation: slideIn 0.3s ease;
+            `;
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                if (document.body.contains(toast)) {
+                    document.body.removeChild(toast);
+                }
+            }, 3000);
+        }
+
+        // 添加CSS動畫
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+
+</html>

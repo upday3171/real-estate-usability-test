@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>更新日誌</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .top-bar {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+
+        .page-title {
+            font-size: 18px;
+            font-weight: bold;
+            flex: 1;
+            text-align: center;
+            margin: 0 15px;
+        }
+
+        .current-version {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+
+        .changelog-container {
+            padding: 20px;
+            padding-bottom: 80px;
+        }
+
+        .changelog-header {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .header-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .header-subtitle {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .version-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 20px;
+            font-weight: bold;
+            color: #8b5cf6;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .filter-section {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .filter-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 6px 12px;
+            border: 2px solid #e9ecef;
+            background: white;
+            color: #666;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn.active {
+            background: #8b5cf6;
+            border-color: #8b5cf6;
+            color: white;
+        }
+
+        .filter-btn:hover {
+            border-color: #8b5cf6;
+            color: #8b5cf6;
+        }
+
+        .filter-btn.active:hover {
+            background: #7c3aed;
+            border-color: #7c3aed;
+            color: white;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #e9ecef;
+        }
+
+        .version-item {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            margin-left: 20px;
+        }
+
+        .version-item::before {
+            content: '';
+            position: absolute;
+            left: -35px;
+            top: 30px;
+            width: 12px;
+            height: 12px;
+            background: #8b5cf6;
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 0 0 2px #8b5cf6;
+        }
+
+        .version-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .version-number {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .version-date {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .version-type {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .type-major {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .type-minor {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .type-patch {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .changes-section {
+            margin-bottom: 20px;
+        }
+
+        .changes-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .changes-title i {
+            margin-right: 8px;
+            font-size: 14px;
+        }
+
+        .changes-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .change-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 8px 0;
+            border-bottom: 1px solid #f8f9fa;
+        }
+
+        .change-item:last-child {
+            border-bottom: none;
+        }
+
+        .change-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 10px;
+            color: white;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .icon-new {
+            background: #059669;
+        }
+
+        .icon-improved {
+            background: #2563eb;
+        }
+
+        .icon-fixed {
+            background: #dc2626;
+        }
+
+        .icon-removed {
+            background: #6b7280;
+        }
+
+        .change-text {
+            flex: 1;
+            font-size: 14px;
+            color: #333;
+            line-height: 1.5;
+        }
+
+        .version-notes {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .notes-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .notes-text {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .load-more {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .btn-load-more {
+            background: #8b5cf6;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-load-more:hover {
+            background: #7c3aed;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e9ecef;
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .nav-item {
+            text-align: center;
+            color: #666;
+            text-decoration: none;
+            padding: 5px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-item.active {
+            color: #8b5cf6;
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 2px;
+        }
+
+        .nav-item span {
+            font-size: 10px;
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .version-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .filter-buttons {
+                justify-content: center;
+            }
+            
+            .version-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .timeline {
+                padding-left: 20px;
+            }
+            
+            .version-item {
+                margin-left: 10px;
+            }
+            
+            .version-item::before {
+                left: -25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 頂部導航 -->
+    <div class="top-bar">
+        <a href="admin-dashboard.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <div class="page-title">更新日誌</div>
+        <div class="current-version">v1.2.3</div>
+    </div>
+
+    <!-- 更新日誌容器 -->
+    <div class="changelog-container">
+        <!-- 標題區域 -->
+        <div class="changelog-header">
+            <div class="header-title">
+                <i class="fas fa-rocket me-2"></i>
+                版本更新歷程
+            </div>
+            <div class="header-subtitle">
+                追蹤平台的每一次進步與改善
+            </div>
+            <div class="version-stats">
+                <div class="stat-item">
+                    <div class="stat-number">1.2.3</div>
+                    <div class="stat-label">當前版本</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">15</div>
+                    <div class="stat-label">總版本數</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">127</div>
+                    <div class="stat-label">新功能</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">89</div>
+                    <div class="stat-label">問題修復</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 篩選區域 -->
+        <div class="filter-section">
+            <div class="filter-title">篩選版本類型</div>
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">全部</button>
+                <button class="filter-btn" data-filter="major">主要版本</button>
+                <button class="filter-btn" data-filter="minor">次要版本</button>
+                <button class="filter-btn" data-filter="patch">修補版本</button>
+            </div>
+        </div>
+
+        <!-- 時間軸 -->
+        <div class="timeline" id="timeline">
+            <!-- 版本項目將由JavaScript生成 -->
+        </div>
+
+        <!-- 載入更多 -->
+        <div class="load-more">
+            <button class="btn-load-more" onclick="loadMoreVersions()">
+                <i class="fas fa-plus me-2"></i>載入更多版本
+            </button>
+        </div>
+    </div>
+
+    <!-- 底部導航 -->
+    <div class="bottom-nav">
+        <a href="dashboard.html" class="nav-item">
+            <i class="fas fa-home"></i>
+            <span>首頁</span>
+        </a>
+        <a href="admin-dashboard.html" class="nav-item active">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>管理</span>
+        </a>
+        <a href="analytics.html" class="nav-item">
+            <i class="fas fa-chart-bar"></i>
+            <span>分析</span>
+        </a>
+        <a href="reports.html" class="nav-item">
+            <i class="fas fa-file-alt"></i>
+            <span>報表</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <i class="fas fa-user"></i>
+            <span>我的</span>
+        </a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 版本數據
+        const versionData = [
+            {
+                version: '1.2.3',
+                date: '2024-02-01',
+                type: 'patch',
+                changes: {
+                    fixed: [
+                        '修復媒合結果頁面載入緩慢的問題',
+                        '解決用戶頭像上傳失敗的錯誤',
+                        '修正搜尋篩選器重置功能'
+                    ]
+                },
+                notes: '本次更新主要修復了用戶反饋的關鍵問題，提升系統穩定性。'
+            },
+            {
+                version: '1.2.0',
+                date: '2024-01-25',
+                type: 'minor',
+                changes: {
+                    new: [
+                        '新增AI智能媒合推薦功能',
+                        '增加物件地圖視圖',
+                        '支援批量匯入品牌資料'
+                    ],
+                    improved: [
+                        '優化搜尋演算法，提升搜尋精準度',
+                        '改善移動端使用體驗',
+                        '增強數據分析圖表互動性'
+                    ],
+                    fixed: [
+                        '修復登入狀態異常問題',
+                        '解決郵件通知延遲發送'
+                    ]
+                },
+                notes: '重大功能更新！新增AI智能媒合，大幅提升媒合成功率。'
+            },
+            {
+                version: '1.1.5',
+                date: '2024-01-15',
+                type: 'patch',
+                changes: {
+                    improved: [
+                        '提升頁面載入速度',
+                        '優化資料庫查詢效能'
+                    ],
+                    fixed: [
+                        '修復案件狀態更新問題',
+                        '解決通知設定無法儲存的錯誤'
+                    ]
+                }
+            },
+            {
+                version: '1.1.0',
+                date: '2024-01-10',
+                type: 'minor',
+                changes: {
+                    new: [
+                        '新增案件時間軸功能',
+                        '增加進階搜尋篩選器',
+                        '支援多語言切換'
+                    ],
+                    improved: [
+                        '重新設計用戶介面',
+                        '優化媒合演算法'
+                    ]
+                },
+                notes: '全新的案件追蹤體驗，讓您更清楚掌握每個案件的進展。'
+            },
+            {
+                version: '1.0.0',
+                date: '2024-01-01',
+                type: 'major',
+                changes: {
+                    new: [
+                        '正式發布商業不動產媒合平台',
+                        '完整的品牌和物件管理系統',
+                        '智能媒合引擎',
+                        '數據分析和報表功能',
+                        '用戶權限管理系統'
+                    ]
+                },
+                notes: '🎉 平台正式上線！感謝所有測試用戶的支持與回饋。'
+            }
+        ];
+
+        let currentFilter = 'all';
+        let displayedVersions = 3;
+
+        /**
+         * 初始化頁面
+         */
+        document.addEventListener('DOMContentLoaded', function() {
+            renderVersions();
+            setupFilterButtons();
+        });
+
+        /**
+         * 設置篩選按鈕
+         */
+        function setupFilterButtons() {
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // 更新按鈕狀態
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // 更新篩選條件
+                    currentFilter = this.dataset.filter;
+                    displayedVersions = 3;
+                    renderVersions();
+                });
+            });
+        }
+
+        /**
+         * 渲染版本列表
+         */
+        function renderVersions() {
+            const timeline = document.getElementById('timeline');
+            timeline.innerHTML = '';
+
+            const filteredData = filterVersions();
+            const versionsToShow = filteredData.slice(0, displayedVersions);
+
+            versionsToShow.forEach(version => {
+                const versionElement = createVersionElement(version);
+                timeline.appendChild(versionElement);
+            });
+
+            // 更新載入更多按鈕
+            updateLoadMoreButton(filteredData.length);
+        }
+
+        /**
+         * 篩選版本
+         */
+        function filterVersions() {
+            if (currentFilter === 'all') {
+                return versionData;
+            }
+            return versionData.filter(version => version.type === currentFilter);
+        }
+
+        /**
+         * 創建版本元素
+         */
+        function createVersionElement(version) {
+            const div = document.createElement('div');
+            div.className = 'version-item';
+
+            const changesHtml = generateChangesHtml(version.changes);
+            const notesHtml = version.notes ? `
+                <div class="version-notes">
+                    <div class="notes-title">版本說明</div>
+                    <div class="notes-text">${version.notes}</div>
+                </div>
+            ` : '';
+
+            div.innerHTML = `
+                <div class="version-header">
+                    <div>
+                        <span class="version-number">v${version.version}</span>
+                        <span class="version-type type-${version.type}">${getTypeText(version.type)}</span>
+                    </div>
+                    <div class="version-date">${formatDate(version.date)}</div>
+                </div>
+                ${changesHtml}
+                ${notesHtml}
+            `;
+
+            return div;
+        }
+
+        /**
+         * 生成變更內容HTML
+         */
+        function generateChangesHtml(changes) {
+            let html = '';
+
+            if (changes.new && changes.new.length > 0) {
+                html += generateChangeSection('新功能', 'fas fa-plus', 'new', changes.new);
+            }
+
+            if (changes.improved && changes.improved.length > 0) {
+                html += generateChangeSection('功能改善', 'fas fa-arrow-up', 'improved', changes.improved);
+            }
+
+            if (changes.fixed && changes.fixed.length > 0) {
+                html += generateChangeSection('問題修復', 'fas fa-bug', 'fixed', changes.fixed);
+            }
+
+            if (changes.removed && changes.removed.length > 0) {
+                html += generateChangeSection('移除功能', 'fas fa-minus', 'removed', changes.removed);
+            }
+
+            return html;
+        }
+
+        /**
+         * 生成變更區塊
+         */
+        function generateChangeSection(title, icon, type, items) {
+            const itemsHtml = items.map(item => `
+                <li class="change-item">
+                    <div class="change-icon icon-${type}">
+                        <i class="${icon}"></i>
+                    </div>
+                    <div class="change-text">${item}</div>
+                </li>
+            `).join('');
+
+            return `
+                <div class="changes-section">
+                    <div class="changes-title">
+                        <i class="${icon}"></i>
+                        ${title}
+                    </div>
+                    <ul class="changes-list">
+                        ${itemsHtml}
+                    </ul>
+                </div>
+            `;
+        }
+
+        /**
+         * 獲取類型文字
+         */
+        function getTypeText(type) {
+            const typeTexts = {
+                major: '主要版本',
+                minor: '次要版本',
+                patch: '修補版本'
+            };
+            return typeTexts[type] || type;
+        }
+
+        /**
+         * 格式化日期
+         */
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('zh-TW', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        /**
+         * 載入更多版本
+         */
+        function loadMoreVersions() {
+            displayedVersions += 3;
+            renderVersions();
+        }
+
+        /**
+         * 更新載入更多按鈕
+         */
+        function updateLoadMoreButton(totalVersions) {
+            const loadMoreBtn = document.querySelector('.btn-load-more');
+            const loadMoreSection = document.querySelector('.load-more');
+            
+            if (displayedVersions >= totalVersions) {
+                loadMoreSection.style.display = 'none';
+            } else {
+                loadMoreSection.style.display = 'block';
+                loadMoreBtn.innerHTML = `
+                    <i class="fas fa-plus me-2"></i>
+                    載入更多版本 (${totalVersions - displayedVersions} 個剩餘)
+                `;
+            }
+        }
+
+        /**
+         * 工具函數：顯示提示訊息
+         */
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast-message toast-${type}`;
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'info' ? '#8b5cf6' : type === 'success' ? '#059669' : '#dc3545'};
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                z-index: 9999;
+                animation: slideIn 0.3s ease;
+                font-size: 14px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            `;
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    if (document.body.contains(toast)) {
+                        document.body.removeChild(toast);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // 添加CSS動畫
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+
+</html>

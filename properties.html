@@ -1,0 +1,1838 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>物件管理</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .top-bar {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .top-bar .title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .top-bar .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .top-bar .action-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .search-filter-section {
+            padding: 20px;
+            background: white;
+            margin-bottom: 10px;
+        }
+
+        .search-box {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 45px 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 25px;
+            font-size: 14px;
+            background: #f8f9fa;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #059669;
+            background: white;
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+
+        .filter-btn {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            color: #666;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn.active {
+            background: #059669;
+            color: white;
+            border-color: #059669;
+        }
+
+        .view-toggle {
+            display: flex;
+            padding: 0 20px;
+            margin-bottom: 15px;
+        }
+
+        .toggle-btn {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #e9ecef;
+            background: white;
+            color: #666;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-btn:first-child {
+            border-radius: 8px 0 0 8px;
+        }
+
+        .toggle-btn:last-child {
+            border-radius: 0 8px 8px 0;
+            border-left: none;
+        }
+
+        .toggle-btn.active {
+            background: #059669;
+            color: white;
+            border-color: #059669;
+        }
+
+        .properties-list {
+            padding: 0 20px;
+            padding-bottom: 80px;
+        }
+
+        .property-card {
+            background: white;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .property-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .property-image {
+            height: 120px;
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 40px;
+        }
+
+        .property-status {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .status-available {
+            background: #28a745;
+            color: white;
+        }
+
+        .status-rented {
+            background: #dc3545;
+            color: white;
+        }
+
+        .status-renovating {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .property-content {
+            padding: 15px;
+        }
+
+        .property-header {
+            margin-bottom: 10px;
+        }
+
+        .property-address {
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+            line-height: 1.3;
+        }
+
+        .property-building {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .property-details {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .detail-item {
+            text-align: center;
+        }
+
+        .detail-value {
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .detail-label {
+            font-size: 10px;
+            color: #666;
+        }
+
+        .property-features {
+            margin-bottom: 12px;
+        }
+
+        .feature-tag {
+            display: inline-block;
+            background: #f8f9fa;
+            color: #666;
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-size: 10px;
+            margin-right: 5px;
+            margin-bottom: 3px;
+        }
+
+        .property-owner {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .property-owner i {
+            margin-right: 5px;
+            color: #059669;
+        }
+
+        .property-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 8px 10px;
+            border: none;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary-custom {
+            background: #059669;
+            color: white;
+        }
+
+        .btn-primary-custom:hover {
+            background: #047857;
+        }
+
+        .btn-outline-custom {
+            background: transparent;
+            border: 1px solid #059669;
+            color: #059669;
+        }
+
+        .btn-outline-custom:hover {
+            background: #059669;
+            color: white;
+        }
+
+        .btn-success-custom {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success-custom:hover {
+            background: #218838;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e9ecef;
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .nav-item {
+            text-align: center;
+            color: #666;
+            text-decoration: none;
+            padding: 5px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-item.active {
+            color: #059669;
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 2px;
+        }
+
+        .nav-item span {
+            font-size: 10px;
+            display: block;
+        }
+
+        /* 進階篩選樣式 */
+        .advanced-filter-section {
+            background: white;
+            margin: 15px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .filter-header {
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .filter-toggle-btn {
+            width: 100%;
+            background: none;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            cursor: pointer;
+        }
+
+        .toggle-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .filter-toggle-btn.active .toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        .filter-content {
+            padding: 20px;
+            background: #fafafa;
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-group-full {
+            grid-column: 1 / -1;
+        }
+
+        .filter-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+
+        .filter-select {
+            padding: 10px 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: #059669;
+        }
+
+        .range-inputs {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .filter-input {
+            flex: 1;
+            padding: 10px 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .filter-input:focus {
+            outline: none;
+            border-color: #059669;
+        }
+
+        .range-separator {
+            font-weight: bold;
+            color: #666;
+        }
+
+        .feature-checkboxes {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .feature-checkbox {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-size: 14px;
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .feature-checkbox input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .checkmark {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 20px;
+            width: 20px;
+            background-color: #eee;
+            border-radius: 4px;
+            border: 2px solid #ddd;
+        }
+
+        .feature-checkbox:hover input~.checkmark {
+            background-color: #ccc;
+        }
+
+        .feature-checkbox input:checked~.checkmark {
+            background-color: #059669;
+            border-color: #059669;
+        }
+
+        .checkmark:after {
+            content: "";
+            position: absolute;
+            display: none;
+        }
+
+        .feature-checkbox input:checked~.checkmark:after {
+            display: block;
+        }
+
+        .feature-checkbox .checkmark:after {
+            left: 6px;
+            top: 2px;
+            width: 6px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            padding-top: 15px;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .filter-action-btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-clear {
+            background: #f8f9fa;
+            color: #666;
+            border: 2px solid #e9ecef;
+        }
+
+        .btn-clear:hover {
+            background: #e9ecef;
+            color: #333;
+        }
+
+        .btn-apply {
+            background: #059669;
+            color: white;
+        }
+
+        .btn-apply:hover {
+            background: #047857;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 768px) {
+            .filter-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .feature-checkboxes {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .filter-actions {
+                flex-direction: column;
+            }
+        }
+
+        /* 篩選計數樣式 */
+        .filter-count {
+            background: #059669;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* 篩選輸入框動畫 */
+        .filter-input:focus,
+        .filter-select:focus {
+            transform: scale(1.02);
+            box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
+            transition: all 0.2s ease;
+        }
+
+        /* 複選框動畫 */
+        .feature-checkbox {
+            transition: all 0.2s ease;
+        }
+
+        .feature-checkbox:hover {
+            transform: translateX(3px);
+        }
+
+        /* 篩選面板動畫 */
+        .filter-content {
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .advanced-filter-section:hover {
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            transition: box-shadow 0.3s ease;
+        }
+
+        /* 比較工具欄樣式 */
+        .compare-toolbar {
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            border: 2px solid #0ea5e9;
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: slideDown 0.3s ease;
+        }
+
+        .compare-info {
+            font-size: 14px;
+            color: #0369a1;
+            font-weight: 600;
+        }
+
+        .compare-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-compare {
+            background: #0ea5e9;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-compare:hover {
+            background: #0284c7;
+            transform: translateY(-1px);
+        }
+
+        .btn-compare-clear {
+            background: #6b7280;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-compare-clear:hover {
+            background: #4b5563;
+        }
+
+        /* 物件卡片選中狀態 */
+        .property-card.selected {
+            border: 2px solid #0ea5e9;
+            background: #f0f9ff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.2);
+        }
+
+        .property-card.selected::before {
+            content: '✓';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 24px;
+            height: 24px;
+            background: #0ea5e9;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 10;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .compare-toolbar {
+                flex-direction: column;
+                gap: 10px;
+                align-items: stretch;
+            }
+
+            .compare-actions {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 頂部導航 -->
+    <div class="top-bar">
+        <div class="title">
+            <i class="fas fa-building me-2"></i>物件管理
+        </div>
+        <div class="actions">
+            <button class="action-btn">
+                <i class="fas fa-map"></i>
+            </button>
+            <button class="action-btn">
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- 搜尋篩選區域 -->
+    <div class="search-filter-section">
+        <div class="search-box">
+            <input type="text" class="search-input" placeholder="搜尋地址或大樓名稱...">
+            <i class="fas fa-search search-icon"></i>
+        </div>
+        <div class="filter-row">
+            <button class="filter-btn active">全部</button>
+            <button class="filter-btn">台北市</button>
+            <button class="filter-btn">新北市</button>
+            <button class="filter-btn">桃園市</button>
+            <button class="filter-btn">空置中</button>
+            <button class="filter-btn">1樓店面</button>
+            <button class="filter-btn">角間</button>
+        </div>
+    </div>
+
+    <!-- 檢視切換 -->
+    <div class="view-toggle">
+        <button class="toggle-btn active">
+            <i class="fas fa-list me-1"></i>列表檢視
+        </button>
+        <button class="toggle-btn">
+            <i class="fas fa-map me-1"></i>地圖檢視
+        </button>
+    </div>
+
+    <!-- 進階篩選區域 -->
+    <div class="advanced-filter-section">
+        <div class="filter-header">
+            <button class="filter-toggle-btn">
+                <i class="fas fa-sliders-h me-2"></i>進階篩選
+                <i class="fas fa-chevron-down toggle-icon"></i>
+            </button>
+        </div>
+        <div class="filter-content" style="display: none;">
+            <div class="filter-grid">
+                <!-- 區域篩選 -->
+                <div class="filter-group">
+                    <label class="filter-label">
+                        <i class="fas fa-map-marker-alt me-2"></i>區域
+                    </label>
+                    <select class="filter-select" id="areaFilter">
+                        <option value="">不限區域</option>
+                        <option value="台北市信義區">台北市信義區</option>
+                        <option value="台北市松山區">台北市松山區</option>
+                        <option value="台北市中山區">台北市中山區</option>
+                        <option value="台北市大安區">台北市大安區</option>
+                        <option value="新北市板橋區">新北市板橋區</option>
+                        <option value="新北市新店區">新北市新店區</option>
+                        <option value="桃園市中壢區">桃園市中壢區</option>
+                    </select>
+                </div>
+
+                <!-- 租金範圍 -->
+                <div class="filter-group">
+                    <label class="filter-label">
+                        <i class="fas fa-dollar-sign me-2"></i>月租金 (萬元)
+                    </label>
+                    <div class="range-inputs">
+                        <input type="number" class="filter-input" id="rentMin" placeholder="最低" min="0" max="100">
+                        <span class="range-separator">-</span>
+                        <input type="number" class="filter-input" id="rentMax" placeholder="最高" min="0" max="100">
+                    </div>
+                </div>
+
+                <!-- 面積範圍 -->
+                <div class="filter-group">
+                    <label class="filter-label">
+                        <i class="fas fa-expand-arrows-alt me-2"></i>面積 (坪)
+                    </label>
+                    <div class="range-inputs">
+                        <input type="number" class="filter-input" id="areaMin" placeholder="最小" min="0" max="500">
+                        <span class="range-separator">-</span>
+                        <input type="number" class="filter-input" id="areaMax" placeholder="最大" min="0" max="500">
+                    </div>
+                </div>
+
+                <!-- 樓層篩選 -->
+                <div class="filter-group">
+                    <label class="filter-label">
+                        <i class="fas fa-building me-2"></i>樓層
+                    </label>
+                    <select class="filter-select" id="floorFilter">
+                        <option value="">不限樓層</option>
+                        <option value="B1">地下1樓</option>
+                        <option value="1">1樓</option>
+                        <option value="2">2樓</option>
+                        <option value="3">3樓</option>
+                        <option value="4">4樓</option>
+                        <option value="5+">5樓以上</option>
+                    </select>
+                </div>
+
+                <!-- 物件類型 -->
+                <div class="filter-group">
+                    <label class="filter-label">
+                        <i class="fas fa-tag me-2"></i>物件類型
+                    </label>
+                    <select class="filter-select" id="typeFilter">
+                        <option value="">不限類型</option>
+                        <option value="店面">店面</option>
+                        <option value="辦公室">辦公室</option>
+                        <option value="倉庫">倉庫</option>
+                        <option value="工作室">工作室</option>
+                        <option value="其他">其他</option>
+                    </select>
+                </div>
+
+                <!-- 特色篩選 -->
+                <div class="filter-group filter-group-full">
+                    <label class="filter-label">
+                        <i class="fas fa-star me-2"></i>物件特色
+                    </label>
+                    <div class="feature-checkboxes">
+                        <label class="feature-checkbox">
+                            <input type="checkbox" value="角間位置">
+                            <span class="checkmark"></span>
+                            角間位置
+                        </label>
+                        <label class="feature-checkbox">
+                            <input type="checkbox" value="近捷運站">
+                            <span class="checkmark"></span>
+                            近捷運站
+                        </label>
+                        <label class="feature-checkbox">
+                            <input type="checkbox" value="停車位">
+                            <span class="checkmark"></span>
+                            停車位
+                        </label>
+                        <label class="feature-checkbox">
+                            <input type="checkbox" value="人流密集">
+                            <span class="checkmark"></span>
+                            人流密集
+                        </label>
+                        <label class="feature-checkbox">
+                            <input type="checkbox" value="電梯大樓">
+                            <span class="checkmark"></span>
+                            電梯大樓
+                        </label>
+                        <label class="feature-checkbox">
+                            <input type="checkbox" value="裝潢完成">
+                            <span class="checkmark"></span>
+                            裝潢完成
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 篩選操作按鈕 -->
+            <div class="filter-actions">
+                <button class="filter-action-btn btn-clear">
+                    <i class="fas fa-undo me-2"></i>清除篩選
+                </button>
+                <button class="filter-action-btn btn-apply">
+                    <i class="fas fa-search me-2"></i>套用篩選
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 比較工具欄 -->
+    <div class="compare-toolbar" id="compareToolbar" style="display: none;">
+        <div class="compare-info">
+            已選擇 <span id="compareCount">0</span> 個物件進行比較
+        </div>
+        <div class="compare-actions">
+            <button class="btn-compare" onclick="startComparison()">
+                <i class="fas fa-balance-scale"></i> 開始比較
+            </button>
+            <button class="btn-compare-clear" onclick="clearComparison()">
+                <i class="fas fa-times"></i> 清除
+            </button>
+        </div>
+    </div>
+
+    <!-- 物件列表 -->
+    <div class="properties-list">
+        <!-- 物件卡片 1 -->
+        <div class="property-card">
+            <div class="property-image">
+                <i class="fas fa-store"></i>
+                <div class="property-status status-available">空置中</div>
+            </div>
+            <div class="property-content">
+                <div class="property-header">
+                    <div class="property-address">台北市信義區信義路五段7號</div>
+                    <div class="property-building">信義商業大樓</div>
+                </div>
+                <div class="property-details">
+                    <div class="detail-item">
+                        <div class="detail-value">1樓</div>
+                        <div class="detail-label">樓層</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-value">35坪</div>
+                        <div class="detail-label">面積</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-value">12萬</div>
+                        <div class="detail-label">月租</div>
+                    </div>
+                </div>
+                <div class="property-features">
+                    <span class="feature-tag">一樓店面</span>
+                    <span class="feature-tag">角間位置</span>
+                    <span class="feature-tag">近捷運</span>
+                    <span class="feature-tag">停車位</span>
+                </div>
+                <div class="property-owner">
+                    <i class="fas fa-user"></i>
+                    <span>屋主: 王先生 0912-345-678</span>
+                </div>
+                <div class="property-actions">
+                    <button class="action-btn btn-primary-custom">
+                        <i class="fas fa-phone me-1"></i>聯絡
+                    </button>
+                    <button class="action-btn btn-outline-custom">
+                        <i class="fas fa-edit me-1"></i>編輯
+                    </button>
+                    <button class="action-btn btn-success-custom">
+                        <i class="fas fa-search me-1"></i>找品牌
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 物件卡片 2 -->
+        <div class="property-card">
+            <div class="property-image">
+                <i class="fas fa-building"></i>
+                <div class="property-status status-renovating">裝潢中</div>
+            </div>
+            <div class="property-content">
+                <div class="property-header">
+                    <div class="property-address">新北市板橋區文化路二段123號</div>
+                    <div class="property-building">文化商業廣場</div>
+                </div>
+                <div class="property-details">
+                    <div class="detail-item">
+                        <div class="detail-value">1樓</div>
+                        <div class="detail-label">樓層</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-value">28坪</div>
+                        <div class="detail-label">面積</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-value">8萬</div>
+                        <div class="detail-label">月租</div>
+                    </div>
+                </div>
+                <div class="property-features">
+                    <span class="feature-tag">一樓店面</span>
+                    <span class="feature-tag">近捷運站</span>
+                    <span class="feature-tag">人流密集</span>
+                </div>
+                <div class="property-owner">
+                    <i class="fas fa-user"></i>
+                    <span>屋主: 李太太 0923-456-789</span>
+                </div>
+                <div class="property-actions">
+                    <button class="action-btn btn-primary-custom">
+                        <i class="fas fa-phone me-1"></i>聯絡
+                    </button>
+                    <button class="action-btn btn-outline-custom">
+                        <i class="fas fa-edit me-1"></i>編輯
+                    </button>
+                    <button class="action-btn btn-success-custom">
+                        <i class="fas fa-search me-1"></i>找品牌
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 物件卡片 3 -->
+        <div class="property-card">
+            <div class="property-image">
+                <i class="fas fa-store-alt"></i>
+                <div class="property-status status-available">空置中</div>
+            </div>
+            <div class="property-content">
+                <div class="property-header">
+                    <div class="property-address">台北市松山區八德路四段123號</div>
+                    <div class="property-building">八德商業中心</div>
+                </div>
+                <div class="property-details">
+                    <div class="detail-item">
+                        <div class="detail-value">2樓</div>
+                        <div class="detail-label">樓層</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-value">45坪</div>
+                        <div class="detail-label">面積</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-value">15萬</div>
+                        <div class="detail-label">月租</div>
+                    </div>
+                </div>
+                <div class="property-features">
+                    <span class="feature-tag">二樓店面</span>
+                    <span class="feature-tag">電梯大樓</span>
+                    <span class="feature-tag">停車位</span>
+                </div>
+                <div class="property-owner">
+                    <i class="fas fa-user"></i>
+                    <span>屋主: 陳先生 0934-567-890</span>
+                </div>
+                <div class="property-actions">
+                    <button class="action-btn btn-primary-custom">
+                        <i class="fas fa-phone me-1"></i>聯絡
+                    </button>
+                    <button class="action-btn btn-outline-custom">
+                        <i class="fas fa-edit me-1"></i>編輯
+                    </button>
+                    <button class="action-btn btn-success-custom">
+                        <i class="fas fa-search me-1"></i>找品牌
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部導航 -->
+    <div class="bottom-nav">
+        <a href="dashboard.html" class="nav-item">
+            <i class="fas fa-home"></i>
+            <span>首頁</span>
+        </a>
+        <a href="brands.html" class="nav-item">
+            <i class="fas fa-store"></i>
+            <span>品牌</span>
+        </a>
+        <a href="properties.html" class="nav-item active">
+            <i class="fas fa-building"></i>
+            <span>物件</span>
+        </a>
+        <a href="cases.html" class="nav-item">
+            <i class="fas fa-handshake"></i>
+            <span>案件</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <i class="fas fa-user"></i>
+            <span>我的</span>
+        </a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="common.js"></script>
+    <script>
+        // 模擬物件數據
+        const propertiesData = [
+            {
+                id: 1,
+                address: '台北市信義區信義路五段7號',
+                building: '信義商業大樓',
+                floor: '1樓',
+                area: 35,
+                rent: 12,
+                status: 'available',
+                owner: '王先生',
+                phone: '0912-345-678',
+                features: ['角間位置', '近捷運站', '停車位', '人流密集'],
+                image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&h=300&fit=crop'
+            },
+            {
+                id: 2,
+                address: '台北市松山區八德路四段123號',
+                building: '八德商業中心',
+                floor: '2樓',
+                area: 45,
+                rent: 15,
+                status: 'available',
+                owner: '李小姐',
+                phone: '0923-456-789',
+                features: ['停車位', '電梯大樓', '裝潢完成'],
+                image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=400&h=300&fit=crop'
+            },
+            {
+                id: 3,
+                address: '新北市板橋區文化路二段123號',
+                building: '文化商業廣場',
+                floor: '1樓',
+                area: 28,
+                rent: 8,
+                status: 'renovating',
+                owner: '陳先生',
+                phone: '0934-567-890',
+                features: ['1樓店面', '近捷運', '商業區'],
+                image: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=300&fit=crop'
+            }
+        ];
+
+        let currentFilter = '全部';
+        let currentView = 'list';
+        let searchQuery = '';
+        let advancedFilters = {
+            area: '',
+            rentMin: '',
+            rentMax: '',
+            areaMin: '',
+            areaMax: '',
+            floor: '',
+            type: '',
+            features: []
+        };
+
+        // 頁面載入完成後初始化
+        document.addEventListener('DOMContentLoaded', function () {
+            initializeProperties();
+            setupEventListeners();
+            setupAdvancedFilters();
+        });
+
+        // 初始化物件頁面
+        function initializeProperties() {
+            renderProperties();
+            updateFilterCounts();
+        }
+
+        // 設置事件監聽器
+        function setupEventListeners() {
+            // 搜尋功能
+            const searchInput = document.querySelector('.search-input');
+            if (searchInput) {
+                searchInput.addEventListener('input', handleSearch);
+            }
+
+            // 篩選按鈕
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', handleFilterClick);
+            });
+
+            // 檢視切換
+            document.querySelectorAll('.toggle-btn').forEach(btn => {
+                btn.addEventListener('click', handleViewToggle);
+            });
+
+            // 新增按鈕
+            const addBtn = document.querySelector('.add-btn');
+            if (addBtn) {
+                addBtn.addEventListener('click', handleAddProperty);
+            }
+
+            // 物件卡片事件
+            setupPropertyCardEvents();
+        }
+
+        // 設置進階篩選功能
+        function setupAdvancedFilters() {
+            // 篩選切換按鈕
+            const filterToggleBtn = document.querySelector('.filter-toggle-btn');
+            const filterContent = document.querySelector('.filter-content');
+
+            if (filterToggleBtn && filterContent) {
+                filterToggleBtn.addEventListener('click', function () {
+                    const isVisible = filterContent.style.display !== 'none';
+
+                    if (isVisible) {
+                        filterContent.style.display = 'none';
+                        this.classList.remove('active');
+                        CommonUtils.showToast('已收起進階篩選', 'info');
+                    } else {
+                        filterContent.style.display = 'block';
+                        this.classList.add('active');
+                        CommonUtils.showToast('展開進階篩選', 'info');
+                    }
+                });
+            }
+
+            // 清除篩選按鈕
+            const clearBtn = document.querySelector('.btn-clear');
+            if (clearBtn) {
+                clearBtn.addEventListener('click', clearAdvancedFilters);
+            }
+
+            // 套用篩選按鈕
+            const applyBtn = document.querySelector('.btn-apply');
+            if (applyBtn) {
+                applyBtn.addEventListener('click', applyAdvancedFilters);
+            }
+
+            // 篩選輸入框事件
+            setupFilterInputs();
+        }
+
+        // 設置篩選輸入框事件
+        function setupFilterInputs() {
+            // 區域選擇
+            const areaFilter = document.querySelector('#areaFilter');
+            if (areaFilter) {
+                areaFilter.addEventListener('change', function () {
+                    advancedFilters.area = this.value;
+                    updateFilterPreview();
+                });
+            }
+
+            // 租金範圍
+            const rentMin = document.querySelector('#rentMin');
+            const rentMax = document.querySelector('#rentMax');
+            if (rentMin) {
+                rentMin.addEventListener('input', function () {
+                    advancedFilters.rentMin = this.value;
+                    updateFilterPreview();
+                });
+            }
+            if (rentMax) {
+                rentMax.addEventListener('input', function () {
+                    advancedFilters.rentMax = this.value;
+                    updateFilterPreview();
+                });
+            }
+
+            // 面積範圍
+            const areaMin = document.querySelector('#areaMin');
+            const areaMax = document.querySelector('#areaMax');
+            if (areaMin) {
+                areaMin.addEventListener('input', function () {
+                    advancedFilters.areaMin = this.value;
+                    updateFilterPreview();
+                });
+            }
+            if (areaMax) {
+                areaMax.addEventListener('input', function () {
+                    advancedFilters.areaMax = this.value;
+                    updateFilterPreview();
+                });
+            }
+
+            // 樓層選擇
+            const floorFilter = document.querySelector('#floorFilter');
+            if (floorFilter) {
+                floorFilter.addEventListener('change', function () {
+                    advancedFilters.floor = this.value;
+                    updateFilterPreview();
+                });
+            }
+
+            // 物件類型
+            const typeFilter = document.querySelector('#typeFilter');
+            if (typeFilter) {
+                typeFilter.addEventListener('change', function () {
+                    advancedFilters.type = this.value;
+                    updateFilterPreview();
+                });
+            }
+
+            // 特色複選框
+            document.querySelectorAll('.feature-checkbox input[type="checkbox"]').forEach(checkbox => {
+                checkbox.addEventListener('change', function () {
+                    const feature = this.value;
+                    if (this.checked) {
+                        if (!advancedFilters.features.includes(feature)) {
+                            advancedFilters.features.push(feature);
+                        }
+                    } else {
+                        advancedFilters.features = advancedFilters.features.filter(f => f !== feature);
+                    }
+                    updateFilterPreview();
+                });
+            });
+        }
+
+        // 更新篩選預覽
+        function updateFilterPreview() {
+            const activeFilters = getActiveFiltersCount();
+            const toggleBtn = document.querySelector('.filter-toggle-btn');
+
+            if (activeFilters > 0) {
+                toggleBtn.innerHTML = `
+                    <span><i class="fas fa-sliders-h me-2"></i>進階篩選 <span class="filter-count">(${activeFilters})</span></span>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                `;
+            } else {
+                toggleBtn.innerHTML = `
+                    <span><i class="fas fa-sliders-h me-2"></i>進階篩選</span>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                `;
+            }
+        }
+
+        // 獲取活躍篩選條件數量
+        function getActiveFiltersCount() {
+            let count = 0;
+
+            if (advancedFilters.area) count++;
+            if (advancedFilters.rentMin || advancedFilters.rentMax) count++;
+            if (advancedFilters.areaMin || advancedFilters.areaMax) count++;
+            if (advancedFilters.floor) count++;
+            if (advancedFilters.type) count++;
+            if (advancedFilters.features.length > 0) count++;
+
+            return count;
+        }
+
+        // 清除進階篩選
+        function clearAdvancedFilters() {
+            // 重置篩選條件
+            advancedFilters = {
+                area: '',
+                rentMin: '',
+                rentMax: '',
+                areaMin: '',
+                areaMax: '',
+                floor: '',
+                type: '',
+                features: []
+            };
+
+            // 清除表單輸入
+            document.querySelector('#areaFilter').value = '';
+            document.querySelector('#rentMin').value = '';
+            document.querySelector('#rentMax').value = '';
+            document.querySelector('#areaMin').value = '';
+            document.querySelector('#areaMax').value = '';
+            document.querySelector('#floorFilter').value = '';
+            document.querySelector('#typeFilter').value = '';
+
+            // 清除複選框
+            document.querySelectorAll('.feature-checkbox input[type="checkbox"]').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+
+            updateFilterPreview();
+            CommonUtils.showToast('已清除所有篩選條件', 'info');
+        }
+
+        // 套用進階篩選
+        function applyAdvancedFilters() {
+            const activeFilters = getActiveFiltersCount();
+
+            if (activeFilters === 0) {
+                CommonUtils.showToast('請先設定篩選條件', 'info');
+                return;
+            }
+
+            CommonUtils.showToast(`正在套用 ${activeFilters} 個篩選條件...`, 'info');
+
+            setTimeout(() => {
+                renderProperties();
+
+                // 收起篩選面板
+                const filterContent = document.querySelector('.filter-content');
+                const toggleBtn = document.querySelector('.filter-toggle-btn');
+                filterContent.style.display = 'none';
+                toggleBtn.classList.remove('active');
+
+                CommonUtils.showToast('篩選已套用', 'success');
+            }, 800);
+        }
+
+        // 套用進階篩選邏輯
+        function applyAdvancedFilterLogic(property) {
+            // 區域篩選
+            if (advancedFilters.area && !property.address.includes(advancedFilters.area)) {
+                return false;
+            }
+
+            // 租金範圍篩選
+            if (advancedFilters.rentMin && property.rent < parseInt(advancedFilters.rentMin)) {
+                return false;
+            }
+            if (advancedFilters.rentMax && property.rent > parseInt(advancedFilters.rentMax)) {
+                return false;
+            }
+
+            // 面積範圍篩選
+            if (advancedFilters.areaMin && property.area < parseInt(advancedFilters.areaMin)) {
+                return false;
+            }
+            if (advancedFilters.areaMax && property.area > parseInt(advancedFilters.areaMax)) {
+                return false;
+            }
+
+            // 樓層篩選
+            if (advancedFilters.floor) {
+                if (advancedFilters.floor === '5+') {
+                    const floorNum = parseInt(property.floor);
+                    if (isNaN(floorNum) || floorNum < 5) {
+                        return false;
+                    }
+                } else if (!property.floor.includes(advancedFilters.floor)) {
+                    return false;
+                }
+            }
+
+            // 物件類型篩選
+            if (advancedFilters.type) {
+                // 這裡可以根據物件特色或其他屬性來判斷類型
+                const propertyType = getPropertyType(property);
+                if (propertyType !== advancedFilters.type) {
+                    return false;
+                }
+            }
+
+            // 特色篩選
+            if (advancedFilters.features.length > 0) {
+                const hasAllFeatures = advancedFilters.features.every(feature =>
+                    property.features.some(propertyFeature =>
+                        propertyFeature.includes(feature) || feature.includes(propertyFeature)
+                    )
+                );
+                if (!hasAllFeatures) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        // 獲取物件類型
+        function getPropertyType(property) {
+            // 根據特色或地址判斷物件類型
+            if (property.features.some(f => f.includes('店面'))) {
+                return '店面';
+            }
+            if (property.features.some(f => f.includes('辦公'))) {
+                return '辦公室';
+            }
+            if (property.features.some(f => f.includes('倉庫'))) {
+                return '倉庫';
+            }
+            if (property.features.some(f => f.includes('工作室'))) {
+                return '工作室';
+            }
+            return '店面'; // 預設為店面
+        }
+
+        // 處理搜尋
+        function handleSearch(event) {
+            searchQuery = event.target.value.toLowerCase();
+            CommonUtils.showToast('搜尋中...', 'info');
+            setTimeout(() => {
+                renderProperties();
+            }, 300);
+        }
+
+        // 處理篩選點擊
+        function handleFilterClick(event) {
+            // 移除所有active類別
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // 添加active到當前點擊的按鈕
+            event.target.classList.add('active');
+            currentFilter = event.target.textContent.trim();
+
+            CommonUtils.showToast(`篩選：${currentFilter}`, 'info');
+            renderProperties();
+        }
+
+        // 處理檢視切換
+        function handleViewToggle(event) {
+            // 移除所有active類別
+            document.querySelectorAll('.toggle-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // 添加active到當前點擊的按鈕
+            event.target.classList.add('active');
+
+            const viewType = event.target.querySelector('i').classList.contains('fa-list') ? 'list' : 'map';
+            currentView = viewType;
+
+            if (viewType === 'map') {
+                CommonUtils.showToast('地圖檢視功能開發中...', 'info');
+            } else {
+                CommonUtils.showToast('切換到列表檢視', 'info');
+                renderProperties();
+            }
+        }
+
+        // 處理新增物件
+        function handleAddProperty(event) {
+            event.preventDefault();
+
+            // 添加點擊動畫
+            event.target.style.transform = 'scale(0.9)';
+            setTimeout(() => {
+                event.target.style.transform = 'scale(1)';
+            }, 150);
+
+            CommonUtils.showToast('正在前往新增物件頁面...', 'info');
+            CommonUtils.navigateTo('property-add.html');
+        }
+
+        // 渲染物件列表
+        function renderProperties() {
+            const propertiesList = document.querySelector('.properties-list');
+            if (!propertiesList) return;
+
+            // 篩選物件
+            let filteredProperties = propertiesData.filter(property => {
+                // 基本篩選
+                const matchesFilter = currentFilter === '全部' ||
+                    (currentFilter === '空置中' && property.status === 'available') ||
+                    (currentFilter === '裝潢中' && property.status === 'renovating') ||
+                    (currentFilter === '營業中' && property.status === 'occupied');
+
+                // 搜尋篩選
+                const matchesSearch = searchQuery === '' ||
+                    property.address.toLowerCase().includes(searchQuery) ||
+                    property.building.toLowerCase().includes(searchQuery);
+
+                // 進階篩選
+                const matchesAdvanced = applyAdvancedFilterLogic(property);
+
+                return matchesFilter && matchesSearch && matchesAdvanced;
+            });
+
+            // 清空現有內容
+            propertiesList.innerHTML = '';
+
+            if (filteredProperties.length === 0) {
+                propertiesList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-search"></i>
+                        <h3>沒有找到符合條件的物件</h3>
+                        <p>請嘗試調整搜尋條件或篩選器</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // 渲染物件卡片
+            filteredProperties.forEach(property => {
+                const propertyCard = createPropertyCard(property);
+                propertiesList.appendChild(propertyCard);
+            });
+
+            // 重新設置事件監聽器
+            setupPropertyCardEvents();
+        }
+
+        // 創建物件卡片
+        function createPropertyCard(property) {
+            const card = document.createElement('div');
+            card.className = 'property-card';
+            card.dataset.propertyId = property.id;
+
+            const statusText = property.status === 'available' ? '空置中' :
+                property.status === 'renovating' ? '裝潢中' : '營業中';
+            const statusClass = property.status === 'available' ? 'available' :
+                property.status === 'renovating' ? 'renovating' : 'occupied';
+
+            card.innerHTML = `
+                <div class="property-image" style="background-image: url('${property.image}'); background-size: cover; background-position: center; height: 200px; position: relative; border-radius: 15px 15px 0 0;">
+                    <div class="property-status ${statusClass}" style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.8); color: white; padding: 4px 8px; border-radius: 12px; font-size: 12px;">${statusText}</div>
+                </div>
+                <div class="property-content">
+                    <div class="property-header">
+                        <div class="property-address">${property.address}</div>
+                        <div class="property-building">${property.building} ${property.floor}</div>
+                    </div>
+                    <div class="property-specs">
+                        <div class="spec-item">
+                            <div class="spec-value">${property.floor}</div>
+                            <div class="spec-label">樓層</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-value">${property.area}坪</div>
+                            <div class="spec-label">面積</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-value">${property.rent}萬</div>
+                            <div class="spec-label">月租</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-value">${statusText}</div>
+                            <div class="spec-label">狀態</div>
+                        </div>
+                    </div>
+                    <div class="property-features">
+                        ${property.features.map(feature => `<span class="feature-tag">${feature}</span>`).join('')}
+                    </div>
+                    <div class="property-owner">
+                        <i class="fas fa-user"></i>
+                        <span>屋主：${property.owner} ${property.phone}</span>
+                    </div>
+                    <div class="property-actions">
+                        <button class="action-btn btn-primary-custom" onclick="handleContact('${property.phone}', '${property.owner}')">
+                            <i class="fas fa-phone me-1"></i>聯絡
+                        </button>
+                        <button class="action-btn btn-outline-custom" onclick="handleEdit(${property.id})">
+                            <i class="fas fa-edit me-1"></i>編輯
+                        </button>
+                        <button class="action-btn btn-success-custom" onclick="handleFindBrand(${property.id})">
+                            <i class="fas fa-search me-1"></i>找品牌
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            return card;
+        }
+
+        // 比較功能變數
+        let selectedProperties = [];
+        const MAX_COMPARE_ITEMS = 3;
+
+        // 設置物件卡片事件
+        function setupPropertyCardEvents() {
+            document.querySelectorAll('.property-card').forEach(card => {
+                let pressTimer;
+                let isLongPress = false;
+
+                // 鼠標/觸摸開始
+                card.addEventListener('mousedown', startPress);
+                card.addEventListener('touchstart', startPress);
+
+                // 鼠標/觸摸結束
+                card.addEventListener('mouseup', endPress);
+                card.addEventListener('touchend', endPress);
+                card.addEventListener('mouseleave', endPress);
+
+                function startPress(event) {
+                    isLongPress = false;
+                    pressTimer = setTimeout(() => {
+                        isLongPress = true;
+                        // 長按選擇比較
+                        const propertyId = parseInt(card.dataset.propertyId);
+                        togglePropertyComparison(propertyId, card);
+
+                        // 觸覺反饋（如果支援）
+                        if (navigator.vibrate) {
+                            navigator.vibrate(50);
+                        }
+                    }, 500); // 500ms長按
+                }
+
+                function endPress(event) {
+                    clearTimeout(pressTimer);
+
+                    if (!isLongPress && event.type !== 'mouseleave') {
+                        // 短按查看詳情（排除按鈕區域）
+                        if (!event.target.closest('.property-actions')) {
+                            CommonUtils.showToast('正在查看物件詳情...', 'info');
+                            CommonUtils.navigateTo('property-detail.html');
+                        }
+                    }
+                }
+
+                // 添加懸停效果
+                card.style.cursor = 'pointer';
+            });
+        }
+
+        /**
+         * 切換物件比較選擇
+         */
+        function togglePropertyComparison(propertyId, cardElement) {
+            const index = selectedProperties.indexOf(propertyId);
+
+            if (index > -1) {
+                // 取消選中
+                selectedProperties.splice(index, 1);
+                cardElement.classList.remove('selected');
+                CommonUtils.showToast('已取消選擇', 'info');
+            } else {
+                // 檢查是否超過最大比較數量
+                if (selectedProperties.length >= MAX_COMPARE_ITEMS) {
+                    CommonUtils.showToast(`最多只能比較 ${MAX_COMPARE_ITEMS} 個物件`, 'warning');
+                    return;
+                }
+
+                // 選中
+                selectedProperties.push(propertyId);
+                cardElement.classList.add('selected');
+                CommonUtils.showToast('已加入比較', 'success');
+            }
+
+            // 更新比較工具欄
+            updateCompareToolbar();
+        }
+
+        /**
+         * 更新比較工具欄
+         */
+        function updateCompareToolbar() {
+            const toolbar = document.getElementById('compareToolbar');
+            const countElement = document.getElementById('compareCount');
+
+            countElement.textContent = selectedProperties.length;
+
+            if (selectedProperties.length > 0) {
+                toolbar.style.display = 'flex';
+            } else {
+                toolbar.style.display = 'none';
+            }
+        }
+
+        /**
+         * 開始比較
+         */
+        function startComparison() {
+            if (selectedProperties.length < 2) {
+                CommonUtils.showToast('請至少選擇2個物件進行比較', 'warning');
+                return;
+            }
+
+            CommonUtils.showToast(`正在比較 ${selectedProperties.length} 個物件...`, 'info');
+
+            // 構建比較頁面URL
+            const compareUrl = `property-comparison.html?ids=${selectedProperties.join(',')}`;
+
+            setTimeout(() => {
+                window.location.href = compareUrl;
+            }, 1000);
+        }
+
+        /**
+         * 清除比較選擇
+         */
+        function clearComparison() {
+            selectedProperties = [];
+
+            // 移除所有選中狀態
+            document.querySelectorAll('.property-card.selected').forEach(card => {
+                card.classList.remove('selected');
+            });
+
+            updateCompareToolbar();
+            CommonUtils.showToast('已清除所有選擇', 'info');
+        }
+
+        // 處理聯絡功能
+        function handleContact(phone, ownerName) {
+            event.stopPropagation();
+            CommonUtils.showToast(`正在撥打電話給 ${ownerName}...`, 'info');
+
+            setTimeout(() => {
+                CommonUtils.confirm(`確定要撥打電話給 ${ownerName} (${phone}) 嗎？`, () => {
+                    CommonUtils.showToast('電話已撥出', 'success');
+                });
+            }, 500);
+        }
+
+        // 處理編輯功能
+        function handleEdit(propertyId) {
+            event.stopPropagation();
+            const property = propertiesData.find(p => p.id === propertyId);
+            CommonUtils.showToast(`正在編輯 ${property.building} 的資料...`, 'info');
+            CommonUtils.navigateTo('edit-property.html');
+        }
+
+        // 處理找品牌功能
+        function handleFindBrand(propertyId) {
+            event.stopPropagation();
+            const property = propertiesData.find(p => p.id === propertyId);
+            CommonUtils.showToast(`正在為 ${property.building} 尋找合適品牌...`, 'info');
+            CommonUtils.navigateTo('matching-results.html');
+        }
+
+        // 更新篩選計數
+        function updateFilterCounts() {
+            const filterCounts = {
+                '全部': propertiesData.length,
+                '空置中': propertiesData.filter(p => p.status === 'available').length,
+                '裝潢中': propertiesData.filter(p => p.status === 'renovating').length,
+                '營業中': propertiesData.filter(p => p.status === 'occupied').length
+            };
+
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                const filterName = btn.textContent.trim();
+                if (filterCounts[filterName] !== undefined) {
+                    btn.innerHTML = `${filterName} <span style="font-size: 10px;">(${filterCounts[filterName]})</span>`;
+                }
+            });
+        }
+
+        // 添加額外的CSS樣式
+        const additionalStyle = document.createElement('style');
+        additionalStyle.textContent = `
+            .empty-state {
+                text-align: center;
+                padding: 60px 20px;
+                color: #666;
+            }
+            .empty-state i {
+                font-size: 60px;
+                color: #ddd;
+                margin-bottom: 20px;
+            }
+            .empty-state h3 {
+                font-size: 18px;
+                margin-bottom: 10px;
+            }
+            .empty-state p {
+                font-size: 14px;
+            }
+            .property-card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+                transition: all 0.3s ease;
+            }
+            .filter-btn:hover, .toggle-btn:hover {
+                transform: translateY(-1px);
+                transition: all 0.2s ease;
+            }
+            .action-btn:hover {
+                transform: translateY(-1px);
+                transition: all 0.2s ease;
+            }
+        `;
+        document.head.appendChild(additionalStyle);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>首頁</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .top-bar {
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .top-bar .logo {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .top-bar .user-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .top-bar .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 10px;
+        }
+
+        .notification-badge {
+            position: relative;
+            margin-right: 10px;
+        }
+
+        .notification-badge .badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ff4757;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .main-content {
+            padding: 20px;
+            padding-bottom: 80px;
+        }
+
+        .welcome-section {
+            margin-bottom: 25px;
+        }
+
+        .welcome-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .welcome-subtitle {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .stat-icon {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .stat-card.brands {
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+            color: white;
+        }
+
+        .stat-card.properties {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            color: white;
+        }
+
+        .stat-card.cases {
+            background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%);
+            color: white;
+        }
+
+        .stat-card.deals {
+            background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
+            color: white;
+        }
+
+        .quick-actions {
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title i {
+            margin-right: 8px;
+            color: #2563eb;
+        }
+
+        .action-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+        }
+
+        .action-btn {
+            background: white;
+            border: none;
+            border-radius: 12px;
+            padding: 20px 10px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            color: #333;
+        }
+
+        .action-btn i {
+            font-size: 24px;
+            margin-bottom: 8px;
+            color: #2563eb;
+        }
+
+        .action-btn span {
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .recent-activities {
+            margin-bottom: 25px;
+        }
+
+        .activity-list {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .activity-item {
+            padding: 15px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 16px;
+        }
+
+        .activity-icon.success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .activity-icon.warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .activity-icon.info {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 2px;
+        }
+
+        .activity-time {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e9ecef;
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .nav-item {
+            text-align: center;
+            color: #666;
+            text-decoration: none;
+            padding: 5px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-item.active {
+            color: #2563eb;
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 2px;
+        }
+
+        .nav-item span {
+            font-size: 10px;
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 頂部導航 -->
+    <div class="top-bar">
+        <div class="logo">
+            <i class="fas fa-building me-2"></i>媒合系統
+        </div>
+        <div class="user-info">
+            <div class="notification-badge">
+                <i class="fas fa-bell"></i>
+                <span class="badge">3</span>
+            </div>
+            <div class="user-avatar">
+                <i class="fas fa-user"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主要內容 -->
+    <div class="main-content">
+        <!-- 歡迎區域 -->
+        <div class="welcome-section">
+            <h1 class="welcome-title">早安，張顧問</h1>
+            <p class="welcome-subtitle">今天是個適合媒合的好日子</p>
+        </div>
+
+        <!-- 統計卡片 -->
+        <div class="stats-grid">
+            <div class="stat-card brands">
+                <div class="stat-icon">
+                    <i class="fas fa-store"></i>
+                </div>
+                <div class="stat-number">12</div>
+                <div class="stat-label">管理品牌</div>
+            </div>
+            <div class="stat-card properties">
+                <div class="stat-icon">
+                    <i class="fas fa-building"></i>
+                </div>
+                <div class="stat-number">8</div>
+                <div class="stat-label">管理物件</div>
+            </div>
+            <div class="stat-card cases">
+                <div class="stat-icon">
+                    <i class="fas fa-handshake"></i>
+                </div>
+                <div class="stat-number">5</div>
+                <div class="stat-label">進行案件</div>
+            </div>
+            <div class="stat-card deals">
+                <div class="stat-icon">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <div class="stat-number">2</div>
+                <div class="stat-label">本月成交</div>
+            </div>
+        </div>
+
+        <!-- 快速操作 -->
+        <div class="quick-actions">
+            <h2 class="section-title">
+                <i class="fas fa-bolt"></i>快速操作
+            </h2>
+            <div class="action-grid">
+                <a href="add-brand.html" class="action-btn">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>新增品牌</span>
+                </a>
+                <a href="property-add.html" class="action-btn">
+                    <i class="fas fa-plus-square"></i>
+                    <span>新增物件</span>
+                </a>
+                <a href="matching-setup.html" class="action-btn">
+                    <i class="fas fa-search"></i>
+                    <span>開始媒合</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- 最近活動 -->
+        <div class="recent-activities">
+            <h2 class="section-title">
+                <i class="fas fa-clock"></i>最近活動
+            </h2>
+            <div class="activity-list">
+                <div class="activity-item">
+                    <div class="activity-icon success">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-title">麥當勞 ↔ 信義區店面 媒合成功</div>
+                        <div class="activity-time">2小時前</div>
+                    </div>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-icon warning">
+                        <i class="fas fa-exclamation"></i>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-title">星巴克案件需要追蹤</div>
+                        <div class="activity-time">4小時前</div>
+                    </div>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-icon info">
+                        <i class="fas fa-plus"></i>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-title">新增物件：松山區辦公室</div>
+                        <div class="activity-time">今天</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部導航 -->
+    <div class="bottom-nav">
+        <a href="dashboard.html" class="nav-item active">
+            <i class="fas fa-home"></i>
+            <span>首頁</span>
+        </a>
+        <a href="brands.html" class="nav-item">
+            <i class="fas fa-store"></i>
+            <span>品牌</span>
+        </a>
+        <a href="properties.html" class="nav-item">
+            <i class="fas fa-building"></i>
+            <span>物件</span>
+        </a>
+        <a href="cases.html" class="nav-item">
+            <i class="fas fa-handshake"></i>
+            <span>案件</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <i class="fas fa-user"></i>
+            <span>我的</span>
+        </a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 模擬數據
+        const dashboardData = {
+            stats: {
+                brands: 12,
+                properties: 8,
+                cases: 5,
+                deals: 2
+            },
+            activities: [
+                {
+                    type: 'success',
+                    icon: 'fas fa-check',
+                    title: '麥當勞 ↔ 信義區店面 媒合成功',
+                    time: '2小時前'
+                },
+                {
+                    type: 'warning',
+                    icon: 'fas fa-exclamation',
+                    title: '星巴克案件需要追蹤',
+                    time: '4小時前'
+                },
+                {
+                    type: 'info',
+                    icon: 'fas fa-plus',
+                    title: '新增物件：松山區辦公室',
+                    time: '今天'
+                }
+            ]
+        };
+
+        // 頁面載入完成後初始化
+        document.addEventListener('DOMContentLoaded', function () {
+            initializeDashboard();
+            setupEventListeners();
+            startRealTimeUpdates();
+        });
+
+        // 初始化儀表板
+        function initializeDashboard() {
+            updateStats();
+            updateActivities();
+            updateGreeting();
+        }
+
+        // 更新統計數據
+        function updateStats() {
+            const stats = dashboardData.stats;
+
+            // 添加動畫效果
+            animateNumber('.stat-card.brands .stat-number', stats.brands);
+            animateNumber('.stat-card.properties .stat-number', stats.properties);
+            animateNumber('.stat-card.cases .stat-number', stats.cases);
+            animateNumber('.stat-card.deals .stat-number', stats.deals);
+        }
+
+        // 數字動畫效果
+        function animateNumber(selector, targetNumber) {
+            const element = document.querySelector(selector);
+            if (!element) return;
+
+            let currentNumber = 0;
+            const increment = targetNumber / 20;
+            const timer = setInterval(() => {
+                currentNumber += increment;
+                if (currentNumber >= targetNumber) {
+                    currentNumber = targetNumber;
+                    clearInterval(timer);
+                }
+                element.textContent = Math.floor(currentNumber);
+            }, 50);
+        }
+
+        // 更新問候語
+        function updateGreeting() {
+            const hour = new Date().getHours();
+            const greetingElement = document.querySelector('.welcome-title');
+            let greeting = '';
+
+            if (hour < 12) {
+                greeting = '早安，張顧問';
+            } else if (hour < 18) {
+                greeting = '午安，張顧問';
+            } else {
+                greeting = '晚安，張顧問';
+            }
+
+            if (greetingElement) {
+                greetingElement.textContent = greeting;
+            }
+        }
+
+        // 設置事件監聽器
+        function setupEventListeners() {
+            // 快速操作按鈕
+            document.querySelectorAll('.action-btn').forEach(btn => {
+                btn.addEventListener('click', handleQuickAction);
+            });
+
+            // 統計卡片點擊
+            document.querySelectorAll('.stat-card').forEach(card => {
+                card.addEventListener('click', handleStatCardClick);
+                card.style.cursor = 'pointer';
+            });
+
+            // 活動項目點擊
+            document.querySelectorAll('.activity-item').forEach(item => {
+                item.addEventListener('click', handleActivityClick);
+                item.style.cursor = 'pointer';
+            });
+
+            // 通知鈴鐺點擊
+            const notificationBell = document.querySelector('.notification-badge');
+            if (notificationBell) {
+                notificationBell.addEventListener('click', showNotifications);
+            }
+        }
+
+        // 處理快速操作
+        function handleQuickAction(event) {
+            event.preventDefault();
+            const actionText = event.currentTarget.querySelector('span').textContent;
+
+            // 添加點擊動畫
+            event.currentTarget.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                event.currentTarget.style.transform = 'scale(1)';
+            }, 150);
+
+            // 顯示操作提示
+            showToast(`正在執行：${actionText}`, 'info');
+
+            // 模擬跳轉延遲
+            setTimeout(() => {
+                switch (actionText) {
+                    case '新增品牌':
+                        window.location.href = 'add-brand.html';
+                        break;
+                    case '新增物件':
+                        window.location.href = 'property-add.html';
+                        break;
+                    case '開始媒合':
+                        window.location.href = 'matching-setup.html';
+                        break;
+                }
+            }, 500);
+        }
+
+        // 處理統計卡片點擊
+        function handleStatCardClick(event) {
+            const card = event.currentTarget;
+            const cardClass = card.classList[1]; // brands, properties, cases, deals
+
+            // 添加點擊動畫
+            card.style.transform = 'scale(0.98)';
+            setTimeout(() => {
+                card.style.transform = 'scale(1)';
+            }, 150);
+
+            // 根據卡片類型跳轉
+            setTimeout(() => {
+                switch (cardClass) {
+                    case 'brands':
+                        window.location.href = 'brands.html';
+                        break;
+                    case 'properties':
+                        window.location.href = 'properties.html';
+                        break;
+                    case 'cases':
+                        window.location.href = 'cases.html';
+                        break;
+                    case 'deals':
+                        window.location.href = 'cases.html';
+                        break;
+                }
+            }, 200);
+        }
+
+        // 處理活動項目點擊
+        function handleActivityClick(event) {
+            const activityTitle = event.currentTarget.querySelector('.activity-title').textContent;
+            showToast(`查看活動：${activityTitle}`, 'info');
+
+            // 模擬跳轉到相關頁面
+            setTimeout(() => {
+                if (activityTitle.includes('媒合')) {
+                    window.location.href = 'case-detail.html';
+                } else if (activityTitle.includes('物件')) {
+                    window.location.href = 'property-detail.html';
+                }
+            }, 500);
+        }
+
+        // 顯示通知
+        function showNotifications() {
+            const notifications = [
+                '您有3個新的媒合推薦',
+                '星巴克案件需要追蹤',
+                '系統維護通知'
+            ];
+
+            showToast('通知：您有3個新消息', 'info');
+        }
+
+        // 開始實時更新
+        function startRealTimeUpdates() {
+            // 每30秒更新一次數據
+            setInterval(() => {
+                updateTimeStamps();
+            }, 30000);
+        }
+
+        // 更新時間戳
+        function updateTimeStamps() {
+            document.querySelectorAll('.activity-time').forEach(timeElement => {
+                // 這裡可以添加實時時間更新邏輯
+            });
+        }
+
+        // 工具函數：顯示提示訊息
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast-message toast-${type}`;
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'info' ? '#2563eb' : '#059669'};
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                z-index: 9999;
+                animation: slideIn 0.3s ease;
+                font-size: 14px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            `;
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    if (document.body.contains(toast)) {
+                        document.body.removeChild(toast);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // 添加CSS動畫
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+            .stat-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+                transition: all 0.3s ease;
+            }
+            .activity-item:hover {
+                background-color: #f8f9fa;
+                transition: background-color 0.3s ease;
+            }
+            .action-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                transition: all 0.3s ease;
+            }
+            .notification-badge:hover {
+                transform: scale(1.1);
+                transition: transform 0.2s ease;
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+
+</html>

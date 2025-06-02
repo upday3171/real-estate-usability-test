@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>物件地圖檢視</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 15px 20px;
+            position: relative;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            border-radius: 10px;
+            padding: 8px 12px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+        }
+
+        .page-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .view-toggle {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            border-radius: 10px;
+            padding: 8px 12px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .view-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+        }
+
+        .map-container {
+            position: relative;
+            height: calc(100vh - 70px);
+            background: #e8f4fd;
+            overflow: hidden;
+        }
+
+        .map-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #e8f4fd 25%, #f0f8ff 25%, #f0f8ff 50%, #e8f4fd 50%, #e8f4fd 75%, #f0f8ff 75%);
+            background-size: 40px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .map-info {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+        }
+
+        .map-info i {
+            font-size: 60px;
+            color: #3498db;
+            margin-bottom: 20px;
+        }
+
+        .map-info h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .map-info p {
+            color: #7f8c8d;
+            margin-bottom: 20px;
+        }
+
+        .property-marker {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: #3498db;
+            border-radius: 50% 50% 50% 0;
+            transform: rotate(-45deg);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+        }
+
+        .property-marker:hover {
+            transform: rotate(-45deg) scale(1.2);
+            z-index: 100;
+        }
+
+        .property-marker i {
+            transform: rotate(45deg);
+        }
+
+        .property-marker.available {
+            background: #27ae60;
+            box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+        }
+
+        .property-marker.rented {
+            background: #e74c3c;
+            box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+        }
+
+        .property-marker.negotiating {
+            background: #f39c12;
+            box-shadow: 0 4px 12px rgba(243, 156, 18, 0.3);
+        }
+
+        .property-popup {
+            position: absolute;
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            min-width: 280px;
+            z-index: 200;
+            display: none;
+            transform: translateY(-100%);
+            margin-top: -10px;
+        }
+
+        .popup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .popup-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin: 0;
+        }
+
+        .popup-close {
+            background: none;
+            border: none;
+            color: #95a5a6;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .popup-details {
+            margin-bottom: 15px;
+        }
+
+        .popup-detail-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .popup-detail-label {
+            color: #7f8c8d;
+        }
+
+        .popup-detail-value {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        .popup-status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .status-available {
+            background: #d5f4e6;
+            color: #27ae60;
+        }
+
+        .status-rented {
+            background: #fadbd8;
+            color: #e74c3c;
+        }
+
+        .status-negotiating {
+            background: #fef5e7;
+            color: #f39c12;
+        }
+
+        .popup-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .popup-btn {
+            flex: 1;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .popup-btn-primary {
+            background: #3498db;
+            color: white;
+        }
+
+        .popup-btn-primary:hover {
+            background: #2980b9;
+        }
+
+        .popup-btn-secondary {
+            background: #ecf0f1;
+            color: #2c3e50;
+        }
+
+        .popup-btn-secondary:hover {
+            background: #d5dbdb;
+        }
+
+        .map-controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 100;
+        }
+
+        .map-control-btn {
+            width: 45px;
+            height: 45px;
+            background: white;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #2c3e50;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .map-control-btn:hover {
+            background: #3498db;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .filter-panel {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            min-width: 250px;
+            z-index: 100;
+        }
+
+        .filter-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .filter-group {
+            margin-bottom: 15px;
+        }
+
+        .filter-label {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .filter-checkboxes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .filter-checkbox {
+            display: flex;
+            align-items: center;
+            background: #f8f9fa;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-checkbox input {
+            margin-right: 6px;
+        }
+
+        .filter-checkbox.checked {
+            background: #3498db;
+            color: white;
+        }
+
+        .legend {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+        }
+
+        .legend-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 12px;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .legend-color.available {
+            background: #27ae60;
+        }
+
+        .legend-color.rented {
+            background: #e74c3c;
+        }
+
+        .legend-color.negotiating {
+            background: #f39c12;
+        }
+
+        .search-overlay {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            min-width: 300px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 2px solid #ecf0f1;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .search-results {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .search-result-item {
+            padding: 10px;
+            border-bottom: 1px solid #ecf0f1;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .search-result-item:hover {
+            background: #f8f9fa;
+        }
+
+        .search-result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 4px;
+        }
+
+        .result-details {
+            font-size: 12px;
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div class="header-content">
+            <a href="properties.html" class="back-btn">
+                <i class="fas fa-arrow-left me-2"></i>返回
+            </a>
+            <h1 class="page-title">物件地圖檢視</h1>
+            <button class="view-toggle" onclick="toggleView()">
+                <i class="fas fa-list me-2"></i>列表檢視
+            </button>
+        </div>
+    </div>
+
+    <div class="map-container">
+        <!-- 地圖佔位符 -->
+        <div class="map-placeholder">
+            <div class="map-info">
+                <i class="fas fa-map-marked-alt"></i>
+                <h3>互動式地圖檢視</h3>
+                <p>在此檢視所有物件的地理位置，點擊標記查看詳細資訊</p>
+                <small class="text-muted">實際部署時將整合 Google Maps 或其他地圖服務</small>
+            </div>
+        </div>
+
+        <!-- 模擬物件標記 -->
+        <div class="property-marker available" style="top: 30%; left: 25%;" onclick="showPropertyPopup(this, 1)">
+            <i class="fas fa-store"></i>
+        </div>
+        <div class="property-marker rented" style="top: 45%; left: 40%;" onclick="showPropertyPopup(this, 2)">
+            <i class="fas fa-store"></i>
+        </div>
+        <div class="property-marker negotiating" style="top: 60%; left: 30%;" onclick="showPropertyPopup(this, 3)">
+            <i class="fas fa-store"></i>
+        </div>
+        <div class="property-marker available" style="top: 35%; left: 60%;" onclick="showPropertyPopup(this, 4)">
+            <i class="fas fa-store"></i>
+        </div>
+        <div class="property-marker available" style="top: 55%; left: 70%;" onclick="showPropertyPopup(this, 5)">
+            <i class="fas fa-store"></i>
+        </div>
+
+        <!-- 物件彈出視窗 -->
+        <div class="property-popup" id="propertyPopup">
+            <div class="popup-header">
+                <h4 class="popup-title" id="popupTitle">信義區精華店面</h4>
+                <button class="popup-close" onclick="hidePropertyPopup()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="popup-status status-available" id="popupStatus">可租用</div>
+            <div class="popup-details" id="popupDetails">
+                <div class="popup-detail-item">
+                    <span class="popup-detail-label">坪數</span>
+                    <span class="popup-detail-value">35坪</span>
+                </div>
+                <div class="popup-detail-item">
+                    <span class="popup-detail-label">月租金</span>
+                    <span class="popup-detail-value">$120,000</span>
+                </div>
+                <div class="popup-detail-item">
+                    <span class="popup-detail-label">樓層</span>
+                    <span class="popup-detail-value">1樓</span>
+                </div>
+                <div class="popup-detail-item">
+                    <span class="popup-detail-label">地址</span>
+                    <span class="popup-detail-value">台北市信義區信義路五段</span>
+                </div>
+            </div>
+            <div class="popup-actions">
+                <button class="popup-btn popup-btn-secondary" onclick="viewPropertyDetail()">
+                    <i class="fas fa-eye me-1"></i>詳情
+                </button>
+                <button class="popup-btn popup-btn-primary" onclick="contactOwner()">
+                    <i class="fas fa-phone me-1"></i>聯絡
+                </button>
+            </div>
+        </div>
+
+        <!-- 地圖控制按鈕 -->
+        <div class="map-controls">
+            <button class="map-control-btn" onclick="zoomIn()" title="放大">
+                <i class="fas fa-plus"></i>
+            </button>
+            <button class="map-control-btn" onclick="zoomOut()" title="縮小">
+                <i class="fas fa-minus"></i>
+            </button>
+            <button class="map-control-btn" onclick="centerMap()" title="重置檢視">
+                <i class="fas fa-crosshairs"></i>
+            </button>
+            <button class="map-control-btn" onclick="toggleFullscreen()" title="全螢幕">
+                <i class="fas fa-expand"></i>
+            </button>
+        </div>
+
+        <!-- 搜尋覆蓋層 -->
+        <div class="search-overlay">
+            <input type="text" class="search-input" placeholder="搜尋地址、區域或物件名稱..."
+                onkeyup="searchProperties(this.value)">
+            <div class="search-results" id="searchResults">
+                <!-- 搜尋結果將動態載入 -->
+            </div>
+        </div>
+
+        <!-- 篩選面板 -->
+        <div class="filter-panel">
+            <div class="filter-title">
+                <i class="fas fa-filter me-2"></i>篩選條件
+            </div>
+
+            <div class="filter-group">
+                <label class="filter-label">物件狀態</label>
+                <div class="filter-checkboxes">
+                    <label class="filter-checkbox checked">
+                        <input type="checkbox" checked onchange="filterByStatus()">
+                        <span>可租用</span>
+                    </label>
+                    <label class="filter-checkbox">
+                        <input type="checkbox" onchange="filterByStatus()">
+                        <span>已租出</span>
+                    </label>
+                    <label class="filter-checkbox">
+                        <input type="checkbox" onchange="filterByStatus()">
+                        <span>洽談中</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <label class="filter-label">物件類型</label>
+                <div class="filter-checkboxes">
+                    <label class="filter-checkbox checked">
+                        <input type="checkbox" checked onchange="filterByType()">
+                        <span>店面</span>
+                    </label>
+                    <label class="filter-checkbox">
+                        <input type="checkbox" onchange="filterByType()">
+                        <span>辦公室</span>
+                    </label>
+                    <label class="filter-checkbox">
+                        <input type="checkbox" onchange="filterByType()">
+                        <span>倉庫</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- 圖例 -->
+        <div class="legend">
+            <div class="legend-title">圖例</div>
+            <div class="legend-item">
+                <div class="legend-color available"></div>
+                <span>可租用</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color rented"></div>
+                <span>已租出</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color negotiating"></div>
+                <span>洽談中</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 模擬物件資料
+        const properties = [
+            {
+                id: 1,
+                title: "信義區精華店面",
+                address: "台北市信義區信義路五段",
+                size: "35坪",
+                rent: "$120,000",
+                floor: "1樓",
+                status: "available",
+                type: "store"
+            },
+            {
+                id: 2,
+                title: "大安區角間店面",
+                address: "台北市大安區復興南路",
+                size: "45坪",
+                rent: "$150,000",
+                floor: "1-2樓",
+                status: "rented",
+                type: "store"
+            },
+            {
+                id: 3,
+                title: "松山區商辦大樓",
+                address: "台北市松山區南京東路",
+                size: "80坪",
+                rent: "$200,000",
+                floor: "5樓",
+                status: "negotiating",
+                type: "office"
+            }
+        ];
+
+        /**
+         * 頁面載入完成後初始化
+         */
+        document.addEventListener('DOMContentLoaded', function () {
+            initializeMap();
+            setupEventListeners();
+        });
+
+        /**
+         * 初始化地圖
+         */
+        function initializeMap() {
+            console.log('地圖檢視已載入');
+        }
+
+        /**
+         * 設置事件監聽器
+         */
+        function setupEventListeners() {
+            // 點擊地圖空白處隱藏彈出視窗
+            document.querySelector('.map-placeholder').addEventListener('click', function (e) {
+                if (e.target === this) {
+                    hidePropertyPopup();
+                }
+            });
+        }
+
+        /**
+         * 顯示物件彈出視窗
+         */
+        function showPropertyPopup(marker, propertyId) {
+            const property = properties.find(p => p.id === propertyId);
+            if (!property) return;
+
+            const popup = document.getElementById('propertyPopup');
+            const rect = marker.getBoundingClientRect();
+
+            // 更新彈出視窗內容
+            document.getElementById('popupTitle').textContent = property.title;
+            document.getElementById('popupStatus').textContent = getStatusText(property.status);
+            document.getElementById('popupStatus').className = `popup-status status-${property.status}`;
+
+            // 定位彈出視窗
+            popup.style.left = rect.left + 'px';
+            popup.style.top = (rect.top - 10) + 'px';
+            popup.style.display = 'block';
+            popup.dataset.propertyId = propertyId;
+        }
+
+        /**
+         * 隱藏物件彈出視窗
+         */
+        function hidePropertyPopup() {
+            document.getElementById('propertyPopup').style.display = 'none';
+        }
+
+        /**
+         * 獲取狀態文字
+         */
+        function getStatusText(status) {
+            const statusMap = {
+                available: '可租用',
+                rented: '已租出',
+                negotiating: '洽談中'
+            };
+            return statusMap[status] || '未知';
+        }
+
+        /**
+         * 搜尋物件
+         */
+        function searchProperties(query) {
+            const results = document.getElementById('searchResults');
+
+            if (!query.trim()) {
+                results.innerHTML = '';
+                return;
+            }
+
+            const filteredProperties = properties.filter(property =>
+                property.title.toLowerCase().includes(query.toLowerCase()) ||
+                property.address.toLowerCase().includes(query.toLowerCase())
+            );
+
+            results.innerHTML = filteredProperties.map(property => `
+                <div class="search-result-item" onclick="focusOnProperty(${property.id})">
+                    <div class="result-title">${property.title}</div>
+                    <div class="result-details">${property.address} • ${property.size} • ${property.rent}</div>
+                </div>
+            `).join('');
+        }
+
+        /**
+         * 聚焦到特定物件
+         */
+        function focusOnProperty(propertyId) {
+            const marker = document.querySelector(`[onclick*="${propertyId}"]`);
+            if (marker) {
+                marker.click();
+            }
+        }
+
+        /**
+         * 按狀態篩選
+         */
+        function filterByStatus() {
+            showToast('篩選條件已更新', 'info');
+        }
+
+        /**
+         * 按類型篩選
+         */
+        function filterByType() {
+            showToast('物件類型篩選已更新', 'info');
+        }
+
+        /**
+         * 地圖控制功能
+         */
+        function zoomIn() {
+            showToast('地圖放大', 'info');
+        }
+
+        function zoomOut() {
+            showToast('地圖縮小', 'info');
+        }
+
+        function centerMap() {
+            showToast('地圖檢視已重置', 'info');
+        }
+
+        function toggleFullscreen() {
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+            } else {
+                document.documentElement.requestFullscreen();
+            }
+        }
+
+        /**
+         * 切換檢視模式
+         */
+        function toggleView() {
+            window.location.href = 'properties.html';
+        }
+
+        /**
+         * 查看物件詳情
+         */
+        function viewPropertyDetail() {
+            const propertyId = document.getElementById('propertyPopup').dataset.propertyId;
+            window.location.href = `property-detail.html?id=${propertyId}`;
+        }
+
+        /**
+         * 聯絡屋主
+         */
+        function contactOwner() {
+            showToast('正在開啟聯絡方式...', 'info');
+        }
+
+        /**
+         * 顯示提示訊息
+         */
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.innerHTML = `<i class="fas fa-info-circle me-2"></i>${message}`;
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: ${type === 'success' ? '#27ae60' : type === 'error' ? '#e74c3c' : '#3498db'};
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                z-index: 9999;
+                font-size: 14px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                animation: slideDown 0.3s ease;
+            `;
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                if (document.body.contains(toast)) {
+                    document.body.removeChild(toast);
+                }
+            }, 3000);
+        }
+
+        // 添加CSS動畫
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideDown {
+                from { transform: translateX(-50%) translateY(-100%); opacity: 0; }
+                to { transform: translateX(-50%) translateY(0); opacity: 1; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+
+</html>

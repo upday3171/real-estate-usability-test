@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新增品牌</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .top-bar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 18px;
+            padding: 0;
+        }
+
+        .top-title {
+            font-size: 18px;
+            font-weight: bold;
+            flex: 1;
+            text-align: center;
+            margin: 0 20px;
+        }
+
+        .save-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+        }
+
+        .progress-section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 10px;
+        }
+
+        .progress-indicator {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .step-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+        }
+
+        .step-circle {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .step-circle.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .step-circle.completed {
+            background: #28a745;
+            color: white;
+        }
+
+        .step-circle.pending {
+            background: #e9ecef;
+            color: #666;
+        }
+
+        .step-label {
+            font-size: 10px;
+            color: #666;
+            text-align: center;
+        }
+
+        .step-line {
+            height: 2px;
+            background: #e9ecef;
+            flex: 1;
+            margin: 0 10px;
+            margin-top: -15px;
+        }
+
+        .step-line.completed {
+            background: #28a745;
+        }
+
+        .progress-text {
+            text-align: center;
+            font-size: 14px;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .form-container {
+            padding: 0 20px;
+            padding-bottom: 100px;
+        }
+
+        .form-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+        }
+
+        .required {
+            color: #dc3545;
+            margin-left: 4px;
+        }
+
+        .form-control {
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 12px 15px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+
+        .form-select {
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 12px 15px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-group-text {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            color: #666;
+            z-index: 10;
+        }
+
+        .form-control.with-icon {
+            padding-left: 45px;
+        }
+
+        .form-text {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+        }
+
+        .btn-custom {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-custom {
+            background: transparent;
+            border: 2px solid #667eea;
+            color: #667eea;
+        }
+
+        .btn-outline-custom:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .tips-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+
+        .tips-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .tips-title i {
+            margin-right: 8px;
+            color: #667eea;
+        }
+
+        .tips-list {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .tips-list li {
+            margin-bottom: 5px;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e9ecef;
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .nav-item {
+            text-align: center;
+            color: #666;
+            text-decoration: none;
+            padding: 5px;
+        }
+
+        .nav-item.active {
+            color: #667eea;
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 2px;
+        }
+
+        .nav-item span {
+            font-size: 10px;
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 頂部導航 -->
+    <div class="top-bar">
+        <button class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+        </button>
+        <div class="top-title">新增品牌</div>
+        <button class="save-btn">
+            <i class="fas fa-save me-1"></i>儲存
+        </button>
+    </div>
+
+    <!-- 進度指示器 -->
+    <div class="progress-section">
+        <div class="progress-indicator">
+            <div class="step-item">
+                <div class="step-circle active">1</div>
+                <div class="step-label">基本資料</div>
+            </div>
+            <div class="step-line"></div>
+            <div class="step-item">
+                <div class="step-circle pending">2</div>
+                <div class="step-label">展店需求</div>
+            </div>
+            <div class="step-line"></div>
+            <div class="step-item">
+                <div class="step-circle pending">3</div>
+                <div class="step-label">確認儲存</div>
+            </div>
+        </div>
+        <div class="progress-text">步驟 1/3 - 基本資料</div>
+    </div>
+
+    <!-- 表單內容 -->
+    <div class="form-container">
+        <div class="form-card">
+            <h2 class="form-title">品牌基本資料</h2>
+
+            <form>
+                <div class="form-group">
+                    <label class="form-label">
+                        品牌名稱<span class="required">*</span>
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="fas fa-store"></i>
+                        </span>
+                        <input type="text" class="form-control with-icon" placeholder="請輸入品牌名稱" required>
+                    </div>
+                    <div class="form-text">請輸入完整的品牌名稱，例如：麥當勞、星巴克</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        品牌類型<span class="required">*</span>
+                    </label>
+                    <select class="form-select" required>
+                        <option value="">請選擇品牌類型</option>
+                        <option value="餐飲業">餐飲業</option>
+                        <option value="零售業">零售業</option>
+                        <option value="服務業">服務業</option>
+                        <option value="娛樂業">娛樂業</option>
+                        <option value="教育業">教育業</option>
+                        <option value="其他">其他</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        聯絡人姓名<span class="required">*</span>
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="fas fa-user"></i>
+                        </span>
+                        <input type="text" class="form-control with-icon" placeholder="請輸入聯絡人姓名" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        聯絡電話<span class="required">*</span>
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="fas fa-phone"></i>
+                        </span>
+                        <input type="tel" class="form-control with-icon" placeholder="0912-345-678" required>
+                    </div>
+                    <div class="form-text">請輸入可直接聯絡的手機號碼</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        電子郵件
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="fas fa-envelope"></i>
+                        </span>
+                        <input type="email" class="form-control with-icon" placeholder="example@company.com">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        公司名稱
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="fas fa-building"></i>
+                        </span>
+                        <input type="text" class="form-control with-icon" placeholder="請輸入公司名稱">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        備註
+                    </label>
+                    <textarea class="form-control" rows="3" placeholder="其他重要資訊或特殊需求..."></textarea>
+                </div>
+
+                <div class="action-buttons">
+                    <button type="button" class="btn-custom btn-outline-custom">
+                        <i class="fas fa-times me-2"></i>取消
+                    </button>
+                    <button type="submit" class="btn-custom btn-primary-custom">
+                        <i class="fas fa-arrow-right me-2"></i>下一步
+                    </button>
+                </div>
+            </form>
+
+            <!-- 提示區域 -->
+            <div class="tips-section">
+                <div class="tips-title">
+                    <i class="fas fa-lightbulb"></i>填寫提示
+                </div>
+                <ul class="tips-list">
+                    <li>品牌名稱請使用正式名稱，避免使用簡稱或暱稱</li>
+                    <li>聯絡電話建議填寫手機號碼，方便即時聯絡</li>
+                    <li>品牌類型會影響後續的物件推薦結果</li>
+                    <li>備註欄可填寫品牌的特殊要求或偏好</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部導航 -->
+    <div class="bottom-nav">
+        <a href="#" class="nav-item">
+            <i class="fas fa-home"></i>
+            <span>首頁</span>
+        </a>
+        <a href="#" class="nav-item active">
+            <i class="fas fa-store"></i>
+            <span>品牌</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-building"></i>
+            <span>物件</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-handshake"></i>
+            <span>案件</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-user"></i>
+            <span>我的</span>
+        </a>
+    </div>
+
+    <script>
+        // 表單數據
+        let formData = {
+            step: 1,
+            basicInfo: {},
+            requirements: {},
+            confirmation: {}
+        };
+
+        // 頁面載入完成後初始化
+        document.addEventListener('DOMContentLoaded', function () {
+            setupEventListeners();
+            initializeForm();
+            setupFormValidation();
+        });
+
+        // 初始化表單
+        function initializeForm() {
+            updateProgressIndicator();
+            loadSavedData();
+        }
+
+        // 設置事件監聽器
+        function setupEventListeners() {
+            // 返回按鈕
+            const backBtn = document.querySelector('.back-btn');
+            if (backBtn) {
+                backBtn.addEventListener('click', handleBackClick);
+            }
+
+            // 儲存按鈕
+            const saveBtn = document.querySelector('.save-btn');
+            if (saveBtn) {
+                saveBtn.addEventListener('click', handleSaveClick);
+            }
+
+            // 表單提交
+            const form = document.querySelector('form');
+            if (form) {
+                form.addEventListener('submit', handleFormSubmit);
+            }
+
+            // 取消按鈕
+            const cancelBtn = document.querySelector('.btn-outline-custom');
+            if (cancelBtn) {
+                cancelBtn.addEventListener('click', handleCancelClick);
+            }
+
+            // 表單輸入監聽
+            document.querySelectorAll('.form-control, .form-select').forEach(input => {
+                input.addEventListener('input', handleInputChange);
+                input.addEventListener('blur', validateField);
+            });
+        }
+
+        // 設置表單驗證
+        function setupFormValidation() {
+            // 即時驗證
+            document.querySelectorAll('input[required], select[required]').forEach(field => {
+                field.addEventListener('blur', function () {
+                    validateField(this);
+                });
+            });
+
+            // 電話號碼格式化
+            const phoneInput = document.querySelector('input[type="tel"]');
+            if (phoneInput) {
+                phoneInput.addEventListener('input', formatPhoneNumber);
+            }
+        }
+
+        // 處理返回按鈕點擊
+        function handleBackClick() {
+            if (hasUnsavedChanges()) {
+                if (confirm('您有未儲存的變更，確定要離開嗎？')) {
+                    window.history.back();
+                }
+            } else {
+                window.history.back();
+            }
+        }
+
+        // 處理儲存按鈕點擊
+        function handleSaveClick() {
+            saveFormData();
+            showToast('資料已暫存', 'success');
+        }
+
+        // 處理表單提交
+        function handleFormSubmit(event) {
+            event.preventDefault();
+
+            if (validateForm()) {
+                saveFormData();
+                showToast('基本資料已完成，進入下一步...', 'success');
+
+                // 跳轉到展店需求設定頁面
+                setTimeout(() => {
+                    window.location.href = 'brand-requirements-setup.html';
+                }, 1000);
+            }
+        }
+
+        // 處理取消按鈕點擊
+        function handleCancelClick() {
+            if (confirm('確定要取消新增品牌嗎？所有資料將會遺失。')) {
+                window.location.href = 'brands.html';
+            }
+        }
+
+        // 處理輸入變更
+        function handleInputChange(event) {
+            const field = event.target;
+
+            // 移除錯誤狀態
+            field.classList.remove('is-invalid');
+
+            // 標記有未儲存變更
+            markUnsavedChanges();
+
+            // 即時儲存到本地
+            saveFieldData(field);
+        }
+
+        // 驗證單個欄位
+        function validateField(field) {
+            const value = field.value.trim();
+            const isRequired = field.hasAttribute('required');
+
+            if (isRequired && !value) {
+                showFieldError(field, '此欄位為必填');
+                return false;
+            }
+
+            // 特殊驗證
+            if (field.type === 'email' && value) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(value)) {
+                    showFieldError(field, '請輸入有效的電子郵件格式');
+                    return false;
+                }
+            }
+
+            if (field.type === 'tel' && value) {
+                const phoneRegex = /^09\d{2}-?\d{3}-?\d{3}$/;
+                if (!phoneRegex.test(value.replace(/-/g, ''))) {
+                    showFieldError(field, '請輸入有效的手機號碼格式');
+                    return false;
+                }
+            }
+
+            // 清除錯誤狀態
+            clearFieldError(field);
+            return true;
+        }
+
+        // 顯示欄位錯誤
+        function showFieldError(field, message) {
+            field.classList.add('is-invalid');
+
+            // 移除舊的錯誤訊息
+            const existingError = field.parentNode.querySelector('.invalid-feedback');
+            if (existingError) {
+                existingError.remove();
+            }
+
+            // 添加新的錯誤訊息
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'invalid-feedback';
+            errorDiv.textContent = message;
+            field.parentNode.appendChild(errorDiv);
+        }
+
+        // 清除欄位錯誤
+        function clearFieldError(field) {
+            field.classList.remove('is-invalid');
+            const errorDiv = field.parentNode.querySelector('.invalid-feedback');
+            if (errorDiv) {
+                errorDiv.remove();
+            }
+        }
+
+        // 格式化電話號碼
+        function formatPhoneNumber(event) {
+            let value = event.target.value.replace(/\D/g, '');
+
+            if (value.length >= 4 && value.length <= 7) {
+                value = value.replace(/(\d{4})(\d+)/, '$1-$2');
+            } else if (value.length > 7) {
+                value = value.replace(/(\d{4})(\d{3})(\d+)/, '$1-$2-$3');
+            }
+
+            event.target.value = value;
+        }
+
+        // 驗證整個表單
+        function validateForm() {
+            const requiredFields = document.querySelectorAll('input[required], select[required]');
+            let isValid = true;
+
+            requiredFields.forEach(field => {
+                if (!validateField(field)) {
+                    isValid = false;
+                }
+            });
+
+            if (!isValid) {
+                showToast('請檢查並修正表單錯誤', 'error');
+            }
+
+            return isValid;
+        }
+
+        // 儲存表單資料
+        function saveFormData() {
+            const formData = {
+                brandName: document.querySelector('input[placeholder="請輸入品牌名稱"]').value,
+                brandType: document.querySelector('.form-select').value,
+                contactName: document.querySelector('input[placeholder="請輸入聯絡人姓名"]').value,
+                contactPhone: document.querySelector('input[type="tel"]').value,
+                email: document.querySelector('input[type="email"]').value,
+                companyName: document.querySelector('input[placeholder="請輸入公司名稱"]').value,
+                notes: document.querySelector('textarea').value,
+                timestamp: new Date().toISOString()
+            };
+
+            localStorage.setItem('addBrandFormData', JSON.stringify(formData));
+        }
+
+        // 載入已儲存的資料
+        function loadSavedData() {
+            const savedData = localStorage.getItem('addBrandFormData');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+
+                document.querySelector('input[placeholder="請輸入品牌名稱"]').value = data.brandName || '';
+                document.querySelector('.form-select').value = data.brandType || '';
+                document.querySelector('input[placeholder="請輸入聯絡人姓名"]').value = data.contactName || '';
+                document.querySelector('input[type="tel"]').value = data.contactPhone || '';
+                document.querySelector('input[type="email"]').value = data.email || '';
+                document.querySelector('input[placeholder="請輸入公司名稱"]').value = data.companyName || '';
+                document.querySelector('textarea').value = data.notes || '';
+            }
+        }
+
+        // 儲存單個欄位資料
+        function saveFieldData(field) {
+            // 實作自動儲存邏輯
+            clearTimeout(window.autoSaveTimer);
+            window.autoSaveTimer = setTimeout(() => {
+                saveFormData();
+            }, 2000); // 2秒後自動儲存
+        }
+
+        // 檢查是否有未儲存變更
+        function hasUnsavedChanges() {
+            return document.querySelector('.form-control.is-invalid') !== null;
+        }
+
+        // 標記有未儲存變更
+        function markUnsavedChanges() {
+            const saveBtn = document.querySelector('.save-btn');
+            if (saveBtn && !saveBtn.classList.contains('unsaved')) {
+                saveBtn.classList.add('unsaved');
+                saveBtn.innerHTML = '<i class="fas fa-save me-1"></i>儲存*';
+            }
+        }
+
+        // 更新進度指示器
+        function updateProgressIndicator() {
+            // 當前在第一步
+            const currentStep = 1;
+
+            document.querySelectorAll('.step-circle').forEach((circle, index) => {
+                const stepNumber = index + 1;
+
+                if (stepNumber < currentStep) {
+                    circle.className = 'step-circle completed';
+                } else if (stepNumber === currentStep) {
+                    circle.className = 'step-circle active';
+                } else {
+                    circle.className = 'step-circle pending';
+                }
+            });
+        }
+
+        // 顯示提示訊息
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast-message toast-${type}`;
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'info' ? '#667eea' : type === 'success' ? '#28a745' : '#dc3545'};
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                z-index: 9999;
+                animation: slideIn 0.3s ease;
+                font-size: 14px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            `;
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    if (document.body.contains(toast)) {
+                        document.body.removeChild(toast);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // 添加CSS動畫
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+            .is-invalid {
+                border-color: #dc3545 !important;
+                box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+            }
+            .invalid-feedback {
+                display: block;
+                width: 100%;
+                margin-top: 0.25rem;
+                font-size: 0.875em;
+                color: #dc3545;
+            }
+            .save-btn.unsaved {
+                background: rgba(255, 193, 7, 0.8) !important;
+                animation: pulse 2s infinite;
+            }
+            @keyframes pulse {
+                0% { opacity: 1; }
+                50% { opacity: 0.7; }
+                100% { opacity: 1; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // 設置輸入框事件
+        function setupInputEvents() {
+            document.querySelectorAll('.form-control, .form-select').forEach(input => {
+                input.addEventListener('focus', handleInputFocus);
+                input.addEventListener('blur', handleInputBlur);
+                input.addEventListener('input', handleInputChange);
+            });
+        }
+
+        // 處理表單提交
+        function handleFormSubmit(event) {
+            event.preventDefault();
+
+            // 收集表單數據
+            const formElements = event.target.elements;
+            const currentStepData = {};
+
+            for (let element of formElements) {
+                if (element.name && element.value) {
+                    currentStepData[element.name] = element.value;
+                }
+            }
+
+            // 驗證必填欄位
+            const requiredFields = event.target.querySelectorAll('[required]');
+            let isValid = true;
+            let firstInvalidField = null;
+
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    field.style.borderColor = '#dc3545';
+                    isValid = false;
+                    if (!firstInvalidField) {
+                        firstInvalidField = field;
+                    }
+                } else {
+                    field.style.borderColor = '#059669';
+                }
+            });
+
+            if (!isValid) {
+                showToast('請填寫所有必填欄位', 'error');
+                if (firstInvalidField) {
+                    firstInvalidField.focus();
+                }
+                return;
+            }
+
+            // 儲存當前步驟數據
+            formData.basicInfo = currentStepData;
+
+            // 顯示成功訊息並進入下一步
+            showToast('基本資料已儲存，即將進入下一步：展店需求設定', 'success');
+
+            // 模擬進入下一步
+            setTimeout(() => {
+                simulateNextStep();
+            }, 2000);
+        }
+
+        // 處理儲存
+        function handleSave(event) {
+            event.preventDefault();
+
+            const saveBtn = event.target;
+            const originalText = saveBtn.innerHTML;
+
+            // 顯示儲存狀態
+            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>儲存中';
+            saveBtn.disabled = true;
+
+            setTimeout(() => {
+                saveBtn.innerHTML = '<i class="fas fa-check me-1"></i>已儲存';
+                saveBtn.style.background = '#059669';
+
+                showToast('資料已暫存', 'success');
+
+                setTimeout(() => {
+                    saveBtn.innerHTML = originalText;
+                    saveBtn.disabled = false;
+                    saveBtn.style.background = '';
+                }, 2000);
+            }, 1500);
+        }
+
+        // 處理取消
+        function handleCancel(event) {
+            event.preventDefault();
+
+            if (confirm('確定要取消新增品牌嗎？未儲存的資料將會遺失。')) {
+                showToast('已取消新增品牌', 'info');
+                setTimeout(() => {
+                    window.location.href = 'brands.html';
+                }, 500);
+            }
+        }
+
+        // 處理輸入框焦點
+        function handleInputFocus(event) {
+            const input = event.target;
+            const inputGroup = input.closest('.input-group');
+
+            if (inputGroup) {
+                inputGroup.style.transform = 'scale(1.02)';
+                inputGroup.style.transition = 'transform 0.2s ease';
+            }
+
+            // 清除錯誤樣式
+            input.style.borderColor = '#2563eb';
+
+            // 顯示提示
+            showInputTip(input);
+        }
+
+        // 處理輸入框失焦
+        function handleInputBlur(event) {
+            const input = event.target;
+            const inputGroup = input.closest('.input-group');
+
+            if (inputGroup) {
+                inputGroup.style.transform = 'scale(1)';
+            }
+
+            // 驗證輸入
+            validateInput(input);
+
+            // 隱藏提示
+            hideInputTip();
+        }
+
+        // 處理輸入變化
+        function handleInputChange(event) {
+            validateInput(event.target);
+            updateFormProgress();
+        }
+
+        // 驗證輸入
+        function validateInput(input) {
+            const value = input.value.trim();
+            const isRequired = input.hasAttribute('required');
+
+            if (isRequired && !value) {
+                input.style.borderColor = '#dc3545';
+                return false;
+            } else if (value) {
+                // 特定欄位驗證
+                if (input.type === 'email') {
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(value)) {
+                        input.style.borderColor = '#dc3545';
+                        return false;
+                    }
+                } else if (input.type === 'tel') {
+                    const phoneRegex = /^09\d{2}-?\d{3}-?\d{3}$/;
+                    if (!phoneRegex.test(value)) {
+                        input.style.borderColor = '#ffc107';
+                        return true; // 警告但不阻止
+                    }
+                }
+
+                input.style.borderColor = '#059669';
+                return true;
+            }
+
+            input.style.borderColor = '#e9ecef';
+            return true;
+        }
+
+        // 顯示輸入提示
+        function showInputTip(input) {
+            const tips = {
+                'brand-name': '請輸入完整的品牌名稱，例如：麥當勞、星巴克',
+                'contact-name': '請輸入主要聯絡人的姓名',
+                'contact-phone': '請輸入手機號碼，格式：0912-345-678',
+                'contact-email': '請輸入有效的電子郵件地址'
+            };
+
+            const tipText = tips[input.name] || tips[input.id];
+            if (tipText) {
+                showToast(tipText, 'info');
+            }
+        }
+
+        // 隱藏輸入提示
+        function hideInputTip() {
+            // 可以在這裡添加隱藏提示的邏輯
+        }
+
+        // 更新表單進度
+        function updateFormProgress() {
+            const requiredFields = document.querySelectorAll('[required]');
+            const filledFields = Array.from(requiredFields).filter(field => field.value.trim());
+            const progress = (filledFields.length / requiredFields.length) * 100;
+
+            // 更新進度條（如果有的話）
+            updateProgressBar(progress);
+        }
+
+        // 更新進度條
+        function updateProgressBar(progress) {
+            // 這裡可以添加進度條更新邏輯
+            console.log(`表單完成度: ${progress.toFixed(0)}%`);
+        }
+
+        // 更新進度指示器
+        function updateProgressIndicator() {
+            const currentStep = formData.step;
+            const stepCircles = document.querySelectorAll('.step-circle');
+            const stepLines = document.querySelectorAll('.step-line');
+
+            stepCircles.forEach((circle, index) => {
+                if (index < currentStep) {
+                    circle.classList.add('completed');
+                    circle.classList.remove('active', 'pending');
+                } else if (index === currentStep - 1) {
+                    circle.classList.add('active');
+                    circle.classList.remove('completed', 'pending');
+                } else {
+                    circle.classList.add('pending');
+                    circle.classList.remove('completed', 'active');
+                }
+            });
+
+            stepLines.forEach((line, index) => {
+                if (index < currentStep - 1) {
+                    line.classList.add('completed');
+                } else {
+                    line.classList.remove('completed');
+                }
+            });
+        }
+
+        // 模擬下一步
+        function simulateNextStep() {
+            showToast('正在進入展店需求設定...', 'info');
+
+            // 跳轉到展店需求設定頁面
+            setTimeout(() => {
+                window.location.href = 'brand-requirements-setup.html';
+            }, 1500);
+        }
+
+        // 設置表單驗證
+        function setupFormValidation() {
+            // 即時驗證
+            document.querySelectorAll('[required]').forEach(field => {
+                field.addEventListener('blur', function () {
+                    validateInput(this);
+                });
+
+                field.addEventListener('input', function () {
+                    if (this.value.trim()) {
+                        validateInput(this);
+                    }
+                });
+            });
+        }
+
+        // 工具函數：顯示提示訊息
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast-message toast-${type}`;
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'info' ? '#2563eb' : type === 'success' ? '#059669' : type === 'error' ? '#dc3545' : '#ffc107'};
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                z-index: 9999;
+                animation: slideIn 0.3s ease;
+                font-size: 14px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            `;
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    if (document.body.contains(toast)) {
+                        document.body.removeChild(toast);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // 添加CSS動畫
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+            .form-control:focus, .form-select:focus {
+                transform: scale(1.02);
+                transition: all 0.2s ease;
+            }
+            .input-group:hover {
+                transform: translateY(-1px);
+                transition: transform 0.2s ease;
+            }
+            .btn-custom:hover {
+                transform: translateY(-2px);
+                transition: all 0.2s ease;
+            }
+            .step-circle.completed {
+                background: #059669;
+                color: white;
+            }
+            .step-circle.active {
+                background: #2563eb;
+                color: white;
+            }
+            .step-line.completed {
+                background: #059669;
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+
+</html>

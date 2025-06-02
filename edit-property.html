@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>編輯物件</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding-bottom: 100px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            border-radius: 10px;
+            padding: 10px 15px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .form-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f8f9fa;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-icon {
+            margin-right: 10px;
+            color: #667eea;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .required {
+            color: #dc3545;
+        }
+
+        .form-control,
+        .form-select {
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 12px 15px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+
+        .photo-upload-area {
+            border: 2px dashed #e9ecef;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        .photo-upload-area:hover {
+            border-color: #667eea;
+            background: #f8f9fa;
+        }
+
+        .photo-upload-area.dragover {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .photo-preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .photo-preview-item {
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            aspect-ratio: 1;
+        }
+
+        .photo-preview-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .photo-remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(220, 53, 69, 0.8);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-item:hover {
+            background: #e9ecef;
+        }
+
+        .feature-item input[type="checkbox"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+
+        .price-input-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .price-input {
+            flex: 1;
+        }
+
+        .currency-label {
+            color: #666;
+            font-weight: 600;
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 25px;
+            padding: 12px 30px;
+            font-weight: 600;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary-custom {
+            background: transparent;
+            border: 2px solid #6c757d;
+            color: #6c757d;
+            border-radius: 25px;
+            padding: 12px 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary-custom:hover {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-danger-custom {
+            background: #dc3545;
+            border: none;
+            border-radius: 25px;
+            padding: 12px 30px;
+            font-weight: 600;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .btn-danger-custom:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+
+        .action-buttons {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 20px;
+            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .map-container {
+            height: 300px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            border: 2px solid #e9ecef;
+        }
+
+        .contact-info {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .contact-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .status-badge {
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-available {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-rented {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="properties.html" class="back-btn">
+                    <i class="fas fa-arrow-left me-2"></i>返回
+                </a>
+                <h1 class="page-title">編輯物件</h1>
+                <div></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <form id="editPropertyForm">
+            <!-- 基本資訊 -->
+            <div class="form-container">
+                <h3 class="section-title">
+                    <i class="fas fa-info-circle section-icon"></i>
+                    基本資訊
+                </h3>
+
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label class="form-label">物件名稱 <span class="required">*</span></label>
+                            <input type="text" class="form-control" id="propertyName" value="信義區精華店面" required>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="form-label">物件狀態</label>
+                            <select class="form-select" id="propertyStatus">
+                                <option value="available" selected>可租</option>
+                                <option value="rented">已租</option>
+                                <option value="pending">洽談中</option>
+                                <option value="maintenance">維護中</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">物件地址 <span class="required">*</span></label>
+                    <input type="text" class="form-control" id="propertyAddress" value="台北市信義區忠孝東路五段123號1樓" required>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="form-label">物件類型 <span class="required">*</span></label>
+                            <select class="form-select" id="propertyType" required>
+                                <option value="">請選擇類型</option>
+                                <option value="店面" selected>店面</option>
+                                <option value="辦公室">辦公室</option>
+                                <option value="商場櫃位">商場櫃位</option>
+                                <option value="百貨專櫃">百貨專櫃</option>
+                                <option value="其他">其他</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="form-label">樓層 <span class="required">*</span></label>
+                            <input type="text" class="form-control" id="floor" value="1樓" required>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="form-label">坪數 <span class="required">*</span></label>
+                            <div class="price-input-group">
+                                <input type="number" class="form-control price-input" id="area" value="50" required>
+                                <span class="currency-label">坪</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">物件描述</label>
+                    <textarea class="form-control" id="propertyDescription" rows="3"
+                        placeholder="請描述物件特色、周邊環境等">位於信義區核心商圈，鄰近捷運站，人流量大，適合各類型商業使用。</textarea>
+                </div>
+            </div>
+
+            <!-- 租金資訊 -->
+            <div class="form-container">
+                <h3 class="section-title">
+                    <i class="fas fa-dollar-sign section-icon"></i>
+                    租金資訊
+                </h3>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">月租金 <span class="required">*</span></label>
+                            <div class="price-input-group">
+                                <input type="number" class="form-control price-input" id="monthlyRent" value="120000"
+                                    required>
+                                <span class="currency-label">元/月</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">押金</label>
+                            <div class="price-input-group">
+                                <input type="number" class="form-control price-input" id="deposit" value="360000">
+                                <span class="currency-label">元</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">管理費</label>
+                            <div class="price-input-group">
+                                <input type="number" class="form-control price-input" id="managementFee" value="5000">
+                                <span class="currency-label">元/月</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">最短租期</label>
+                            <div class="price-input-group">
+                                <input type="number" class="form-control price-input" id="minLease" value="3">
+                                <span class="currency-label">年</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 物件特色 -->
+            <div class="form-container">
+                <h3 class="section-title">
+                    <i class="fas fa-star section-icon"></i>
+                    物件特色
+                </h3>
+
+                <div class="feature-grid">
+                    <div class="feature-item">
+                        <input type="checkbox" id="feature1" value="近捷運站" checked>
+                        <label for="feature1">近捷運站</label>
+                    </div>
+                    <div class="feature-item">
+                        <input type="checkbox" id="feature2" value="雙面臨路" checked>
+                        <label for="feature2">雙面臨路</label>
+                    </div>
+                    <div class="feature-item">
+                        <input type="checkbox" id="feature3" value="停車方便">
+                        <label for="feature3">停車方便</label>
+                    </div>
+                    <div class="feature-item">
+                        <input type="checkbox" id="feature4" value="人流量大" checked>
+                        <label for="feature4">人流量大</label>
+                    </div>
+                    <div class="feature-item">
+                        <input type="checkbox" id="feature5" value="可明火">
+                        <label for="feature5">可明火</label>
+                    </div>
+                    <div class="feature-item">
+                        <input type="checkbox" id="feature6" value="24小時營業">
+                        <label for="feature6">24小時營業</label>
+                    </div>
+                    <div class="feature-item">
+                        <input type="checkbox" id="feature7" value="獨立出入口" checked>
+                        <label for="feature7">獨立出入口</label>
+                    </div>
+                    <div class="feature-item">
+                        <input type="checkbox" id="feature8" value="空調設備">
+                        <label for="feature8">空調設備</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 物件照片 -->
+            <div class="form-container">
+                <h3 class="section-title">
+                    <i class="fas fa-camera section-icon"></i>
+                    物件照片
+                </h3>
+
+                <div class="photo-upload-area" onclick="document.getElementById('photoFiles').click()">
+                    <div class="upload-icon">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <p>點擊或拖拽上傳物件照片</p>
+                    <small class="text-muted">支援 JPG, PNG 格式，最多上傳10張照片</small>
+                </div>
+                <input type="file" id="photoFiles" accept="image/*" multiple style="display: none;">
+
+                <div class="photo-preview-grid" id="photoPreviewGrid">
+                    <!-- 預設照片 -->
+                    <div class="photo-preview-item">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjZjhmOWZhIi8+CjxwYXRoIGQ9Ik0xMDAgNTBMMTUwIDEwMEgxMDBIMTAwSDUwTDEwMCA1MFoiIGZpbGw9IiM2Njc3ZWEiLz4KPHN2ZyB4PSI3NSIgeT0iMTIwIiB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzY2NzdlYSI+CjxwYXRoIGQ9Ik0xMiAyQzYuNDggMiAyIDYuNDggMiAxMnM0LjQ4IDEwIDEwIDEwIDEwLTQuNDggMTAtMTBTMTcuNTIgMiAxMiAyem0tMiAxNWwtNS01IDEuNDEtMS40MUwxMCAxNC4xN2w3LjU5LTcuNTlMMTkgOGwtOSA5eiIvPgo8L3N2Zz4KPC9zdmc+"
+                            alt="店面外觀" class="photo-preview-img">
+                        <button type="button" class="photo-remove-btn" onclick="removePhoto(this)">×</button>
+                    </div>
+                    <div class="photo-preview-item">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjZjhmOWZhIi8+CjxyZWN0IHg9IjUwIiB5PSI1MCIgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9IiM2Njc3ZWEiLz4KPC9zdmc+"
+                            alt="內部空間" class="photo-preview-img">
+                        <button type="button" class="photo-remove-btn" onclick="removePhoto(this)">×</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 聯絡資訊 -->
+            <div class="form-container">
+                <h3 class="section-title">
+                    <i class="fas fa-address-book section-icon"></i>
+                    聯絡資訊
+                </h3>
+
+                <div class="contact-info">
+                    <div class="contact-header">
+                        <h6>物件聯絡人</h6>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">聯絡人姓名 <span class="required">*</span></label>
+                                <input type="text" class="form-control" id="contactName" value="李房東" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">聯絡電話 <span class="required">*</span></label>
+                                <input type="tel" class="form-control" id="contactPhone" value="0912-345-678" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control" id="contactEmail" value="li@example.com">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">最佳聯絡時間</label>
+                                <select class="form-select" id="contactTime">
+                                    <option value="anytime" selected>隨時</option>
+                                    <option value="morning">上午 9:00-12:00</option>
+                                    <option value="afternoon">下午 13:00-17:00</option>
+                                    <option value="evening">晚上 18:00-21:00</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 位置資訊 -->
+            <div class="form-container">
+                <h3 class="section-title">
+                    <i class="fas fa-map-marker-alt section-icon"></i>
+                    位置資訊
+                </h3>
+
+                <div class="form-group">
+                    <label class="form-label">地圖位置</label>
+                    <div class="map-container">
+                        <div>
+                            <i class="fas fa-map-marked-alt" style="font-size: 48px; margin-bottom: 15px;"></i>
+                            <p>點擊設定物件位置</p>
+                            <small class="text-muted">台北市信義區忠孝東路五段123號</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">最近捷運站</label>
+                            <input type="text" class="form-control" id="nearestMRT" value="市政府站">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">步行距離</label>
+                            <div class="price-input-group">
+                                <input type="number" class="form-control price-input" id="walkingDistance" value="3">
+                                <span class="currency-label">分鐘</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">周邊環境</label>
+                    <textarea class="form-control" id="surroundings" rows="2"
+                        placeholder="描述周邊商圈、交通、生活機能等">鄰近信義商圈，周邊有百貨公司、餐廳、銀行等，交通便利，生活機能完善。</textarea>
+                </div>
+            </div>
+
+            <!-- 其他設定 -->
+            <div class="form-container">
+                <h3 class="section-title">
+                    <i class="fas fa-cog section-icon"></i>
+                    其他設定
+                </h3>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">優先級</label>
+                            <select class="form-select" id="priority">
+                                <option value="high" selected>高</option>
+                                <option value="medium">中</option>
+                                <option value="low">低</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">可入住日期</label>
+                            <input type="date" class="form-control" id="availableDate" value="2024-02-01">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">備註</label>
+                    <textarea class="form-control" id="notes" rows="3"
+                        placeholder="其他需要注意的事項">屋主希望承租方為知名品牌，有穩定的營運能力。</textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- 操作按鈕 -->
+    <div class="action-buttons">
+        <button type="button" class="btn btn-secondary-custom flex-fill" onclick="cancelEdit()">
+            <i class="fas fa-times me-2"></i>取消
+        </button>
+        <button type="button" class="btn btn-danger-custom" onclick="deleteProperty()">
+            <i class="fas fa-trash me-2"></i>刪除
+        </button>
+        <button type="submit" form="editPropertyForm" class="btn btn-primary-custom flex-fill">
+            <i class="fas fa-save me-2"></i>儲存變更
+        </button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        /**
+         * 頁面載入完成後初始化
+         */
+        document.addEventListener('DOMContentLoaded', function () {
+            initializePage();
+            setupEventListeners();
+            loadPropertyData();
+        });
+
+        /**
+         * 初始化頁面
+         */
+        function initializePage() {
+            // 設置照片上傳功能
+            setupPhotoUpload();
+
+            console.log('編輯物件頁面已載入');
+        }
+
+        /**
+         * 設置事件監聽器
+         */
+        function setupEventListeners() {
+            const form = document.getElementById('editPropertyForm');
+            form.addEventListener('submit', handleFormSubmit);
+
+            // 監聽表單變更
+            form.addEventListener('change', markFormAsChanged);
+            form.addEventListener('input', markFormAsChanged);
+        }
+
+        /**
+         * 載入物件數據
+         */
+        function loadPropertyData() {
+            // 從URL參數獲取物件ID
+            const urlParams = new URLSearchParams(window.location.search);
+            const propertyId = urlParams.get('id');
+
+            if (propertyId) {
+                // 模擬從API載入物件數據
+                console.log(`載入物件數據: ${propertyId}`);
+                // 這裡的數據已經在HTML中預填了
+            }
+        }
+
+        /**
+         * 設置照片上傳功能
+         */
+        function setupPhotoUpload() {
+            const fileInput = document.getElementById('photoFiles');
+            const uploadArea = document.querySelector('.photo-upload-area');
+
+            fileInput.addEventListener('change', handlePhotoSelect);
+
+            // 拖拽上傳
+            uploadArea.addEventListener('dragover', function (e) {
+                e.preventDefault();
+                this.classList.add('dragover');
+            });
+
+            uploadArea.addEventListener('dragleave', function (e) {
+                e.preventDefault();
+                this.classList.remove('dragover');
+            });
+
+            uploadArea.addEventListener('drop', function (e) {
+                e.preventDefault();
+                this.classList.remove('dragover');
+
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    handlePhotoSelect({ target: { files: files } });
+                }
+            });
+        }
+
+        /**
+         * 處理照片選擇
+         */
+        function handlePhotoSelect(event) {
+            const files = Array.from(event.target.files);
+            const previewGrid = document.getElementById('photoPreviewGrid');
+
+            files.forEach(file => {
+                // 檢查檔案類型
+                if (!file.type.startsWith('image/')) {
+                    showToast('請選擇圖片檔案', 'error');
+                    return;
+                }
+
+                // 檢查檔案大小 (5MB)
+                if (file.size > 5 * 1024 * 1024) {
+                    showToast('檔案大小不能超過5MB', 'error');
+                    return;
+                }
+
+                // 檢查照片數量限制
+                const currentPhotos = previewGrid.children.length;
+                if (currentPhotos >= 10) {
+                    showToast('最多只能上傳10張照片', 'warning');
+                    return;
+                }
+
+                // 創建預覽
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const photoItem = document.createElement('div');
+                    photoItem.className = 'photo-preview-item';
+                    photoItem.innerHTML = `
+                        <img src="${e.target.result}" alt="物件照片" class="photo-preview-img">
+                        <button type="button" class="photo-remove-btn" onclick="removePhoto(this)">×</button>
+                    `;
+                    previewGrid.appendChild(photoItem);
+                };
+                reader.readAsDataURL(file);
+            });
+
+            markFormAsChanged();
+        }
+
+        /**
+         * 移除照片
+         */
+        function removePhoto(button) {
+            if (confirm('確定要移除此照片嗎？')) {
+                button.parentElement.remove();
+                markFormAsChanged();
+            }
+        }
+
+        /**
+         * 標記表單已變更
+         */
+        function markFormAsChanged() {
+            window.formChanged = true;
+        }
+
+        /**
+         * 處理表單提交
+         */
+        function handleFormSubmit(event) {
+            event.preventDefault();
+
+            if (!validateForm()) {
+                return;
+            }
+
+            const submitBtn = event.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+
+            // 顯示載入狀態
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>儲存中...';
+
+            // 收集表單數據
+            const formData = collectFormData();
+
+            // 模擬保存過程
+            setTimeout(() => {
+                showToast('物件資訊已成功更新！', 'success');
+                window.formChanged = false;
+
+                setTimeout(() => {
+                    window.location.href = 'property-detail.html?id=' + (new URLSearchParams(window.location.search).get('id') || '1');
+                }, 1500);
+            }, 2000);
+        }
+
+        /**
+         * 驗證表單
+         */
+        function validateForm() {
+            const requiredFields = document.querySelectorAll('[required]');
+            let isValid = true;
+
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    field.style.borderColor = '#dc3545';
+                    isValid = false;
+                } else {
+                    field.style.borderColor = '#e9ecef';
+                }
+            });
+
+            if (!isValid) {
+                showToast('請填寫所有必填欄位', 'error');
+            }
+
+            return isValid;
+        }
+
+        /**
+         * 收集表單數據
+         */
+        function collectFormData() {
+            const formData = new FormData();
+
+            // 基本資訊
+            formData.append('propertyName', document.getElementById('propertyName').value);
+            formData.append('propertyAddress', document.getElementById('propertyAddress').value);
+            formData.append('propertyType', document.getElementById('propertyType').value);
+            formData.append('floor', document.getElementById('floor').value);
+            formData.append('area', document.getElementById('area').value);
+            formData.append('propertyDescription', document.getElementById('propertyDescription').value);
+
+            // 租金資訊
+            formData.append('monthlyRent', document.getElementById('monthlyRent').value);
+            formData.append('deposit', document.getElementById('deposit').value);
+            formData.append('managementFee', document.getElementById('managementFee').value);
+            formData.append('minLease', document.getElementById('minLease').value);
+
+            // 物件特色
+            const features = Array.from(document.querySelectorAll('input[type="checkbox"]:checked'))
+                .map(cb => cb.value);
+            formData.append('features', JSON.stringify(features));
+
+            // 聯絡資訊
+            formData.append('contactName', document.getElementById('contactName').value);
+            formData.append('contactPhone', document.getElementById('contactPhone').value);
+            formData.append('contactEmail', document.getElementById('contactEmail').value);
+            formData.append('contactTime', document.getElementById('contactTime').value);
+
+            // 位置資訊
+            formData.append('nearestMRT', document.getElementById('nearestMRT').value);
+            formData.append('walkingDistance', document.getElementById('walkingDistance').value);
+            formData.append('surroundings', document.getElementById('surroundings').value);
+
+            // 其他設定
+            formData.append('propertyStatus', document.getElementById('propertyStatus').value);
+            formData.append('priority', document.getElementById('priority').value);
+            formData.append('availableDate', document.getElementById('availableDate').value);
+            formData.append('notes', document.getElementById('notes').value);
+
+            // 照片
+            const photoFiles = document.getElementById('photoFiles').files;
+            for (let i = 0; i < photoFiles.length; i++) {
+                formData.append('photos', photoFiles[i]);
+            }
+
+            return formData;
+        }
+
+        /**
+         * 取消編輯
+         */
+        function cancelEdit() {
+            if (window.formChanged) {
+                if (confirm('您有未儲存的變更，確定要離開嗎？')) {
+                    window.location.href = 'property-detail.html?id=' + (new URLSearchParams(window.location.search).get('id') || '1');
+                }
+            } else {
+                window.location.href = 'property-detail.html?id=' + (new URLSearchParams(window.location.search).get('id') || '1');
+            }
+        }
+
+        /**
+         * 刪除物件
+         */
+        function deleteProperty() {
+            if (confirm('確定要刪除此物件嗎？此操作無法復原。')) {
+                showToast('物件已刪除', 'success');
+                setTimeout(() => {
+                    window.location.href = 'properties.html';
+                }, 1500);
+            }
+        }
+
+        /**
+         * 顯示提示訊息
+         */
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast-message toast-${type}`;
+            toast.innerHTML = `
+                <i class="fas fa-${getToastIcon(type)} me-2"></i>
+                ${message}
+            `;
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${getToastColor(type)};
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                z-index: 9999;
+                animation: slideIn 0.3s ease;
+                font-size: 14px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                max-width: 300px;
+            `;
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    if (document.body.contains(toast)) {
+                        document.body.removeChild(toast);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        /**
+         * 獲取提示訊息圖標
+         */
+        function getToastIcon(type) {
+            const icons = {
+                success: 'check-circle',
+                error: 'exclamation-circle',
+                info: 'info-circle',
+                warning: 'exclamation-triangle'
+            };
+            return icons[type] || 'info-circle';
+        }
+
+        /**
+         * 獲取提示訊息顏色
+         */
+        function getToastColor(type) {
+            const colors = {
+                success: '#28a745',
+                error: '#dc3545',
+                info: '#007bff',
+                warning: '#ffc107'
+            };
+            return colors[type] || '#007bff';
+        }
+
+        // 添加CSS動畫
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // 監聽頁面離開事件
+        window.addEventListener('beforeunload', function (e) {
+            if (window.formChanged) {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        });
+    </script>
+</body>
+
+</html>

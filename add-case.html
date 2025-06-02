@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新增案件</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding-bottom: 100px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            border-radius: 10px;
+            padding: 10px 15px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .progress-container {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            position: relative;
+        }
+
+        .step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 15px;
+            right: -50%;
+            width: 100%;
+            height: 2px;
+            background: #e9ecef;
+            z-index: 1;
+        }
+
+        .step.active:not(:last-child)::after {
+            background: #3498db;
+        }
+
+        .step-circle {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #e9ecef;
+            color: #666;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            z-index: 2;
+            position: relative;
+        }
+
+        .step.active .step-circle {
+            background: #3498db;
+            color: white;
+        }
+
+        .step.completed .step-circle {
+            background: #28a745;
+            color: white;
+        }
+
+        .step-label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 8px;
+            text-align: center;
+        }
+
+        .step.active .step-label {
+            color: #3498db;
+            font-weight: 600;
+        }
+
+        .form-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-icon {
+            margin-right: 10px;
+            color: #3498db;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .required {
+            color: #dc3545;
+        }
+
+        .form-control,
+        .form-select {
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 12px 15px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+        }
+
+        .selection-card {
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .selection-card:hover {
+            border-color: #3498db;
+            background: #f8f9fa;
+        }
+
+        .selection-card.selected {
+            border-color: #3498db;
+            background: rgba(52, 152, 219, 0.1);
+        }
+
+        .selection-card .card-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .selection-card .card-title {
+            font-weight: 600;
+            color: #333;
+            margin: 0;
+        }
+
+        .selection-card .card-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-available {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge-active {
+            background: #cce5ff;
+            color: #004085;
+        }
+
+        .selection-card .card-details {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .match-score {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            border: none;
+            border-radius: 25px;
+            padding: 12px 30px;
+            font-weight: 600;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.3);
+        }
+
+        .btn-secondary-custom {
+            background: transparent;
+            border: 2px solid #6c757d;
+            color: #6c757d;
+            border-radius: 25px;
+            padding: 12px 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary-custom:hover {
+            background: #6c757d;
+            color: white;
+        }
+
+        .action-buttons {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 20px;
+            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .step-content {
+            display: none;
+        }
+
+        .step-content.active {
+            display: block;
+        }
+
+        .priority-selector {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .priority-option {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .priority-option.selected {
+            border-color: #3498db;
+            background: rgba(52, 152, 219, 0.1);
+        }
+
+        .priority-high {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+
+        .priority-high.selected {
+            background: rgba(220, 53, 69, 0.1);
+            border-color: #dc3545;
+        }
+
+        .priority-medium {
+            border-color: #ffc107;
+            color: #ffc107;
+        }
+
+        .priority-medium.selected {
+            background: rgba(255, 193, 7, 0.1);
+            border-color: #ffc107;
+        }
+
+        .priority-low {
+            border-color: #28a745;
+            color: #28a745;
+        }
+
+        .priority-low.selected {
+            background: rgba(40, 167, 69, 0.1);
+            border-color: #28a745;
+        }
+
+        .summary-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: between;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .summary-label {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .summary-value {
+            color: #666;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="cases.html" class="back-btn">
+                    <i class="fas fa-arrow-left me-2"></i>返回
+                </a>
+                <h1 class="page-title">新增案件</h1>
+                <div></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- 進度指示器 -->
+        <div class="progress-container">
+            <div class="progress-steps">
+                <div class="step active" data-step="1">
+                    <div class="step-circle">1</div>
+                    <div class="step-label">選擇品牌</div>
+                </div>
+                <div class="step" data-step="2">
+                    <div class="step-circle">2</div>
+                    <div class="step-label">選擇物件</div>
+                </div>
+                <div class="step" data-step="3">
+                    <div class="step-circle">3</div>
+                    <div class="step-label">案件設定</div>
+                </div>
+                <div class="step" data-step="4">
+                    <div class="step-circle">4</div>
+                    <div class="step-label">確認建立</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 步驟1：選擇品牌 -->
+        <div class="step-content active" id="step1">
+            <div class="form-container">
+                <h3 class="section-title">
+                    <i class="fas fa-store section-icon"></i>
+                    選擇品牌
+                </h3>
+
+                <div class="form-group">
+                    <label class="form-label">搜尋品牌</label>
+                    <input type="text" class="form-control" id="brandSearch" placeholder="輸入品牌名稱搜尋...">
+                </div>
+
+                <div id="brandList">
+                    <div class="selection-card" data-brand-id="1" onclick="selectBrand(this)">
+                        <div class="card-header">
+                            <h6 class="card-title">星巴克咖啡</h6>
+                            <span class="card-badge badge-active">活躍</span>
+                        </div>
+                        <div class="card-details">
+                            <div class="mb-2">
+                                <strong>需求：</strong>30-50坪 • $80,000-150,000/月<br>
+                                <strong>地區：</strong>台北市、新北市<br>
+                                <strong>類型：</strong>店面、商場櫃位
+                            </div>
+                            <div>
+                                <strong>聯絡人：</strong>王經理 (02-1234-5678)
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="selection-card" data-brand-id="2" onclick="selectBrand(this)">
+                        <div class="card-header">
+                            <h6 class="card-title">麥當勞</h6>
+                            <span class="card-badge badge-active">活躍</span>
+                        </div>
+                        <div class="card-details">
+                            <div class="mb-2">
+                                <strong>需求：</strong>80-120坪 • $150,000-250,000/月<br>
+                                <strong>地區：</strong>台北市、桃園市<br>
+                                <strong>類型：</strong>店面、獨棟
+                            </div>
+                            <div>
+                                <strong>聯絡人：</strong>陳經理 (02-2345-6789)
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="selection-card" data-brand-id="3" onclick="selectBrand(this)">
+                        <div class="card-header">
+                            <h6 class="card-title">UNIQLO</h6>
+                            <span class="card-badge badge-active">活躍</span>
+                        </div>
+                        <div class="card-details">
+                            <div class="mb-2">
+                                <strong>需求：</strong>100-200坪 • $200,000-400,000/月<br>
+                                <strong>地區：</strong>台北市、台中市<br>
+                                <strong>類型：</strong>店面、百貨專櫃
+                            </div>
+                            <div>
+                                <strong>聯絡人：</strong>林經理 (02-3456-7890)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 步驟2：選擇物件 -->
+        <div class="step-content" id="step2">
+            <div class="form-container">
+                <h3 class="section-title">
+                    <i class="fas fa-building section-icon"></i>
+                    選擇物件
+                </h3>
+
+                <div class="form-group">
+                    <label class="form-label">搜尋物件</label>
+                    <input type="text" class="form-control" id="propertySearch" placeholder="輸入物件名稱或地址搜尋...">
+                </div>
+
+                <div id="propertyList">
+                    <div class="selection-card" data-property-id="1" onclick="selectProperty(this)">
+                        <div class="card-header">
+                            <h6 class="card-title">信義區精華店面</h6>
+                            <div>
+                                <span class="match-score">95% 匹配</span>
+                                <span class="card-badge badge-available">可租</span>
+                            </div>
+                        </div>
+                        <div class="card-details">
+                            <div class="mb-2">
+                                <strong>地址：</strong>台北市信義區忠孝東路五段123號<br>
+                                <strong>坪數：</strong>50坪 • <strong>租金：</strong>$120,000/月<br>
+                                <strong>特色：</strong>1樓、雙面臨路、近捷運站
+                            </div>
+                            <div>
+                                <strong>聯絡人：</strong>李房東 (0912-345-678)
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="selection-card" data-property-id="2" onclick="selectProperty(this)">
+                        <div class="card-header">
+                            <h6 class="card-title">東區商圈店面</h6>
+                            <div>
+                                <span class="match-score">88% 匹配</span>
+                                <span class="card-badge badge-available">可租</span>
+                            </div>
+                        </div>
+                        <div class="card-details">
+                            <div class="mb-2">
+                                <strong>地址：</strong>台北市大安區忠孝東路四段456號<br>
+                                <strong>坪數：</strong>35坪 • <strong>租金：</strong>$90,000/月<br>
+                                <strong>特色：</strong>地下1樓、捷運站旁、人流量大
+                            </div>
+                            <div>
+                                <strong>聯絡人：</strong>張房東 (0923-456-789)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 步驟3：案件設定 -->
+        <div class="step-content" id="step3">
+            <div class="form-container">
+                <h3 class="section-title">
+                    <i class="fas fa-cog section-icon"></i>
+                    案件設定
+                </h3>
+
+                <div class="form-group">
+                    <label class="form-label">案件名稱 <span class="required">*</span></label>
+                    <input type="text" class="form-control" id="caseName" placeholder="請輸入案件名稱" required>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">案件類型 <span class="required">*</span></label>
+                            <select class="form-select" id="caseType" required>
+                                <option value="">請選擇案件類型</option>
+                                <option value="new-lease">新租約</option>
+                                <option value="renewal">續約</option>
+                                <option value="transfer">轉租</option>
+                                <option value="consultation">諮詢</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">預計簽約日期</label>
+                            <input type="date" class="form-control" id="expectedSignDate">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">優先級 <span class="required">*</span></label>
+                    <div class="priority-selector">
+                        <div class="priority-option priority-high" data-priority="high" onclick="selectPriority(this)">
+                            <i class="fas fa-exclamation-triangle mb-2"></i>
+                            <div><strong>高</strong></div>
+                            <small>緊急處理</small>
+                        </div>
+                        <div class="priority-option priority-medium selected" data-priority="medium"
+                            onclick="selectPriority(this)">
+                            <i class="fas fa-clock mb-2"></i>
+                            <div><strong>中</strong></div>
+                            <small>正常處理</small>
+                        </div>
+                        <div class="priority-option priority-low" data-priority="low" onclick="selectPriority(this)">
+                            <i class="fas fa-calendar mb-2"></i>
+                            <div><strong>低</strong></div>
+                            <small>延後處理</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">案件描述</label>
+                    <textarea class="form-control" id="caseDescription" rows="4"
+                        placeholder="請描述案件詳情、特殊需求或注意事項..."></textarea>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">預估佣金</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="estimatedCommission" placeholder="0">
+                                <span class="input-group-text">元</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">佣金比例</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="commissionRate" placeholder="0"
+                                    step="0.1">
+                                <span class="input-group-text">%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">標籤</label>
+                    <div class="d-flex flex-wrap gap-2 mb-2">
+                        <span class="badge bg-primary">新客戶</span>
+                        <span class="badge bg-success">高價值</span>
+                        <span class="badge bg-info">快速成交</span>
+                    </div>
+                    <input type="text" class="form-control" id="newTag" placeholder="輸入標籤後按Enter新增">
+                </div>
+            </div>
+        </div>
+
+        <!-- 步驟4：確認建立 -->
+        <div class="step-content" id="step4">
+            <div class="form-container">
+                <h3 class="section-title">
+                    <i class="fas fa-check-circle section-icon"></i>
+                    確認建立案件
+                </h3>
+
+                <div class="summary-section">
+                    <h6 class="mb-3"><i class="fas fa-info-circle me-2"></i>案件摘要</h6>
+
+                    <div class="summary-item">
+                        <span class="summary-label">案件名稱：</span>
+                        <span class="summary-value" id="summaryName">-</span>
+                    </div>
+
+                    <div class="summary-item">
+                        <span class="summary-label">品牌：</span>
+                        <span class="summary-value" id="summaryBrand">-</span>
+                    </div>
+
+                    <div class="summary-item">
+                        <span class="summary-label">物件：</span>
+                        <span class="summary-value" id="summaryProperty">-</span>
+                    </div>
+
+                    <div class="summary-item">
+                        <span class="summary-label">案件類型：</span>
+                        <span class="summary-value" id="summaryType">-</span>
+                    </div>
+
+                    <div class="summary-item">
+                        <span class="summary-label">優先級：</span>
+                        <span class="summary-value" id="summaryPriority">-</span>
+                    </div>
+
+                    <div class="summary-item">
+                        <span class="summary-label">預計簽約：</span>
+                        <span class="summary-value" id="summarySignDate">-</span>
+                    </div>
+                </div>
+
+                <div class="alert alert-info">
+                    <i class="fas fa-lightbulb me-2"></i>
+                    <strong>提醒：</strong>案件建立後將自動通知相關聯絡人，並開始追蹤案件進度。
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 操作按鈕 -->
+    <div class="action-buttons">
+        <button type="button" class="btn btn-secondary-custom" id="prevBtn" onclick="previousStep()"
+            style="display: none;">
+            <i class="fas fa-arrow-left me-2"></i>上一步
+        </button>
+        <button type="button" class="btn btn-primary-custom flex-fill" id="nextBtn" onclick="nextStep()" disabled>
+            下一步<i class="fas fa-arrow-right ms-2"></i>
+        </button>
+        <button type="button" class="btn btn-primary-custom flex-fill" id="createBtn" onclick="createCase()"
+            style="display: none;">
+            <i class="fas fa-plus me-2"></i>建立案件
+        </button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 全局變量
+        let currentStep = 1;
+        let selectedBrand = null;
+        let selectedProperty = null;
+        let selectedPriority = 'medium';
+
+        /**
+         * 頁面載入完成後初始化
+         */
+        document.addEventListener('DOMContentLoaded', function () {
+            initializePage();
+            setupEventListeners();
+        });
+
+        /**
+         * 初始化頁面
+         */
+        function initializePage() {
+            updateStepDisplay();
+            updateButtonStates();
+            console.log('新增案件頁面已載入');
+        }
+
+        /**
+         * 設置事件監聽器
+         */
+        function setupEventListeners() {
+            // 品牌搜尋
+            document.getElementById('brandSearch').addEventListener('input', function () {
+                filterBrands(this.value);
+            });
+
+            // 物件搜尋
+            document.getElementById('propertySearch').addEventListener('input', function () {
+                filterProperties(this.value);
+            });
+
+            // 案件名稱自動生成
+            document.getElementById('caseName').addEventListener('blur', function () {
+                if (!this.value && selectedBrand && selectedProperty) {
+                    this.value = `${selectedBrand.name} × ${selectedProperty.name}`;
+                }
+            });
+
+            // 標籤輸入
+            document.getElementById('newTag').addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    addTag(this.value.trim());
+                    this.value = '';
+                }
+            });
+        }
+
+        /**
+         * 選擇品牌
+         */
+        function selectBrand(element) {
+            // 移除其他選中狀態
+            document.querySelectorAll('#brandList .selection-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+
+            // 設置選中狀態
+            element.classList.add('selected');
+
+            // 儲存選中的品牌
+            selectedBrand = {
+                id: element.dataset.brandId,
+                name: element.querySelector('.card-title').textContent,
+                contact: element.querySelector('.card-details').textContent
+            };
+
+            updateButtonStates();
+            console.log('選中品牌:', selectedBrand);
+        }
+
+        /**
+         * 選擇物件
+         */
+        function selectProperty(element) {
+            // 移除其他選中狀態
+            document.querySelectorAll('#propertyList .selection-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+
+            // 設置選中狀態
+            element.classList.add('selected');
+
+            // 儲存選中的物件
+            selectedProperty = {
+                id: element.dataset.propertyId,
+                name: element.querySelector('.card-title').textContent,
+                address: element.querySelector('.card-details').textContent
+            };
+
+            updateButtonStates();
+            console.log('選中物件:', selectedProperty);
+        }
+
+        /**
+         * 選擇優先級
+         */
+        function selectPriority(element) {
+            // 移除其他選中狀態
+            document.querySelectorAll('.priority-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+
+            // 設置選中狀態
+            element.classList.add('selected');
+            selectedPriority = element.dataset.priority;
+
+            console.log('選中優先級:', selectedPriority);
+        }
+
+        /**
+         * 下一步
+         */
+        function nextStep() {
+            if (currentStep < 4) {
+                currentStep++;
+                updateStepDisplay();
+                updateButtonStates();
+
+                // 如果到了確認步驟，更新摘要
+                if (currentStep === 4) {
+                    updateSummary();
+                }
+            }
+        }
+
+        /**
+         * 上一步
+         */
+        function previousStep() {
+            if (currentStep > 1) {
+                currentStep--;
+                updateStepDisplay();
+                updateButtonStates();
+            }
+        }
+
+        /**
+         * 更新步驟顯示
+         */
+        function updateStepDisplay() {
+            // 更新進度指示器
+            document.querySelectorAll('.step').forEach((step, index) => {
+                const stepNumber = index + 1;
+                step.classList.remove('active', 'completed');
+
+                if (stepNumber < currentStep) {
+                    step.classList.add('completed');
+                    step.querySelector('.step-circle').innerHTML = '<i class="fas fa-check"></i>';
+                } else if (stepNumber === currentStep) {
+                    step.classList.add('active');
+                    step.querySelector('.step-circle').textContent = stepNumber;
+                } else {
+                    step.querySelector('.step-circle').textContent = stepNumber;
+                }
+            });
+
+            // 更新內容顯示
+            document.querySelectorAll('.step-content').forEach((content, index) => {
+                content.classList.remove('active');
+                if (index + 1 === currentStep) {
+                    content.classList.add('active');
+                }
+            });
+        }
+
+        /**
+         * 更新按鈕狀態
+         */
+        function updateButtonStates() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const createBtn = document.getElementById('createBtn');
+
+            // 上一步按鈕
+            prevBtn.style.display = currentStep > 1 ? 'block' : 'none';
+
+            // 下一步/建立按鈕
+            if (currentStep === 4) {
+                nextBtn.style.display = 'none';
+                createBtn.style.display = 'block';
+            } else {
+                nextBtn.style.display = 'block';
+                createBtn.style.display = 'none';
+
+                // 檢查是否可以進行下一步
+                let canProceed = false;
+                switch (currentStep) {
+                    case 1:
+                        canProceed = selectedBrand !== null;
+                        break;
+                    case 2:
+                        canProceed = selectedProperty !== null;
+                        break;
+                    case 3:
+                        const caseName = document.getElementById('caseName').value;
+                        const caseType = document.getElementById('caseType').value;
+                        canProceed = caseName.trim() && caseType;
+                        break;
+                }
+                nextBtn.disabled = !canProceed;
+            }
+        }
+
+        /**
+         * 更新摘要
+         */
+        function updateSummary() {
+            const caseName = document.getElementById('caseName').value;
+            const caseType = document.getElementById('caseType').value;
+            const expectedSignDate = document.getElementById('expectedSignDate').value;
+
+            document.getElementById('summaryName').textContent = caseName || '-';
+            document.getElementById('summaryBrand').textContent = selectedBrand ? selectedBrand.name : '-';
+            document.getElementById('summaryProperty').textContent = selectedProperty ? selectedProperty.name : '-';
+            document.getElementById('summaryType').textContent = getTypeText(caseType);
+            document.getElementById('summaryPriority').textContent = getPriorityText(selectedPriority);
+            document.getElementById('summarySignDate').textContent = expectedSignDate || '-';
+        }
+
+        /**
+         * 獲取類型文字
+         */
+        function getTypeText(type) {
+            const types = {
+                'new-lease': '新租約',
+                'renewal': '續約',
+                'transfer': '轉租',
+                'consultation': '諮詢'
+            };
+            return types[type] || '-';
+        }
+
+        /**
+         * 獲取優先級文字
+         */
+        function getPriorityText(priority) {
+            const priorities = {
+                'high': '高優先級',
+                'medium': '中優先級',
+                'low': '低優先級'
+            };
+            return priorities[priority] || '-';
+        }
+
+        /**
+         * 篩選品牌
+         */
+        function filterBrands(searchTerm) {
+            const brandCards = document.querySelectorAll('#brandList .selection-card');
+            brandCards.forEach(card => {
+                const brandName = card.querySelector('.card-title').textContent.toLowerCase();
+                const isVisible = brandName.includes(searchTerm.toLowerCase());
+                card.style.display = isVisible ? 'block' : 'none';
+            });
+        }
+
+        /**
+         * 篩選物件
+         */
+        function filterProperties(searchTerm) {
+            const propertyCards = document.querySelectorAll('#propertyList .selection-card');
+            propertyCards.forEach(card => {
+                const propertyName = card.querySelector('.card-title').textContent.toLowerCase();
+                const isVisible = propertyName.includes(searchTerm.toLowerCase());
+                card.style.display = isVisible ? 'block' : 'none';
+            });
+        }
+
+        /**
+         * 新增標籤
+         */
+        function addTag(tagText) {
+            if (!tagText) return;
+
+            const tagContainer = document.querySelector('.d-flex.flex-wrap.gap-2.mb-2');
+            const tagElement = document.createElement('span');
+            tagElement.className = 'badge bg-secondary';
+            tagElement.innerHTML = `${tagText} <i class="fas fa-times ms-1" onclick="removeTag(this)" style="cursor: pointer;"></i>`;
+            tagContainer.appendChild(tagElement);
+        }
+
+        /**
+         * 移除標籤
+         */
+        function removeTag(element) {
+            element.parentElement.remove();
+        }
+
+        /**
+         * 建立案件
+         */
+        function createCase() {
+            const createBtn = document.getElementById('createBtn');
+            const originalText = createBtn.innerHTML;
+
+            // 顯示載入狀態
+            createBtn.disabled = true;
+            createBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>建立中...';
+
+            // 收集所有表單數據
+            const caseData = {
+                name: document.getElementById('caseName').value,
+                type: document.getElementById('caseType').value,
+                description: document.getElementById('caseDescription').value,
+                expectedSignDate: document.getElementById('expectedSignDate').value,
+                estimatedCommission: document.getElementById('estimatedCommission').value,
+                commissionRate: document.getElementById('commissionRate').value,
+                priority: selectedPriority,
+                brand: selectedBrand,
+                property: selectedProperty,
+                tags: Array.from(document.querySelectorAll('.badge')).map(badge => badge.textContent.trim())
+            };
+
+            // 模擬建立過程
+            setTimeout(() => {
+                showToast('案件建立成功！', 'success');
+
+                setTimeout(() => {
+                    window.location.href = 'case-detail.html?id=new&created=true';
+                }, 1500);
+            }, 2000);
+
+            console.log('建立案件數據:', caseData);
+        }
+
+        /**
+         * 顯示提示訊息
+         */
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast-message toast-${type}`;
+            toast.innerHTML = `
+                <i class="fas fa-${getToastIcon(type)} me-2"></i>
+                ${message}
+            `;
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${getToastColor(type)};
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                z-index: 9999;
+                animation: slideIn 0.3s ease;
+                font-size: 14px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                max-width: 300px;
+            `;
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    if (document.body.contains(toast)) {
+                        document.body.removeChild(toast);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        /**
+         * 獲取提示訊息圖標
+         */
+        function getToastIcon(type) {
+            const icons = {
+                success: 'check-circle',
+                error: 'exclamation-circle',
+                info: 'info-circle',
+                warning: 'exclamation-triangle'
+            };
+            return icons[type] || 'info-circle';
+        }
+
+        /**
+         * 獲取提示訊息顏色
+         */
+        function getToastColor(type) {
+            const colors = {
+                success: '#28a745',
+                error: '#dc3545',
+                info: '#007bff',
+                warning: '#ffc107'
+            };
+            return colors[type] || '#007bff';
+        }
+
+        // 添加CSS動畫
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // 監聽表單變更以更新按鈕狀態
+        document.addEventListener('input', updateButtonStates);
+        document.addEventListener('change', updateButtonStates);
+    </script>
+</body>
+
+</html>

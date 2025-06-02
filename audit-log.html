@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>操作日誌</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .admin-header {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            color: white;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .admin-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .admin-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .admin-nav {
+            background: white;
+            padding: 15px 20px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+        }
+
+        .nav-tab {
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: #f8f9fa;
+            color: #666;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .nav-tab.active {
+            background: #2563eb;
+            color: white;
+        }
+
+        .nav-tab:hover {
+            background: #e9ecef;
+            color: #333;
+        }
+
+        .nav-tab.active:hover {
+            background: #1e40af;
+            color: white;
+        }
+
+        .log-container {
+            padding: 20px;
+            padding-bottom: 80px;
+        }
+
+        .log-controls {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .controls-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 40px 10px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 25px;
+            font-size: 14px;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .filter-select {
+            padding: 8px 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .date-range {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .date-input {
+            padding: 8px 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .btn-export {
+            background: #059669;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-export:hover {
+            background: #047857;
+            color: white;
+        }
+
+        .log-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-item {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2563eb;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .log-table-container {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow-x: auto;
+        }
+
+        .log-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .log-table th {
+            background: #f8f9fa;
+            padding: 15px 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #333;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .log-table td {
+            padding: 15px 12px;
+            border-bottom: 1px solid #f1f5f9;
+            vertical-align: middle;
+        }
+
+        .log-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .log-time {
+            font-size: 12px;
+            color: #666;
+            white-space: nowrap;
+        }
+
+        .log-user {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .log-action {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .action-create {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .action-update {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .action-delete {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .action-login {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .action-logout {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .log-details {
+            color: #666;
+            max-width: 300px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .log-ip {
+            font-family: monospace;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .log-status {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-failed {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .status-warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            gap: 10px;
+        }
+
+        .pagination-btn {
+            padding: 8px 12px;
+            border: 1px solid #e9ecef;
+            background: white;
+            color: #666;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .pagination-btn:hover {
+            background: #f8f9fa;
+        }
+
+        .pagination-btn.active {
+            background: #2563eb;
+            color: white;
+            border-color: #2563eb;
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e9ecef;
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .nav-item {
+            text-align: center;
+            color: #666;
+            text-decoration: none;
+            padding: 5px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-item.active {
+            color: #2563eb;
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 2px;
+        }
+
+        .nav-item span {
+            font-size: 10px;
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .controls-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .search-box {
+                min-width: auto;
+            }
+            
+            .filter-group {
+                justify-content: space-between;
+            }
+            
+            .date-range {
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .log-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .log-table-container {
+                overflow-x: scroll;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 管理員標題 -->
+    <div class="admin-header">
+        <div class="admin-title">操作日誌</div>
+        <div class="admin-subtitle">系統操作記錄和審計追蹤</div>
+    </div>
+
+    <!-- 導航標籤 -->
+    <div class="admin-nav">
+        <a href="admin-dashboard.html" class="nav-tab">總覽</a>
+        <a href="user-management.html" class="nav-tab">用戶管理</a>
+        <a href="system-settings.html" class="nav-tab">系統設定</a>
+        <a href="audit-log.html" class="nav-tab active">操作日誌</a>
+        <a href="analytics.html" class="nav-tab">數據分析</a>
+        <a href="reports.html" class="nav-tab">報表中心</a>
+    </div>
+
+    <!-- 日誌管理容器 -->
+    <div class="log-container">
+        <!-- 控制面板 -->
+        <div class="log-controls">
+            <div class="controls-row">
+                <div class="search-box">
+                    <input type="text" class="search-input" placeholder="搜尋用戶、操作或詳細內容..." id="searchInput">
+                    <i class="fas fa-search search-icon"></i>
+                </div>
+                <div class="filter-group">
+                    <select class="filter-select" id="actionFilter">
+                        <option value="">所有操作</option>
+                        <option value="login">登入</option>
+                        <option value="logout">登出</option>
+                        <option value="create">新增</option>
+                        <option value="update">更新</option>
+                        <option value="delete">刪除</option>
+                    </select>
+                    <div class="date-range">
+                        <input type="date" class="date-input" id="startDate">
+                        <span>至</span>
+                        <input type="date" class="date-input" id="endDate">
+                    </div>
+                    <a href="#" class="btn-export" onclick="exportLogs()">
+                        <i class="fas fa-download me-2"></i>匯出
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 日誌統計 -->
+        <div class="log-stats">
+            <div class="stat-item">
+                <div class="stat-number" id="totalLogs">2,847</div>
+                <div class="stat-label">總記錄數</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="todayLogs">156</div>
+                <div class="stat-label">今日記錄</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="failedLogs">23</div>
+                <div class="stat-label">失敗操作</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="uniqueUsers">89</div>
+                <div class="stat-label">活躍用戶</div>
+            </div>
+        </div>
+
+        <!-- 日誌表格 -->
+        <div class="log-table-container">
+            <table class="log-table">
+                <thead>
+                    <tr>
+                        <th>時間</th>
+                        <th>用戶</th>
+                        <th>操作</th>
+                        <th>詳細內容</th>
+                        <th>IP地址</th>
+                        <th>狀態</th>
+                    </tr>
+                </thead>
+                <tbody id="logTableBody">
+                    <!-- 日誌數據將由JavaScript生成 -->
+                </tbody>
+            </table>
+            
+            <!-- 分頁 -->
+            <div class="pagination" id="pagination">
+                <!-- 分頁按鈕將由JavaScript生成 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部導航 -->
+    <div class="bottom-nav">
+        <a href="dashboard.html" class="nav-item">
+            <i class="fas fa-home"></i>
+            <span>首頁</span>
+        </a>
+        <a href="admin-dashboard.html" class="nav-item active">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>管理</span>
+        </a>
+        <a href="analytics.html" class="nav-item">
+            <i class="fas fa-chart-bar"></i>
+            <span>分析</span>
+        </a>
+        <a href="reports.html" class="nav-item">
+            <i class="fas fa-file-alt"></i>
+            <span>報表</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <i class="fas fa-user"></i>
+            <span>我的</span>
+        </a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 模擬日誌數據
+        const logData = [
+            { id: 1, time: '2024-02-01 14:30:25', user: '張小明', action: 'login', details: '管理員登入系統', ip: '192.168.1.100', status: 'success' },
+            { id: 2, time: '2024-02-01 14:25:18', user: '李小華', action: 'create', details: '新增用戶 "王小美"', ip: '192.168.1.101', status: 'success' },
+            { id: 3, time: '2024-02-01 14:20:45', user: '陳小強', action: 'update', details: '更新品牌 "麥當勞" 資料', ip: '192.168.1.102', status: 'success' },
+            { id: 4, time: '2024-02-01 14:15:32', user: '林小芳', action: 'delete', details: '刪除過期案件 #1234', ip: '192.168.1.103', status: 'success' },
+            { id: 5, time: '2024-02-01 14:10:15', user: '黃小龍', action: 'login', details: '用戶登入失敗 - 密碼錯誤', ip: '192.168.1.104', status: 'failed' },
+            { id: 6, time: '2024-02-01 14:05:28', user: '劉小雯', action: 'update', details: '修改系統設定', ip: '192.168.1.105', status: 'success' },
+            { id: 7, time: '2024-02-01 14:00:41', user: '吳小偉', action: 'create', details: '新增物件 "信義區店面"', ip: '192.168.1.106', status: 'success' },
+            { id: 8, time: '2024-02-01 13:55:33', user: '張小明', action: 'logout', details: '管理員登出系統', ip: '192.168.1.100', status: 'success' },
+            { id: 9, time: '2024-02-01 13:50:22', user: '李小華', action: 'update', details: '更新用戶權限', ip: '192.168.1.101', status: 'warning' },
+            { id: 10, time: '2024-02-01 13:45:17', user: '王小美', action: 'login', details: '用戶首次登入', ip: '192.168.1.107', status: 'success' }
+        ];
+
+        let filteredData = logData;
+        let currentPage = 1;
+        const itemsPerPage = 8;
+
+        /**
+         * 初始化日誌頁面
+         */
+        document.addEventListener('DOMContentLoaded', function() {
+            setDefaultDates();
+            renderLogTable();
+            renderPagination();
+            setupEventListeners();
+        });
+
+        /**
+         * 設置預設日期
+         */
+        function setDefaultDates() {
+            const today = new Date();
+            const lastWeek = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+            
+            document.getElementById('endDate').value = today.toISOString().split('T')[0];
+            document.getElementById('startDate').value = lastWeek.toISOString().split('T')[0];
+        }
+
+        /**
+         * 設置事件監聽器
+         */
+        function setupEventListeners() {
+            document.getElementById('searchInput').addEventListener('input', handleFilter);
+            document.getElementById('actionFilter').addEventListener('change', handleFilter);
+            document.getElementById('startDate').addEventListener('change', handleFilter);
+            document.getElementById('endDate').addEventListener('change', handleFilter);
+        }
+
+        /**
+         * 處理篩選
+         */
+        function handleFilter() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const actionFilter = document.getElementById('actionFilter').value;
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            
+            filteredData = logData.filter(log => {
+                const matchesSearch = log.user.toLowerCase().includes(query) || 
+                                    log.details.toLowerCase().includes(query) ||
+                                    log.ip.includes(query);
+                const matchesAction = !actionFilter || log.action === actionFilter;
+                
+                let matchesDate = true;
+                if (startDate && endDate) {
+                    const logDate = log.time.split(' ')[0];
+                    matchesDate = logDate >= startDate && logDate <= endDate;
+                }
+                
+                return matchesSearch && matchesAction && matchesDate;
+            });
+            
+            currentPage = 1;
+            renderLogTable();
+            renderPagination();
+        }
+
+        /**
+         * 渲染日誌表格
+         */
+        function renderLogTable() {
+            const tbody = document.getElementById('logTableBody');
+            tbody.innerHTML = '';
+            
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const pageData = filteredData.slice(startIndex, endIndex);
+            
+            pageData.forEach(log => {
+                const row = createLogRow(log);
+                tbody.appendChild(row);
+            });
+        }
+
+        /**
+         * 創建日誌行
+         */
+        function createLogRow(log) {
+            const tr = document.createElement('tr');
+            
+            tr.innerHTML = `
+                <td class="log-time">${log.time}</td>
+                <td class="log-user">${log.user}</td>
+                <td>
+                    <span class="log-action action-${log.action}">${getActionText(log.action)}</span>
+                </td>
+                <td class="log-details" title="${log.details}">${log.details}</td>
+                <td class="log-ip">${log.ip}</td>
+                <td>
+                    <span class="log-status status-${log.status}">${getStatusText(log.status)}</span>
+                </td>
+            `;
+            
+            return tr;
+        }
+
+        /**
+         * 渲染分頁
+         */
+        function renderPagination() {
+            const pagination = document.getElementById('pagination');
+            pagination.innerHTML = '';
+            
+            const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+            
+            // 上一頁按鈕
+            const prevBtn = document.createElement('button');
+            prevBtn.className = 'pagination-btn';
+            prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
+            prevBtn.disabled = currentPage === 1;
+            prevBtn.onclick = () => changePage(currentPage - 1);
+            pagination.appendChild(prevBtn);
+            
+            // 頁碼按鈕
+            for (let i = 1; i <= totalPages; i++) {
+                const pageBtn = document.createElement('button');
+                pageBtn.className = `pagination-btn ${i === currentPage ? 'active' : ''}`;
+                pageBtn.textContent = i;
+                pageBtn.onclick = () => changePage(i);
+                pagination.appendChild(pageBtn);
+            }
+            
+            // 下一頁按鈕
+            const nextBtn = document.createElement('button');
+            nextBtn.className = 'pagination-btn';
+            nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+            nextBtn.disabled = currentPage === totalPages;
+            nextBtn.onclick = () => changePage(currentPage + 1);
+            pagination.appendChild(nextBtn);
+        }
+
+        /**
+         * 切換頁面
+         */
+        function changePage(page) {
+            const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+            if (page >= 1 && page <= totalPages) {
+                currentPage = page;
+                renderLogTable();
+                renderPagination();
+            }
+        }
+
+        /**
+         * 獲取操作文字
+         */
+        function getActionText(action) {
+            const actionTexts = {
+                login: '登入',
+                logout: '登出',
+                create: '新增',
+                update: '更新',
+                delete: '刪除'
+            };
+            return actionTexts[action] || action;
+        }
+
+        /**
+         * 獲取狀態文字
+         */
+        function getStatusText(status) {
+            const statusTexts = {
+                success: '成功',
+                failed: '失敗',
+                warning: '警告'
+            };
+            return statusTexts[status] || status;
+        }
+
+        /**
+         * 匯出日誌
+         */
+        function exportLogs() {
+            showToast('正在準備匯出檔案...', 'info');
+            
+            setTimeout(() => {
+                showToast('日誌已匯出為CSV檔案', 'success');
+                // 在實際應用中，這裡會生成並下載CSV檔案
+            }, 2000);
+        }
+
+        /**
+         * 工具函數：顯示提示訊息
+         */
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast-message toast-${type}`;
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'info' ? '#2563eb' : type === 'success' ? '#059669' : '#dc3545'};
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                z-index: 9999;
+                animation: slideIn 0.3s ease;
+                font-size: 14px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            `;
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    if (document.body.contains(toast)) {
+                        document.body.removeChild(toast);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // 添加CSS動畫
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+
+</html>
